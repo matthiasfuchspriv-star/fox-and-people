@@ -5,22 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fox &amp; People — Unabhängige Beratung für Arbeitskräfteüberlassung</title>
   <meta name="description" content="Wir prüfen Ihre Überlassungsverträge, decken überhöhte Verrechnungssätze auf und verhandeln bessere Konditionen — unabhängig von jedem Personaldienstleister." />
-  <meta name="theme-color" content="#12302a" />
+  <meta name="theme-color" content="#14120f" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,560;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,560;1,9..144,500&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/styles.css" />
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2312302a'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='34' fill='%23faf7ef' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2314120f'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23a8402c' stroke-width='3'/%3E%3Ctext x='32' y='39' font-family='monospace' font-size='20' fill='%23f6f2e8' text-anchor='middle'%3EFP%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
   <header class="site-header" id="siteHeader">
     <div class="container site-header__bar">
-      <a class="brand" href="#top"><span class="brand__bar" aria-hidden="true"></span>FOX &amp; PEOPLE</a>
+      <a class="brand" href="#top"><span class="brand__mark" aria-hidden="true">F&amp;P</span>FOX &amp; PEOPLE</a>
 
       <nav class="site-nav" aria-label="Hauptnavigation">
         <ul>
@@ -58,7 +58,7 @@
     <section class="hero" id="top">
       <div class="container hero__grid">
         <div>
-          <p class="eyebrow">Unabhängige Beratung für Beschäftigerbetriebe</p>
+          <p class="stamp">Unabhängig &middot; Vertraulich</p>
           <h1>Sie zahlen mehr für überlassenes Personal, <em>als Sie müssten.</em></h1>
           <p class="lede hero__lede">
             Wir prüfen Ihre Überlassungsverträge, decken überhöhte Verrechnungssätze auf und
@@ -72,17 +72,51 @@
             <a class="btn btn-ghost" href="#ablauf">So läuft es ab</a>
           </div>
 
-          <p class="hero__meta">Unabhängig · Diskret · Auf Augenhöhe mit der Gegenseite</p>
+          <p class="hero__meta">UNABHÄNGIG · DISKRET · AUF AUGENHÖHE MIT DER GEGENSEITE</p>
+        </div>
+
+        <div>
+          <div class="ledger">
+            <p class="ledger__title">Verrechnungssatz — Beispiel</p>
+
+            <div class="ledger__row">
+              <span>KV-Grundlohn / Std.</span>
+              <span>14,80 €</span>
+            </div>
+
+            <div class="ledger__row ledger__row--marked">
+              <span>Aufschlag (Faktor 2,3×)</span>
+              <span>34,04 €</span>
+              <svg class="ledger__mark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M6 20c0-10 30-16 148-16s146 5 146 16-28 17-146 17S6 30 6 20z"/>
+              </svg>
+              <span class="ledger__note">
+                <svg viewBox="0 0 40 32" aria-hidden="true"><path d="M2 4c10 0 20 6 24 22"/></svg>
+                wofür genau?
+              </span>
+            </div>
+
+            <div class="ledger__row">
+              <span>Zuschläge, Diäten, Fahrt</span>
+              <span>?</span>
+            </div>
+
+            <div class="ledger__row ledger__row--total">
+              <span>Ihre Kosten / Std.</span>
+              <span>34,04 €</span>
+            </div>
+          </div>
+          <p class="ledger__caption">Illustrative Darstellung, keine echten Kundendaten</p>
         </div>
       </div>
     </section>
 
-    <!-- ============ PROBLEM ============ -->
+    <!-- ============ BEFUND / PROBLEM ============ -->
     <section class="section" id="problem">
       <div class="container">
         <div class="problem__grid">
           <div>
-            <p class="eyebrow">Das Problem</p>
+            <p class="stamp">Befund</p>
             <h2>Kaum jemand weiß, wie sich ein Überlassungssatz zusammensetzt.</h2>
             <p class="lede" style="margin-top: 1.1rem;">
               Die meisten Beschäftigerbetriebe können den Stundensatz ihres Personaldienstleisters
@@ -94,23 +128,35 @@
 
           <div class="problem-list">
             <article class="problem-list__item">
-              <h3>Intransparente Multiplikatoren</h3>
-              <p>Aufschläge auf den KV-Grundlohn, die selten hinterfragt werden.</p>
+              <span class="problem-list__index">§1</span>
+              <div>
+                <h3>Intransparente Multiplikatoren</h3>
+                <p>Aufschläge auf den KV-Grundlohn, die selten hinterfragt werden.</p>
+              </div>
             </article>
 
             <article class="problem-list__item">
-              <h3>Versteckte Zuschläge</h3>
-              <p>Überstunden, Fahrt, Diäten, Mindestverrechnungsstunden.</p>
+              <span class="problem-list__index">§2</span>
+              <div>
+                <h3>Versteckte Zuschläge</h3>
+                <p>Überstunden, Fahrt, Diäten, Mindestverrechnungsstunden.</p>
+              </div>
             </article>
 
             <article class="problem-list__item">
-              <h3>Rechtliche Risiken</h3>
-              <p>AÜG-Gleichbehandlung, LSD-BG-Haftung, Scheinwerkvertrag.</p>
+              <span class="problem-list__index">§3</span>
+              <div>
+                <h3>Rechtliche Risiken</h3>
+                <p>AÜG-Gleichbehandlung, LSD-BG-Haftung, Scheinwerkvertrag.</p>
+              </div>
             </article>
 
             <article class="problem-list__item">
-              <h3>Ungünstige Klauseln</h3>
-              <p>Übernahmeprovisionen, Exklusivbindungen, Preisgleitung.</p>
+              <span class="problem-list__index">§4</span>
+              <div>
+                <h3>Ungünstige Klauseln</h3>
+                <p>Übernahmeprovisionen, Exklusivbindungen, Preisgleitung.</p>
+              </div>
             </article>
           </div>
         </div>
@@ -121,13 +167,13 @@
     <section class="section section--tight-top" id="leistungen">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">Leistungen</p>
+          <p class="stamp">Leistungen</p>
           <h2>Drei Stufen. Ein Ziel: niedrigere Personalkosten.</h2>
         </div>
 
         <div class="services">
           <article class="service-card">
-            <div class="service-card__index">01</div>
+            <div class="service-card__index">01 / 03</div>
             <h3 class="service-card__title">Check</h3>
             <span class="service-card__kicker">Analyse &amp; Audit</span>
             <div class="service-card__body">
@@ -140,7 +186,7 @@
           </article>
 
           <article class="service-card service-card--featured">
-            <div class="service-card__index">02</div>
+            <div class="service-card__index">02 / 03</div>
             <h3 class="service-card__title">Optimize</h3>
             <span class="service-card__kicker">Verhandlung &amp; Umsetzung</span>
             <div class="service-card__body">
@@ -153,7 +199,7 @@
           </article>
 
           <article class="service-card">
-            <div class="service-card__index">03</div>
+            <div class="service-card__index">03 / 03</div>
             <h3 class="service-card__title">Care</h3>
             <span class="service-card__kicker">Laufende Begleitung</span>
             <div class="service-card__body">
@@ -172,28 +218,28 @@
     <section class="section" id="ablauf">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">Ablauf</p>
+          <p class="stamp">Ablauf</p>
           <h2>Vom Erstgespräch zu besseren Konditionen.</h2>
         </div>
 
         <div class="process-list">
           <div class="process-item">
-            <div class="process-item__index">1</div>
+            <div class="process-item__index"><span class="process-item__box" aria-hidden="true"></span>Schritt 1 / 4</div>
             <h3>Erstgespräch</h3>
             <p>Unverbindlich. Wir klären Ihre Ausgangslage und ob sich eine Analyse für Sie lohnt.</p>
           </div>
           <div class="process-item">
-            <div class="process-item__index">2</div>
+            <div class="process-item__index"><span class="process-item__box" aria-hidden="true"></span>Schritt 2 / 4</div>
             <h3>Audit</h3>
             <p>Wir prüfen Verträge und Sätze und zeigen Ihnen schwarz auf weiß, wo Luft drin ist.</p>
           </div>
           <div class="process-item">
-            <div class="process-item__index">3</div>
+            <div class="process-item__index"><span class="process-item__box" aria-hidden="true"></span>Schritt 3 / 4</div>
             <h3>Verhandlung</h3>
             <p>Wir holen bessere Konditionen heraus — Sie entscheiden, wir setzen um.</p>
           </div>
           <div class="process-item">
-            <div class="process-item__index">4</div>
+            <div class="process-item__index"><span class="process-item__box" aria-hidden="true"></span>Schritt 4 / 4</div>
             <h3>Laufende Begleitung</h3>
             <p>Auf Wunsch bleiben wir an Ihrer Seite — mit regelmäßiger Kostenkontrolle und einem festen Ansprechpartner.</p>
           </div>
@@ -205,9 +251,9 @@
     <section class="section" id="nutzen">
       <div class="container benefits__grid">
         <div>
-          <p class="eyebrow">Ihr Nutzen</p>
+          <p class="stamp">Kennzahlen</p>
           <h2>Klarheit, faire Kosten und ein gutes Gefühl.</h2>
-          <p class="lede" style="margin-top: 1.1rem;">
+          <p class="lede" style="margin-top: 1.1rem; max-width: 52rem;">
             Sie erfahren endlich, wofür Sie bei überlassenem Personal wirklich zahlen — und wo Sie
             zu viel zahlen. Wir stehen dabei ausschließlich auf Ihrer Seite, unabhängig von jedem
             Personaldienstleister. Und wir achten darauf, dass am Ende nicht nur Ihr Budget stimmt,
@@ -218,18 +264,25 @@
           </div>
         </div>
 
-        <div class="stat-cards">
-          <div class="stat-card">
-            <p class="stat-card__value">6–12%</p>
-            <p class="stat-card__label">typische Satzsenkung bei überlassenem Personal</p>
+        <div class="stat-row">
+          <div class="stat stat--lg">
+            <span class="stat__value-wrap">
+              <span class="stat__value">6–12%</span>
+              <svg class="stat__circle" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M8 46C6 20 40 8 80 8s74 11 72 39-38 33-76 33S10 70 8 46z"/>
+              </svg>
+            </span>
+            <p class="stat__label">typische Satzsenkung bei überlassenem Personal</p>
           </div>
-          <div class="stat-card">
-            <p class="stat-card__value">100%</p>
-            <p class="stat-card__label">unabhängig — keine Provision von Dienstleistern</p>
+
+          <div class="stat stat--md">
+            <span class="stat__value">100%</span>
+            <p class="stat__label">unabhängig — keine Provision von Dienstleistern</p>
           </div>
-          <div class="stat-card">
-            <p class="stat-card__value">1</p>
-            <p class="stat-card__label">fester Ansprechpartner, der Sie versteht</p>
+
+          <div class="stat stat--sm">
+            <span class="stat__value">1</span>
+            <p class="stat__label">fester Ansprechpartner, der Sie versteht</p>
           </div>
         </div>
       </div>
@@ -239,11 +292,25 @@
     <section class="section" id="ueber-uns">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">Über uns</p>
+          <p class="stamp">Über uns</p>
           <h2>Wir kennen beide Seiten des Tisches.</h2>
         </div>
 
         <div class="about__grid">
+          <aside class="about__file">
+            <p class="about__file-label">Hintergrund</p>
+            <dl>
+              <dt>Herkunft</dt>
+              <dd>Banking</dd>
+              <dt>Erfahrung</dt>
+              <dd>Personaldienstleistung, Vertrieb</dd>
+              <dt>Spezialisierung</dt>
+              <dd>Arbeitskräfteüberlassung</dd>
+              <dt>Perspektive</dt>
+              <dd>Unabhängig, keine Provision</dd>
+            </dl>
+          </aside>
+
           <div class="about__body">
             <p>
               Mit Wurzeln im Banking und langjähriger Erfahrung in Personaldienstleistung,
@@ -256,19 +323,19 @@
               Menschen, die in Ihrem Betrieb arbeiten — und die verdienen eine faire, ordentliche
               Behandlung. Genau dafür arbeiten wir: persönlich, verlässlich und auf Augenhöhe.
             </p>
-          </div>
 
-          <blockquote class="about__quote">
-            <p>„Gute Beratung bedeutet für uns, dass am Ende beide Seiten gewinnen — Ihr Unternehmen und die Menschen, die für Sie arbeiten.“</p>
-          </blockquote>
+            <blockquote class="about__quote">
+              <p>„Gute Beratung bedeutet für uns, dass am Ende beide Seiten gewinnen — Ihr Unternehmen und die Menschen, die für Sie arbeiten.“</p>
+            </blockquote>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ============ TERMIN / KONTAKT ============ -->
-    <section class="section section-forest" id="termin">
+    <section class="section section-dark" id="termin">
       <div class="container">
-        <p class="eyebrow">Erstgespräch</p>
+        <p class="stamp">Erstgespräch</p>
         <h2>Finden wir heraus, wie viel Sie sparen können.</h2>
         <p class="lede" style="margin-top: 1.1rem;">
           30 Minuten, unverbindlich. Wählen Sie einen Termin, der Ihnen passt — telefonisch
@@ -277,7 +344,7 @@
 
         <div class="contact__actions">
           <!-- TODO: echten Kalender-Buchungslink (z. B. Calendly) einsetzen -->
-          <a class="btn btn-ghost" href="#termin">Termin auswählen</a>
+          <a class="btn btn-paper" href="#termin">Termin auswählen</a>
           <a class="link-underline" href="mailto:office@blackburn.at">E-Mail schreiben</a>
         </div>
 
@@ -290,10 +357,10 @@
 
   </main>
 
-  <footer class="site-footer section-forest">
+  <footer class="site-footer section-dark">
     <div class="container site-footer__inner">
       <div>
-        <p class="brand"><span class="brand__bar" aria-hidden="true"></span>FOX &amp; PEOPLE</p>
+        <p class="brand"><span class="brand__mark" aria-hidden="true">F&amp;P</span>FOX &amp; PEOPLE</p>
         <p class="site-footer__tagline">Unabhängige Beratung für Arbeitskräfteüberlassung</p>
       </div>
       <p class="site-footer__legal">Keine Rechtsberatung. © 2026 Fox &amp; People — eine Geschäftsbezeichnung der Blackburn Beteiligungs GmbH</p>
