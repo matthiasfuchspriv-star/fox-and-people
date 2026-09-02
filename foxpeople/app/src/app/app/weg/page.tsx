@@ -24,7 +24,7 @@ export default async function AppWeg() {
     <AppShell navLabels={navLabels(t)}>
       <AppKopf titel={t("weg.titel")} zurueck="/app" />
       <div className="px-4 pt-4 space-y-4">
-        <section className="card card-pad" style={{ background: "linear-gradient(135deg, #10222a 0%, #1c3a45 100%)", color: "#fff" }}>
+        <section className="app-hero card-pad">
           <Award size={24} className="text-fox" />
           <div className="font-display font-extrabold text-[22px] mt-2">{dauer}</div>
           <div className="text-[13px] text-white/75">{t("weg.dabeiSeit")} {d.eintritt ? datum(d.eintritt) : "–"}</div>

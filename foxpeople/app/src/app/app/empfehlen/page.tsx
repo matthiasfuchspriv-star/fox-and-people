@@ -27,7 +27,7 @@ export default async function AppEmpfehlen({ searchParams }: { searchParams: Pro
     <AppShell>
       <AppKopf titel="Freunde werben Freunde" zurueck="/app" />
       <div className="px-4 pt-4 space-y-4">
-        <section className="card card-pad" style={{ background: "linear-gradient(135deg, #10222a 0%, #1c3a45 100%)", color: "#fff" }}>
+        <section className="app-hero card-pad">
           <Gift size={26} className="text-fox" />
           <div className="font-display font-extrabold text-[22px] mt-2">{eur(cfg.praemieWerber, 0)} für dich, {eur(cfg.praemieGeworbener, 0)} für deinen Freund</div>
           <p className="text-[13.5px] text-white/80 mt-1">Sobald deine Empfehlung bei uns anfängt und {cfg.praemieNachMonaten} Monate dabei bleibt, bekommst du die Prämie.{cfg.bonusJeAnzahl > 0 ? ` Für je ${cfg.bonusJeAnzahl} erfolgreiche Empfehlungen gibt es zusätzlich ${eur(cfg.bonusBetrag, 0)}.` : ""}</p>

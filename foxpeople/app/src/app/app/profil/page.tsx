@@ -21,7 +21,7 @@ export default async function AppProfil({ searchParams }: { searchParams: Promis
   const vollst = Math.round((felder.filter(Boolean).length / felder.length) * 100);
   return (
     <AppShell>
-      <AppKopf titel="Mein Profil" zurueck="/app" rechts={<a href="/app/logout" className="text-[12px] text-white/70">Abmelden</a>} />
+      <AppKopf titel="Mein Profil" zurueck="/app" rechts={<a href="/app/logout" className="text-[14px] font-medium text-fox-ink px-2 py-2">Abmelden</a>} />
       <div className="px-4 pt-4 space-y-4">
         {sp.ok === "1" && <div className="alert alert-teal"><span>Danke – deine Daten sind aktualisiert.</span></div>}
         {sp.ok === "upload" && <div className="alert alert-teal"><span>Hochgeladen – die Dispo prüft das Dokument.</span></div>}
