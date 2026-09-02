@@ -48,7 +48,7 @@ export default async function AppAbwesenheit({ searchParams }: { searchParams: P
             <AlertTriangle size={18} className="text-red" />
             <div className="section-title !text-red">{t("abw.krankTitel")}</div>
           </div>
-          <p className="text-[13.5px]" dangerouslySetInnerHTML={{ __html: t("abw.krankText") }} />
+          <p className="text-[14px]" dangerouslySetInnerHTML={{ __html: t("abw.krankText") }} />
           <div className="grid grid-cols-2 gap-2 mt-3">
             <a href={`tel:${telefon.replace(/\s/g, "")}`} className="btn btn-primary justify-center !h-12"><Phone size={17} /> {t("abw.anrufen")}</a>
             <a href={`mailto:${mail}?subject=${encodeURIComponent("Krankmeldung")}`} className="btn btn-secondary justify-center !h-12"><Mail size={17} /> {t("abw.mail")}</a>
@@ -60,7 +60,7 @@ export default async function AppAbwesenheit({ searchParams }: { searchParams: P
         <form action={abwesenheitMelden} className="card card-pad space-y-3">
           <input type="hidden" name="typ" value="URLAUB" />
           <div className="section-title">{t("abw.urlaubBeantragen")}</div>
-          <p className="text-[13.5px]">{t("abw.resturlaub")} {jahr}: <b>{tg(ul.rest)} Werktage</b> (je vollem Arbeitsmonat werden {tg(ul.proMonat)} Tage freigeschaltet – bisher {tg(ul.erworben)}). Bitte mindestens 2 Wochen vorher beantragen; der Urlaub gilt erst nach Genehmigung.</p>
+          <p className="text-[14px]">{t("abw.resturlaub")} {jahr}: <b>{tg(ul.rest)} Werktage</b> (je vollem Arbeitsmonat werden {tg(ul.proMonat)} Tage freigeschaltet – bisher {tg(ul.erworben)}). Bitte mindestens 2 Wochen vorher beantragen; der Urlaub gilt erst nach Genehmigung.</p>
           <div className="grid grid-cols-2 gap-2">
             <div className="field"><label className="label">{t("abw.von")}</label><input type="date" name="von" required defaultValue={heute} className="input" /></div>
             <div className="field"><label className="label">{t("abw.bis")}</label><input type="date" name="bis" defaultValue={heute} className="input" /></div>
@@ -73,12 +73,12 @@ export default async function AppAbwesenheit({ searchParams }: { searchParams: P
           <div className="px-5 pt-4 pb-1 section-title">Bisherige Meldungen</div>
           {abw.length ? (
             <ul className="divide-y divide-line">{abw.map((a) => (
-              <li key={a.id} className="flex items-center gap-3 px-5 py-2.5 text-[13.5px]">
-                <span className="flex-1">{({ URLAUB: "Urlaub", KRANKENSTAND: "Krankenstand", PFLEGEFREISTELLUNG: "Pflegefreistellung", SONSTIGES: "Sonstiges", ZEITAUSGLEICH: "Zeitausgleich" } as Record<string, string>)[a.typ] ?? a.typ}<div className="text-[12px] text-muted">{datum(a.von)} – {datum(a.bis)} · {a.tage} Tage</div></span>
+              <li key={a.id} className="flex items-center gap-3 px-5 py-2.5 text-[14px]">
+                <span className="flex-1">{({ URLAUB: "Urlaub", KRANKENSTAND: "Krankenstand", PFLEGEFREISTELLUNG: "Pflegefreistellung", SONSTIGES: "Sonstiges", ZEITAUSGLEICH: "Zeitausgleich" } as Record<string, string>)[a.typ] ?? a.typ}<div className="text-[12.5px] text-muted">{datum(a.von)} – {datum(a.bis)} · {a.tage} Tage</div></span>
                 {a.status === "BEANTRAGT" ? <span className="badge badge-brand">beantragt</span> : a.status === "ABGELEHNT" ? <span className="badge badge-red">abgelehnt</span> : <span className="badge badge-teal">{a.typ === "URLAUB" ? "genehmigt" : "erfasst"}</span>}
               </li>
             ))}</ul>
-          ) : <p className="text-muted text-[13px] px-5 pb-4">Noch keine Meldungen.</p>}
+          ) : <p className="text-muted text-[12.5px] px-5 pb-4">Noch keine Meldungen.</p>}
         </section>
       </div>
     </AppShell>

@@ -39,13 +39,13 @@ export function SchichtVorlagen({ label }: { label: string }) {
   };
   return (
     <div>
-      <div className="text-[12px] text-muted mb-1.5">{label}</div>
+      <div className="text-[12.5px] text-muted mb-1.5">{label}</div>
       <div className="grid grid-cols-2 gap-2">
         {SCHICHTEN.map((s) => (
           <button key={s.name} type="button" onClick={() => setzen(s)} className="btn btn-secondary btn-sm justify-center !py-2.5">{s.name}</button>
         ))}
       </div>
-      <button type="button" onClick={leeren} className="text-[12px] text-muted underline mt-2">Alles leeren</button>
+      <button type="button" onClick={leeren} className="text-[12.5px] text-muted underline mt-2">Alles leeren</button>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export default async function AppEinsatz() {
   });
   if (!einsatz) return (
     <AppShell><AppKopf titel="Mein Einsatz" zurueck="/app" />
-      <div className="px-4 pt-4"><section className="card card-pad text-[13.5px] text-muted">Derzeit ist kein Einsatz geplant. Wenn du kurzfristig verfügbar bist, schreib uns im Chat – wir melden uns, sobald etwas Passendes da ist.</section></div>
+      <div className="px-4 pt-4"><section className="card card-pad text-[14px] text-muted">Derzeit ist kein Einsatz geplant. Wenn du kurzfristig verfügbar bist, schreib uns im Chat – wir melden uns, sobald etwas Passendes da ist.</section></div>
     </AppShell>
   );
   const dispo = einsatz.kunde.ansprechpartner.find((a) => a.rollen.includes("DISPOSITION")) ?? einsatz.kunde.ansprechpartner.find((a) => a.istHaupt);
@@ -33,9 +33,9 @@ export default async function AppEinsatz() {
       <div className="px-4 pt-4 space-y-4">
         <section className="card card-pad">
           <div className="section-title mb-1 flex items-center gap-1.5"><Building2 size={14} /> {einsatz.status === "AKTIV" ? "Aktueller Einsatz" : "Geplanter Einsatz"}</div>
-          <h1 className="font-display font-bold text-[20px]">{einsatz.kunde.firmenname}</h1>
-          <p className="text-[13.5px] text-muted">{einsatz.rolleImEinsatz} · ab {datum(einsatz.von)}{einsatz.bis ? ` bis ${datum(einsatz.bis)}` : " (offenes Ende)"}</p>
-          <div className="mt-3 space-y-2 text-[13.5px]">
+          <h1 className="font-display font-bold text-[22px]">{einsatz.kunde.firmenname}</h1>
+          <p className="text-[14px] text-muted">{einsatz.rolleImEinsatz} · ab {datum(einsatz.von)}{einsatz.bis ? ` bis ${datum(einsatz.bis)}` : " (offenes Ende)"}</p>
+          <div className="mt-3 space-y-2 text-[14px]">
             <div className="flex items-start gap-2"><MapPin size={15} className="mt-0.5 text-fox shrink-0" /><span>{adresse || "Adresse folgt"}{einsatz.kundenKostenstelle ? <span className="text-muted"> · {einsatz.kundenKostenstelle}</span> : null}</span></div>
             {dispo && <div className="flex items-start gap-2"><Phone size={15} className="mt-0.5 text-fox shrink-0" /><span>Vor Ort: {dispo.name}{dispo.funktion ? ` (${dispo.funktion})` : ""}{dispo.telefon ? <> · <a href={`tel:${dispo.telefon}`} className="text-brand font-semibold">{dispo.telefon}</a></> : ""}</span></div>}
             <div className="flex items-start gap-2"><Clock size={15} className="mt-0.5 text-fox shrink-0" /><span>{einsatz.kunde.arbeitszeitmodell ?? `${einsatz.wochenstunden} h/Woche`}{einsatz.schichtmodell !== "TAG" ? ` · ${({ ZWEI_SCHICHT: "2-Schicht", DREI_SCHICHT: "3-Schicht", FREI: "nach Bedarf" } as Record<string, string>)[einsatz.schichtmodell] ?? ""}` : ""}</span></div>
@@ -47,12 +47,12 @@ export default async function AppEinsatz() {
           <section className="card card-pad">
             <div className="section-title mb-1 flex items-center gap-1.5"><ShieldAlert size={14} /> Was du mitbringen musst</div>
             {quals.length > 0 && <div className="flex flex-wrap gap-1.5 mb-2">{quals.map((q) => <span key={q} className="badge badge-brand">{q}</span>)}</div>}
-            {einsatz.kunde.anforderungen && <p className="text-[13.5px]">{einsatz.kunde.anforderungen}</p>}
+            {einsatz.kunde.anforderungen && <p className="text-[14px]">{einsatz.kunde.anforderungen}</p>}
             <p className="help mt-2">Schutzausrüstung und die Sicherheitsunterweisung stellt der Beschäftiger vor Ort (§ 6 AÜG). Wenn etwas fehlt oder unklar ist: sofort bei uns melden, nicht einfach anfangen.</p>
           </section>
         )}
 
-        <section className="card card-pad text-[13px] text-muted">
+        <section className="card card-pad text-[12.5px] text-muted">
           <div className="font-semibold text-ink mb-1">Wichtig</div>
           Krankmeldung immer <b>telefonisch vor Arbeitsbeginn</b> bei uns – nicht nur beim Beschäftiger und nicht über die App.
         </section>

@@ -52,9 +52,9 @@ export default async function AufgabenPage({ searchParams }: { searchParams: Pro
             <ul className="divide-y divide-line">{aufgaben.map((a) => { const t = TYP[a.typ] ?? TYP.MANUELL; const ueber = !a.erledigt && a.faelligAm < heute; return (
               <li key={a.id} className={`flex items-center gap-4 px-5 py-3 ${a.erledigt ? "opacity-50" : ""}`}>
                 <form action={aufgabeErledigt.bind(null, a.id)}><button className={`w-7 h-7 rounded-lg border flex items-center justify-center ${a.erledigt ? "bg-teal border-teal text-white" : "border-line-2 hover:border-teal hover:text-teal"}`} title="Erledigt" disabled={a.erledigt}><Check size={14} /></button></form>
-                <div className="flex-1 min-w-0"><Link href={link(a)} className="font-semibold text-[13.5px] hover:text-brand">{a.titel}</Link><div className="text-[12px] text-muted">{a.kunde?.firmenname ?? a.person ? `${a.person?.vorname ?? ""} ${a.person?.nachname ?? ""}`.trim() : ""}{!tenantWhere(s).kostenstelleId && ` · ${a.kostenstelle.name}`}</div></div>
+                <div className="flex-1 min-w-0"><Link href={link(a)} className="font-semibold text-[14px] hover:text-brand">{a.titel}</Link><div className="text-[12.5px] text-muted">{a.kunde?.firmenname ?? a.person ? `${a.person?.vorname ?? ""} ${a.person?.nachname ?? ""}`.trim() : ""}{!tenantWhere(s).kostenstelleId && ` · ${a.kostenstelle.name}`}</div></div>
                 <Badge tone={t.tone}>{t.label}</Badge>
-                <div className={`text-[13px] num w-28 text-right ${ueber ? "text-red font-semibold" : "text-muted"}`}>{ueber ? "seit " : ""}{datum(a.faelligAm)}</div>
+                <div className={`text-[12.5px] num w-28 text-right ${ueber ? "text-red font-semibold" : "text-muted"}`}>{ueber ? "seit " : ""}{datum(a.faelligAm)}</div>
               </li>
             ); })}</ul>
           ) : <Empty title="Alles erledigt" text="Keine offenen Wiedervorlagen." />}

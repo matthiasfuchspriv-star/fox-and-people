@@ -27,18 +27,18 @@ export default async function NachrichtenPage({ searchParams }: { searchParams: 
       {sp.fehler && <div className="alert alert-red mb-4">Keine Berechtigung.</div>}
       <div className="grid lg:grid-cols-3 gap-4">
         <Card pad={false} className="reveal">
-          {liste.length ? <ul className="divide-y divide-line">{liste.map(({ p, t, neu }) => <li key={p.id}><Link href={`/nachrichten?person=${p.id}`} className={`flex items-center gap-3 px-4 py-3 ${p.id === aktiv ? "bg-brand-soft" : ""}`}><div className="flex-1 min-w-0"><div className="font-semibold text-[13.5px] truncate">{p.vorname} {p.nachname}</div><div className="text-[12px] text-muted">{p.kostenstelle.name} · {t._max.erstelltAm ? fmt(t._max.erstelltAm) : ""}</div></div>{neu > 0 && <span className="bg-fox text-white text-[11px] font-bold rounded-full px-1.5 min-w-[20px] text-center">{neu}</span>}</Link></li>)}</ul> : <Empty title="Noch keine Nachrichten" text="Sobald ein Mitarbeiter in der App schreibt, erscheint der Chat hier." />}
+          {liste.length ? <ul className="divide-y divide-line">{liste.map(({ p, t, neu }) => <li key={p.id}><Link href={`/nachrichten?person=${p.id}`} className={`flex items-center gap-3 px-4 py-3 ${p.id === aktiv ? "bg-brand-soft" : ""}`}><div className="flex-1 min-w-0"><div className="font-semibold text-[14px] truncate">{p.vorname} {p.nachname}</div><div className="text-[12.5px] text-muted">{p.kostenstelle.name} · {t._max.erstelltAm ? fmt(t._max.erstelltAm) : ""}</div></div>{neu > 0 && <span className="bg-fox text-white text-[11px] font-bold rounded-full px-1.5 min-w-[20px] text-center">{neu}</span>}</Link></li>)}</ul> : <Empty title="Noch keine Nachrichten" text="Sobald ein Mitarbeiter in der App schreibt, erscheint der Chat hier." />}
         </Card>
-        <Card className="lg:col-span-2 reveal reveal-2" title={aktivP ? <span>{aktivP.vorname} {aktivP.nachname} <Link href={`/personen/${aktivP.id}`} className="text-[12px] font-normal text-brand ml-2">Akt öffnen</Link></span> : "Chat"}>
+        <Card className="lg:col-span-2 reveal reveal-2" title={aktivP ? <span>{aktivP.vorname} {aktivP.nachname} <Link href={`/personen/${aktivP.id}`} className="text-[12.5px] font-normal text-brand ml-2">Akt öffnen</Link></span> : "Chat"}>
           {aktiv ? (
             <>
               <div className="space-y-2 max-h-[55vh] overflow-y-auto pr-1">
-                {msgs.map((m) => <div key={m.id} className={`flex ${m.vonMitarbeiter ? "justify-start" : "justify-end"}`}><div className={`max-w-[80%] rounded-[10px] px-3 py-2 text-[13.5px] whitespace-pre-wrap ${m.vonMitarbeiter ? "bg-surface-2" : "bg-brand text-white"}`}>{m.text}<div className={`text-[10.5px] mt-1 ${m.vonMitarbeiter ? "text-muted" : "text-white/60"}`}>{m.vonMitarbeiter ? aktivP?.vorname : m.nutzerName} · {fmt(m.erstelltAm)}</div></div></div>)}
-                {!msgs.length && <p className="text-muted text-[13px]">Noch keine Nachrichten in diesem Thread.</p>}
+                {msgs.map((m) => <div key={m.id} className={`flex ${m.vonMitarbeiter ? "justify-start" : "justify-end"}`}><div className={`max-w-[80%] rounded-[10px] px-3 py-2 text-[14px] whitespace-pre-wrap ${m.vonMitarbeiter ? "bg-surface-2" : "bg-brand text-white"}`}>{m.text}<div className={`text-[11px] mt-1 ${m.vonMitarbeiter ? "text-muted" : "text-white/60"}`}>{m.vonMitarbeiter ? aktivP?.vorname : m.nutzerName} · {fmt(m.erstelltAm)}</div></div></div>)}
+                {!msgs.length && <p className="text-muted text-[12.5px]">Noch keine Nachrichten in diesem Thread.</p>}
               </div>
               <form action={antwortSenden.bind(null, aktiv)} className="flex gap-2 mt-4"><input name="text" required autoComplete="off" placeholder="Antwort schreiben …" className="input flex-1" /><button className="btn btn-primary"><Send size={16} /> Senden</button></form>
             </>
-          ) : <p className="text-muted text-[13px]">Links einen Chat auswählen.</p>}
+          ) : <p className="text-muted text-[12.5px]">Links einen Chat auswählen.</p>}
         </Card>
       </div>
     </>

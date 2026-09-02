@@ -17,7 +17,7 @@ export function Fuechse({ n, max = 5, size = "text-[14px]", zahl }: { n: number 
   return (
     <span className="inline-flex items-center gap-px leading-none whitespace-nowrap" title={`${n.toFixed(1)} von ${max} Füchsen`} aria-label={`${n.toFixed(1)} von ${max}`}>
       {Array.from({ length: max }, (_, i) => <Fuchs key={i} voll={i < voll} px={px} />)}
-      {zahl && <span className="ml-1.5 text-[12px] text-muted num">{n.toFixed(1)}</span>}
+      {zahl && <span className="ml-1.5 text-[12.5px] text-muted num">{n.toFixed(1)}</span>}
     </span>
   );
 }

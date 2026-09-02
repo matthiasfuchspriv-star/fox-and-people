@@ -79,15 +79,15 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
                 return (
                   <tr key={n.id}>
                     <td>{ks?.name ?? n.kostenstelleId}</td><td>{({ RE: "Rechnung", AN: "Angebot", VT: "Vertrag" } as Record<string, string>)[n.typ] ?? n.typ}</td><td>{n.jahr}</td>
-                    <td><form action={nummernkreisSpeichern.bind(null, n.id)} id={`nk-${n.id}`} className="flex items-center gap-2"><input name="format" defaultValue={n.format} className="input !w-44 !py-1 font-mono text-[12px]" /></form></td>
+                    <td><form action={nummernkreisSpeichern.bind(null, n.id)} id={`nk-${n.id}`} className="flex items-center gap-2"><input name="format" defaultValue={n.format} className="input !w-44 !py-1 font-mono text-[12.5px]" /></form></td>
                     <td className="r"><input form={`nk-${n.id}`} name="letzteNummer" type="number" min={0} defaultValue={n.letzteNummer} className="input !w-24 !py-1 num text-right" /></td>
-                    <td className="num text-muted text-[12px]">{n.freieNummern.length ? n.freieNummern.map(vorschau).join(", ") : "–"}</td>
+                    <td className="num text-muted text-[12.5px]">{n.freieNummern.length ? n.freieNummern.map(vorschau).join(", ") : "–"}</td>
                     <td className="num text-muted">{n.freieNummern.length ? vorschau(Math.min(...n.freieNummern)) : vorschau(n.letzteNummer + 1)}</td>
                     <td className="r"><button form={`nk-${n.id}`} className="btn btn-secondary btn-sm">Speichern</button></td>
                   </tr>
                 );
               })}</tbody></table>
-          ) : <p className="p-5 text-[13px] text-muted">Noch keine Nummernkreise – sie entstehen automatisch mit der ersten Rechnung, dem ersten Angebot bzw. Vertrag.</p>}
+          ) : <p className="p-5 text-[12.5px] text-muted">Noch keine Nummernkreise – sie entstehen automatisch mit der ersten Rechnung, dem ersten Angebot bzw. Vertrag.</p>}
           <p className="help px-5 py-3">„Zuletzt vergeben“ = laufende Zahl der letzten Nummer; die nächste Rechnung bekommt die Zahl + 1. Platzhalter im Format: {"{jahr} {kuerzel} {typ} {nnn} {nnnn}"}. Beispiel Rechnung: Format <code>{"{jahr}{nnn}"}</code>, zuletzt 7 → nächste 2026008. Änderungen werden im Audit-Log protokolliert – § 11 UStG verlangt eine fortlaufende Nummerierung ohne Lücken.</p>
         </Card>
       </>)}
@@ -112,7 +112,7 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
               <div className="grid grid-cols-2 gap-3"><Field label="PLZ"><input name="plz" defaultValue={editKs?.plz ?? ""} className="input" /></Field><Field label="Ort"><input name="ort" defaultValue={editKs?.ort ?? ""} className="input" /></Field></div>
               <Field label="E-Mail (Absender)"><input name="email" defaultValue={editKs?.email ?? ""} className="input" /></Field>
               <Field label="Telefon"><input name="telefon" defaultValue={editKs?.telefon ?? ""} className="input" /></Field>
-              {editKs && <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="aktiv" value="on" defaultChecked={editKs.aktiv} /><input type="hidden" name="aktiv" value="off" /> Aktiv</label>}
+              {editKs && <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="aktiv" value="on" defaultChecked={editKs.aktiv} /><input type="hidden" name="aktiv" value="off" /> Aktiv</label>}
               <div className="flex gap-2"><button className="btn btn-primary flex-1 justify-center">{editKs ? "Speichern" : "Anlegen"}</button>{editKs && <Link href="/einstellungen?tab=kostenstellen" className="btn btn-secondary">Neu</Link>}</div>
               <p className="help">Neue Kostenstellen sind sofort nutzbar – Nutzer dann unter „Nutzer“ zuordnen. Kostenstellen-Nutzer sehen keinen DB1, sondern nur ihre Provision lt. Schlüssel; die Zentrale sieht DB1 und Provision.</p>
             </form>
@@ -134,8 +134,8 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
               <Field label="Rolle"><select name="rolle" defaultValue={editNutzer?.rolle ?? "KOSTENSTELLEN_LEITUNG"} className="select"><option value="SYSTEMADMIN">Systemadmin (alles, inkl. Einstellungen)</option><option value="ZENTRALE">Zentrale (alle Kostenstellen)</option><option value="KOSTENSTELLEN_LEITUNG">Kostenstellen-Leitung</option><option value="SACHBEARBEITUNG">Sachbearbeitung (ohne Lohn/Rechnungsfreigabe)</option></select></Field>
               <Field label="Kostenstelle (für Leitung/Sachbearbeitung)"><select name="kostenstelleId" defaultValue={editNutzer?.kostenstelleId ?? ""} className="select"><option value="">–</option>{kostenstellen.map((k) => <option key={k.id} value={k.id}>{k.name}</option>)}</select></Field>
               <Field label={editNutzer ? "Neues Passwort (leer = unverändert)" : "Passwort"} help="Mind. 10 Zeichen; Nutzer sollte es nach dem ersten Login ändern."><input name="passwort" type="password" className="input" autoComplete="new-password" /></Field>
-              {editNutzer && <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="aktiv" value="on" defaultChecked={editNutzer.aktiv} /><input type="hidden" name="aktiv" value="off" /> Aktiv</label>}
-              {editNutzer?.totpSecret && <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="totpReset" /> 2FA zurücksetzen (bei Geräteverlust)</label>}
+              {editNutzer && <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="aktiv" value="on" defaultChecked={editNutzer.aktiv} /><input type="hidden" name="aktiv" value="off" /> Aktiv</label>}
+              {editNutzer?.totpSecret && <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="totpReset" /> 2FA zurücksetzen (bei Geräteverlust)</label>}
               <div className="flex gap-2"><button className="btn btn-primary flex-1 justify-center">{editNutzer ? "Speichern" : "Anlegen"}</button>{editNutzer && <Link href="/einstellungen?tab=nutzer" className="btn btn-secondary">Neu</Link>}</div>
             </form>
           </Card>
@@ -148,7 +148,7 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
             <form action={saetzeSpeichern} className="space-y-4">
               <div className="grid sm:grid-cols-2 gap-3"><Field label="Name des neuen Satz-Sets"><input name="name" className="input" placeholder="z. B. Sätze 2027" /></Field><Field label="Gültig ab"><input type="date" name="gultigAb" className="input" defaultValue={isoDate(new Date())} /></Field></div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">{SATZ_LABELS.map(([k, l]) => <Field key={k} label={l + " %"}><input name={k} defaultValue={(saetzeNow.saetze[k] * 100).toFixed(4).replace(/\.?0+$/, "")} className="input num" inputMode="decimal" /></Field>)}</div>
-              <div className="alert alert-brand text-[13px]">Abgeleitet: DG-Abgaben gesamt <b className="num">{pct(a.dgAbgabenGesamt, 2)}</b> · ohne WBF {pct(a.dgAbgabenOhneWbf, 2)} · Payroll-Faktor <b className="num">{a.payrollFaktor.toFixed(4)}</b> · Überlassungs-Faktor <b className="num">{a.ueberlassungsFaktor.toFixed(4)}</b> · DG auf Grundlohn {pct(a.dgAbgabenAufGrundlohn, 2)}</div>
+              <div className="alert alert-brand text-[12.5px]">Abgeleitet: DG-Abgaben gesamt <b className="num">{pct(a.dgAbgabenGesamt, 2)}</b> · ohne WBF {pct(a.dgAbgabenOhneWbf, 2)} · Payroll-Faktor <b className="num">{a.payrollFaktor.toFixed(4)}</b> · Überlassungs-Faktor <b className="num">{a.ueberlassungsFaktor.toFixed(4)}</b> · DG auf Grundlohn {pct(a.dgAbgabenAufGrundlohn, 2)}</div>
               <button className="btn btn-primary">Als neues Satz-Set speichern</button>
               <p className="help">Alte Angebote behalten ihren Kalkulations-Snapshot; Monatsabrechnungen nutzen das zum Stichtag gültige Set. Bisherige Sets: {satzSets.map((x) => `${x.name} (ab ${datum(x.gultigAb)})`).join(", ")}</p>
             </form>
@@ -156,7 +156,7 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
           <Card title="DZ-Zuschlag je Bundesland" className="reveal reveal-2">
             <form action={dzSpeichern} className="space-y-3">
               <Field label="Gültig ab"><input type="date" name="gultigAb" className="input" defaultValue={isoDate(new Date())} /></Field>
-              {dzAktuell.map(({ bl, satz }) => <div key={bl} className="flex items-center gap-2"><span className="flex-1 text-[13.5px]">{bl}</span><input name={`dz_${bl}`} defaultValue={(satz * 100).toFixed(2)} className="input !w-24 num text-right" /><span className="text-muted text-[12px]">%</span></div>)}
+              {dzAktuell.map(({ bl, satz }) => <div key={bl} className="flex items-center gap-2"><span className="flex-1 text-[14px]">{bl}</span><input name={`dz_${bl}`} defaultValue={(satz * 100).toFixed(2)} className="input !w-24 num text-right" /><span className="text-muted text-[12.5px]">%</span></div>)}
               <button className="btn btn-secondary w-full justify-center">DZ-Sätze speichern</button>
             </form>
           </Card>
@@ -170,11 +170,11 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
             {kvs.map((kv) => {
               const tafeln = [...new Set(kv.lohntabelle.map((l) => (l.gultigAb ? l.gultigAb.toISOString().slice(0, 10) : "")))].sort();
               return (
-              <Card key={kv.id} title={<span>{kv.name} ({kv.kuerzel})<span className="block text-[12px] font-normal text-muted">{kv.istReferenz ? `Beschäftiger-KV · ${kv.wochenstunden} h/Woche · Teiler ${kv.monatsteiler}${kv.quelle ? ` · ${kv.quelle}` : ""}` : `Eigener KV · gültig ab ${datum(kv.gultigAb)}`}</span></span>} pad={false} className="reveal">
+              <Card key={kv.id} title={<span>{kv.name} ({kv.kuerzel})<span className="block text-[12.5px] font-normal text-muted">{kv.istReferenz ? `Beschäftiger-KV · ${kv.wochenstunden} h/Woche · Teiler ${kv.monatsteiler}${kv.quelle ? ` · ${kv.quelle}` : ""}` : `Eigener KV · gültig ab ${datum(kv.gultigAb)}`}</span></span>} pad={false} className="reveal">
                 {kv.referenzzuschlagPruefen && <div className="px-5 pt-4"><div className="alert alert-amber">{kv.hinweis ?? "Lohntafel nicht hinterlegt – Referenzzuschlag vor dem Einsatz prüfen."}</div></div>}
                 {kv.lohntabelle.length > 0 && tafeln.map((t) => (
                   <div key={t}>
-                    {tafeln.length > 1 && <div className="px-5 pt-4 text-[12px] font-semibold uppercase tracking-wide text-muted">Lohntafel gültig ab {t ? datum(new Date(t)) : "–"}</div>}
+                    {tafeln.length > 1 && <div className="px-5 pt-4 text-[12.5px] font-medium text-muted">Lohntafel gültig ab {t ? datum(new Date(t)) : "–"}</div>}
                     <table className="table"><thead><tr><th>Gruppe</th><th>Bezeichnung</th><th className="r">Std.lohn</th><th className="r">Grundstufe</th><th className="r">nach 2 J.</th><th className="r">nach 4 J.</th><th className="r" title="Referenzzuschlag laut Lohnverrechnung – Spalte „Satz Ref. Z“">Ref. Z</th><th className="r">inkl. Zuschlag</th><th></th></tr></thead>
                       <tbody>{kv.lohntabelle.filter((l) => (l.gultigAb ? l.gultigAb.toISOString().slice(0, 10) : "") === t).map((l) => <tr key={l.id}><td className="font-semibold">{l.beschaeftigungsgruppe}</td><td>{l.bezeichnung}</td><td className="r num">{l.mindestStundenlohn?.toFixed(2) ?? "–"}</td><td className="r num">{l.mindestMonatsbrutto?.toFixed(2) ?? "–"}</td><td className="r num">{l.nach2Jahren?.toFixed(2) ?? "–"}</td><td className="r num">{l.nach4Jahren?.toFixed(2) ?? "–"}</td><td className="r num">{l.referenzzuschlagProzent != null ? `${l.referenzzuschlagProzent.toFixed(0)} %` : "–"}</td><td className="r num">{(() => { const std = l.mindestStundenlohn ?? (l.mindestMonatsbrutto != null ? l.mindestMonatsbrutto / (kv.monatsteiler || 167) : null); return std != null && l.referenzzuschlagProzent != null ? (std * (1 + l.referenzzuschlagProzent / 100)).toFixed(2) : "–"; })()}</td><td className="r"><form action={kvStufeLoeschen.bind(null, l.id)}><button className="btn btn-ghost btn-sm text-red">Entfernen</button></form></td></tr>)}</tbody></table>
                   </div>
@@ -199,23 +199,23 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
             </form>
           </Card>
           <Card title="Allgemeine Geschäftsbedingungen" className="reveal reveal-3">
-            <p className="text-[13.5px] text-muted mb-3">Fassung <b>{AGB_VERSION}</b> (Stand {AGB_STAND}). Die AGB gehen bei jedem Rahmen-, Überlassungs- und Vermittlungsvertrag automatisch als Anhang mit und werden beim Kunden mit Version, Datum und Unterzeichner dokumentiert.</p>
+            <p className="text-[14px] text-muted mb-3">Fassung <b>{AGB_VERSION}</b> (Stand {AGB_STAND}). Die AGB gehen bei jedem Rahmen-, Überlassungs- und Vermittlungsvertrag automatisch als Anhang mit und werden beim Kunden mit Version, Datum und Unterzeichner dokumentiert.</p>
             <div className="flex gap-2"><a href="/agb/ueberlassung" target="_blank" className="btn btn-secondary btn-sm">AGB Arbeitskräfteüberlassung</a><a href="/agb/vermittlung" target="_blank" className="btn btn-secondary btn-sm">AGB Arbeitskräftevermittlung</a></div>
           </Card>
           <Card title="Referenzlöhne der Beschäftiger-KV" className="reveal reveal-3">
-            <p className="text-[13.5px] text-muted mb-3">Legt die Beschäftiger-Kollektivverträge an bzw. bringt sie auf den aktuellen Stand: die <b>metalltechnische Industrie</b> mit den exakten Lohntafeln der WKO (gültig ab 1.11.2025 und 1.11.2026, Beschäftigungsgruppen A–K inkl. Vorrückung nach 2 und 4 Jahren), alle übrigen KV nur angelegt und mit dem Hinweis „Referenzzuschlag prüfen“. Bereits erfasste Werte werden überschrieben, eigene KV bleiben unberührt.</p>
+            <p className="text-[14px] text-muted mb-3">Legt die Beschäftiger-Kollektivverträge an bzw. bringt sie auf den aktuellen Stand: die <b>metalltechnische Industrie</b> mit den exakten Lohntafeln der WKO (gültig ab 1.11.2025 und 1.11.2026, Beschäftigungsgruppen A–K inkl. Vorrückung nach 2 und 4 Jahren), alle übrigen KV nur angelegt und mit dem Hinweis „Referenzzuschlag prüfen“. Bereits erfasste Werte werden überschrieben, eigene KV bleiben unberührt.</p>
             <p className="mb-3"><Link href="/kollektivvertraege" className="btn btn-secondary w-full justify-center">Übersicht der Kollektivverträge und ihrer Gültigkeit</Link></p>
             <p className="help mb-3">Der Abgleich läuft seit v2.16.4 bei jedem Start des Servers automatisch – dieser Knopf ist nur noch für den Fall gedacht, dass etwas nachgezogen werden soll, ohne neu zu starten.</p>
             <form action={referenzKvAktualisieren}><button className="btn btn-secondary w-full justify-center">Referenz-KV anlegen / aktualisieren</button></form>
           </Card>
           <Card title="Kollektivverträge ohne Referenzzuschlag" className="reveal reveal-4">
-            <p className="text-[13.5px] text-muted mb-3">Nicht jeder Beschäftiger-KV kennt einen Referenzzuschlag nach § 10 AÜG – im Handel etwa gibt es keinen. Wird das bei einem Einsatz einmal festgehalten, verlangt die Software für Kunden dieses KV keine Bestätigung mehr. Die Feststellung steht hier mit Name und Zeitpunkt und lässt sich jederzeit aufheben.</p>
+            <p className="text-[14px] text-muted mb-3">Nicht jeder Beschäftiger-KV kennt einen Referenzzuschlag nach § 10 AÜG – im Handel etwa gibt es keinen. Wird das bei einem Einsatz einmal festgehalten, verlangt die Software für Kunden dieses KV keine Bestätigung mehr. Die Feststellung steht hier mit Name und Zeitpunkt und lässt sich jederzeit aufheben.</p>
             {keinZuschlag.length === 0 ? (
               <p className="help">Noch nichts festgehalten. Beim Einsatz erscheint dafür ein Kästchen unter dem Referenzlohn.</p>
             ) : (
               <ul className="divide-y divide-line">
                 {keinZuschlag.map((e) => (
-                  <li key={e.schluessel} className="py-2 flex items-center justify-between gap-4 text-[13.5px]">
+                  <li key={e.schluessel} className="py-2 flex items-center justify-between gap-4 text-[14px]">
                     <span><b>{e.bezeichnung}</b><span className="text-muted"> · {e.von} · {new Date(e.am).toLocaleDateString("de-AT")}</span></span>
                     <form action={keinZuschlagAufheben.bind(null, e.schluessel)}><button className="btn btn-secondary btn-sm">Aufheben</button></form>
                   </li>
@@ -228,13 +228,13 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
 
       {tab === "vorlagen" && (
         <div className="grid lg:grid-cols-[320px_1fr] gap-4">
-          <Card title="Vorlagen" pad={false} className="reveal"><ul className="divide-y divide-line">{vorlagen.map((v) => <li key={v.id}><Link href={`/einstellungen?tab=vorlagen&edit=${v.id}`} className={`block px-5 py-3 hover:bg-surface-2 ${editVorlage?.id === v.id ? "bg-brand-soft" : ""}`}><div className="font-semibold text-[13.5px]">{v.name}</div><div className="text-[12px] text-muted">{v.typ} · v{v.version}{!v.aktiv && " · inaktiv"}</div></Link></li>)}</ul><div className="px-5 py-3 border-t border-line"><Link href="/einstellungen?tab=vorlagen" className="btn btn-secondary btn-sm">Neue Vorlage</Link></div></Card>
+          <Card title="Vorlagen" pad={false} className="reveal"><ul className="divide-y divide-line">{vorlagen.map((v) => <li key={v.id}><Link href={`/einstellungen?tab=vorlagen&edit=${v.id}`} className={`block px-5 py-3 hover:bg-surface-2 ${editVorlage?.id === v.id ? "bg-brand-soft" : ""}`}><div className="font-semibold text-[14px]">{v.name}</div><div className="text-[12.5px] text-muted">{v.typ} · v{v.version}{!v.aktiv && " · inaktiv"}</div></Link></li>)}</ul><div className="px-5 py-3 border-t border-line"><Link href="/einstellungen?tab=vorlagen" className="btn btn-secondary btn-sm">Neue Vorlage</Link></div></Card>
           <Card title={editVorlage ? editVorlage.name : "Neue Vorlage"} className="reveal reveal-2">
             <form action={vorlageSpeichern} className="space-y-3">
               {editVorlage && <input type="hidden" name="id" value={editVorlage.id} />}
               <div className="grid sm:grid-cols-2 gap-3"><Field label="Name"><input name="name" defaultValue={editVorlage?.name ?? ""} required className="input" /></Field><Field label="Typ"><select name="typ" defaultValue={editVorlage?.typ ?? "DIENSTVERTRAG"} className="select">{["DIENSTVERTRAG", "UEBERLASSUNGSMITTEILUNG", "ZUSATZVEREINBARUNG", "UEBERLASSUNGSVERTRAG", "RAHMENVERTRAG", "VERMITTLUNGSVERTRAG"].map((t) => <option key={t}>{t}</option>)}</select></Field></div>
               <textarea name="inhalt" defaultValue={editVorlage?.inhalt ?? ""} rows={26} className="textarea font-mono text-[12.5px]" />
-              {editVorlage && <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="aktiv" value="on" defaultChecked={editVorlage.aktiv} /><input type="hidden" name="aktiv" value="off" /> Aktiv</label>}
+              {editVorlage && <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="aktiv" value="on" defaultChecked={editVorlage.aktiv} /><input type="hidden" name="aktiv" value="off" /> Aktiv</label>}
               <div className="flex gap-2"><button className="btn btn-primary">Speichern</button></div>
               <p className="help">Platzhalter: {"{{person.vorname}} {{person.nachname}} {{person.geburtsdatum}} {{person.strasse}} {{person.plz}} {{person.ort}} {{person.stundenlohn}} {{person.beschaeftigungsgruppe}} {{person.kv}} {{person.urlaubsanspruch}} {{kunde.firmenname}} {{kunde.strasse}} {{kunde.plz}} {{kunde.ort}} {{kunde.uid}} {{kunde.zahlungszielTage}} {{kunde.kuendigungsfrist}} {{kunde.rahmenvertragEnde}} {{kunde.konditionenTabelle}} {{kunde.ueberstundenZuschlag}} {{kunde.wochenendZuschlag}} {{einsatz.von}} {{einsatz.bis}} {{einsatz.rolle}} {{einsatz.ort}} {{einsatz.wochenstunden}} {{einsatz.schicht}} {{einsatz.verrechnungssatz}} {{einsatz.dauer}} {{firma.name}} {{firma.rechtstraeger}} {{firma.strasse}} {{firma.plz}} {{firma.ort}} {{firma.uid}} {{firma.firmenbuch}} {{firma.telefon}} {{datum}}"}</p>
             </form>
@@ -255,12 +255,12 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
           </Card>
           <div className="space-y-4">
             <Card title="Demo-Daten" className="reveal reveal-2">
-              <p className="text-[13.5px] mb-3">Musterkunden („Muster Logistik GmbH“, „Alpen Metallbau AG“, „Donau Office Services e.U.“) und Musterpersonen mit Einsätzen, Angeboten und Rechnungen. Vor dem Produktivbetrieb entfernen.</p>
+              <p className="text-[14px] mb-3">Musterkunden („Muster Logistik GmbH“, „Alpen Metallbau AG“, „Donau Office Services e.U.“) und Musterpersonen mit Einsätzen, Angeboten und Rechnungen. Vor dem Produktivbetrieb entfernen.</p>
               <form action={demoDatenLoeschen}><button className="btn btn-danger">Demo-Daten löschen</button></form>
               <form action={testmailSenden} className="mt-3"><button className="btn btn-secondary">Testmail an mich senden</button><p className="help mt-1">Modus: <b>{process.env.MAIL_MODE === "live" ? "live" : "test (Mails werden nur protokolliert)"}</b>{sp.testmail && <> · Ergebnis: <b>{sp.testmail}</b></>}</p></form>
             </Card>
             <Card title="Backups & Löschkonzept" className="reveal reveal-3">
-              <p className="text-[13.5px]">Datenbank-Backup täglich per <code>pg_dump</code> (siehe README / docker-compose), Dateispeicher im Volume <code>storage/</code>. Ausgeschiedene Personen können vom Systemadmin anonymisiert werden (Name, Kontakt, SVNR, Dokumente werden entfernt; Kennzahlen bleiben aggregiert erhalten).</p>
+              <p className="text-[14px]">Datenbank-Backup täglich per <code>pg_dump</code> (siehe README / docker-compose), Dateispeicher im Volume <code>storage/</code>. Ausgeschiedene Personen können vom Systemadmin anonymisiert werden (Name, Kontakt, SVNR, Dokumente werden entfernt; Kennzahlen bleiben aggregiert erhalten).</p>
             </Card>
           </div>
         </div>
@@ -276,9 +276,9 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
             <form action={bestandLeeren} className="space-y-4">
               <div className="space-y-2">
                 {BEREICHE.map((b) => (
-                  <label key={b.key} className="flex items-start gap-2 text-[13.5px]">
+                  <label key={b.key} className="flex items-start gap-2 text-[14px]">
                     <input type="checkbox" name={`b_${b.key}`} value="ja" className="mt-[4px]" />
-                    <span><b>{b.label}</b> <span className="text-muted num">({bestand?.[b.key] ?? 0})</span>{b.hinweis && <span className="block text-[12px] text-muted">{b.hinweis}</span>}</span>
+                    <span><b>{b.label}</b> <span className="text-muted num">({bestand?.[b.key] ?? 0})</span>{b.hinweis && <span className="block text-[12.5px] text-muted">{b.hinweis}</span>}</span>
                   </label>
                 ))}
               </div>
@@ -306,7 +306,7 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
       {tab === "audit" && (
         <Card title="Audit-Log (letzte 200 Einträge)" pad={false} className="reveal">
           <div className="overflow-x-auto"><table className="table text-[12.5px]"><thead><tr><th>Zeitpunkt</th><th>Nutzer</th><th>Aktion</th><th>Entität</th><th>Beschreibung</th><th>IP</th></tr></thead>
-            <tbody>{auditLog.map((l) => <tr key={l.id}><td className="whitespace-nowrap">{new Date(l.zeitpunkt).toLocaleString("de-AT")}</td><td>{l.nutzerName}</td><td><Badge tone={l.aktion === "VIEW_SENSITIVE" ? "amber" : l.aktion === "DELETE" ? "red" : l.aktion.startsWith("LOGIN") ? "grey" : "brand"}>{l.aktion}</Badge></td><td>{l.entitaet}{l.datensatzId && <span className="text-muted"> #{l.datensatzId.slice(-6)}</span>}</td><td>{l.beschreibung}{l.diff ? <details className="text-[11.5px] text-muted"><summary>Diff</summary><pre className="whitespace-pre-wrap">{JSON.stringify(l.diff, null, 1)}</pre></details> : null}</td><td className="text-muted">{l.ip}</td></tr>)}</tbody></table></div>
+            <tbody>{auditLog.map((l) => <tr key={l.id}><td className="whitespace-nowrap">{new Date(l.zeitpunkt).toLocaleString("de-AT")}</td><td>{l.nutzerName}</td><td><Badge tone={l.aktion === "VIEW_SENSITIVE" ? "amber" : l.aktion === "DELETE" ? "red" : l.aktion.startsWith("LOGIN") ? "grey" : "brand"}>{l.aktion}</Badge></td><td>{l.entitaet}{l.datensatzId && <span className="text-muted"> #{l.datensatzId.slice(-6)}</span>}</td><td>{l.beschreibung}{l.diff ? <details className="text-[12.5px] text-muted"><summary>Diff</summary><pre className="whitespace-pre-wrap">{JSON.stringify(l.diff, null, 1)}</pre></details> : null}</td><td className="text-muted">{l.ip}</td></tr>)}</tbody></table></div>
         </Card>
       )}
 
@@ -315,8 +315,8 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
           <Card title="KV-Zulagen & Zuschläge" pad={false} className="lg:col-span-2 reveal" actions={!zulagen.length ? <form action={zulagenStandardAnlegen}><button className="btn btn-secondary btn-sm">Standard-Zulagen anlegen</button></form> : undefined}>
             {zulagen.length ? (
               <table className="table"><thead><tr><th>Zulage</th><th>Kürzel</th><th>Wert</th><th>Gilt für</th><th>Weiterverr.</th><th>Steuerfrei</th><th>Status</th><th></th></tr></thead>
-                <tbody>{zulagen.map((z) => <tr key={z.id}><td className="font-semibold">{z.name}<div className="text-[11.5px] text-muted font-normal">{z.beschreibung}</div></td><td className="num">{z.kuerzel}</td><td className="num">{zulageText(z)}</td><td className="text-[12px]">{[kvs.find((k) => k.id === z.kvId)?.name, z.schichtmodelle.length ? z.schichtmodelle.map((x) => x === "ZWEI_SCHICHT" ? "2-Schicht" : x === "DREI_SCHICHT" ? "3-Schicht" : x === "TAG" ? "Tag" : "frei").join(", ") : null].filter(Boolean).join(" · ") || <span className="text-muted">alle</span>}</td><td>{z.weiterverrechnen ? <Badge tone="teal">ja</Badge> : <Badge tone="grey">nein</Badge>}</td><td>{z.steuerfrei ? <Badge tone="brand">§ 68 EStG</Badge> : "–"}</td><td>{z.aktiv ? <Badge tone="teal">aktiv</Badge> : <Badge tone="grey">inaktiv</Badge>}</td><td className="r whitespace-nowrap"><Link href={`/einstellungen?tab=zulagen&edit=${z.id}`} className="btn btn-ghost btn-sm">Bearbeiten</Link><form action={zulageLoeschen.bind(null, z.id)} className="inline"><button className="btn btn-ghost btn-sm text-red">Löschen</button></form></td></tr>)}</tbody></table>
-            ) : <div className="p-5"><p className="text-[13.5px] text-muted">Noch keine Zulagen hinterlegt. Mit „Standard-Zulagen anlegen“ bekommst du Schmutz-/Erschwernis-/Gefahrenzulage, Nacht-, Schicht-, Sonntags- und Feiertagszuschlag, Taggeld und Kilometergeld als Referenzwerte – bitte mit KV und Lohnverrechnung abgleichen.</p></div>}
+                <tbody>{zulagen.map((z) => <tr key={z.id}><td className="font-semibold">{z.name}<div className="text-[12.5px] text-muted font-normal">{z.beschreibung}</div></td><td className="num">{z.kuerzel}</td><td className="num">{zulageText(z)}</td><td className="text-[12.5px]">{[kvs.find((k) => k.id === z.kvId)?.name, z.schichtmodelle.length ? z.schichtmodelle.map((x) => x === "ZWEI_SCHICHT" ? "2-Schicht" : x === "DREI_SCHICHT" ? "3-Schicht" : x === "TAG" ? "Tag" : "frei").join(", ") : null].filter(Boolean).join(" · ") || <span className="text-muted">alle</span>}</td><td>{z.weiterverrechnen ? <Badge tone="teal">ja</Badge> : <Badge tone="grey">nein</Badge>}</td><td>{z.steuerfrei ? <Badge tone="brand">§ 68 EStG</Badge> : "–"}</td><td>{z.aktiv ? <Badge tone="teal">aktiv</Badge> : <Badge tone="grey">inaktiv</Badge>}</td><td className="r whitespace-nowrap"><Link href={`/einstellungen?tab=zulagen&edit=${z.id}`} className="btn btn-ghost btn-sm">Bearbeiten</Link><form action={zulageLoeschen.bind(null, z.id)} className="inline"><button className="btn btn-ghost btn-sm text-red">Löschen</button></form></td></tr>)}</tbody></table>
+            ) : <div className="p-5"><p className="text-[14px] text-muted">Noch keine Zulagen hinterlegt. Mit „Standard-Zulagen anlegen“ bekommst du Schmutz-/Erschwernis-/Gefahrenzulage, Nacht-, Schicht-, Sonntags- und Feiertagszuschlag, Taggeld und Kilometergeld als Referenzwerte – bitte mit KV und Lohnverrechnung abgleichen.</p></div>}
             <p className="help px-5 py-3">Zulagen werden je Einsatz ausgewählt, erhöhen die Selbstkosten (und bei „weiterverrechnen“ den Verrechnungssatz × Faktor) und stehen auf der Überlassungsmitteilung. Steuerfreie Zulagen (§ 68 EStG: SEG-Zulagen, Taggeld) sind für die Lohnverrechnung gekennzeichnet.</p>
           </Card>
           <Card title={editZulage ? `${editZulage.name} bearbeiten` : "Neue Zulage"} className="reveal reveal-2">
@@ -334,13 +334,13 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
               </Field>
               <Field label="Von selbst vorschlagen bei" help="Zum Beispiel Schichtzulagen: Sobald der Einsatz auf 2- oder 3-Schicht steht, ist die Zulage angehakt.">
                 <div className="flex flex-wrap gap-4 mt-1">{[["ZWEI_SCHICHT", "2-Schicht"], ["DREI_SCHICHT", "3-Schicht"], ["TAG", "Tagschicht"], ["FREI", "Frei / nach Bedarf"]].map(([w, l]) => (
-                  <label key={w} className="flex items-center gap-2 text-[13px]"><input type="checkbox" name="schichtmodelle" value={w} defaultChecked={editZulage?.schichtmodelle.includes(w)} /> {l}</label>
+                  <label key={w} className="flex items-center gap-2 text-[12.5px]"><input type="checkbox" name="schichtmodelle" value={w} defaultChecked={editZulage?.schichtmodelle.includes(w)} /> {l}</label>
                 ))}</div>
               </Field>
               <Field label="Reihenfolge"><input name="reihenfolge" defaultValue={editZulage?.reihenfolge ?? 0} className="input num" /></Field>
-              <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="weiterverrechnen" defaultChecked={editZulage?.weiterverrechnen ?? true} /> An Kunden weiterverrechnen (× Faktor)</label>
-              <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="steuerfrei" defaultChecked={editZulage?.steuerfrei ?? false} /> Steuerfrei (§ 68 EStG)</label>
-              {editZulage && <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="aktiv" value="on" defaultChecked={editZulage.aktiv} /><input type="hidden" name="aktiv" value="off" /> Aktiv</label>}
+              <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="weiterverrechnen" defaultChecked={editZulage?.weiterverrechnen ?? true} /> An Kunden weiterverrechnen (× Faktor)</label>
+              <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="steuerfrei" defaultChecked={editZulage?.steuerfrei ?? false} /> Steuerfrei (§ 68 EStG)</label>
+              {editZulage && <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="aktiv" value="on" defaultChecked={editZulage.aktiv} /><input type="hidden" name="aktiv" value="off" /> Aktiv</label>}
               <div className="flex gap-2"><button className="btn btn-primary flex-1 justify-center">{editZulage ? "Speichern" : "Anlegen"}</button>{editZulage && <Link href="/einstellungen?tab=zulagen" className="btn btn-secondary">Neu</Link>}</div>
             </form>
           </Card>
@@ -354,7 +354,7 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
             {([["arbeiterDienstgeber", "Arbeiter/in – Kündigung durch Dienstgeber (KV AKÜ)"], ["arbeiterDienstnehmer", "Arbeiter/in – Kündigung durch Dienstnehmer"], ["angestellteDienstgeber", "Angestellte – Kündigung durch Dienstgeber (§ 20 AngG)"], ["angestellteDienstnehmer", "Angestellte – Kündigung durch Dienstnehmer"]] as const).map(([key, label]) => (
               <div key={key}>
                 <div className="section-title mb-2">{label}</div>
-                <div className="overflow-x-auto"><table className="table text-[13px]">
+                <div className="overflow-x-auto"><table className="table text-[12.5px]">
                   <thead><tr><th>ab Dienstjahr</th><th>Frist</th><th>Einheit</th><th>Kündigungstermin</th><th>aktuell</th></tr></thead>
                   <tbody>{Array.from({ length: 6 }, (_, i) => { const st: Fristenstufe | undefined = fristen[key][i]; return (
                     <tr key={i}>
@@ -380,7 +380,7 @@ export default async function EinstellungenPage({ searchParams }: { searchParams
       {tab === "konto" && me && (
         <div className="grid lg:grid-cols-2 gap-4">
           <Card title="Zwei-Faktor-Authentifizierung" className="reveal">
-            {me.totpSecret ? <><p className="text-[13.5px] mb-3"><Badge tone="teal">2FA aktiv</Badge> Beim Login wird zusätzlich ein Code aus deiner Authenticator-App abgefragt.</p><form action={totpDeaktivieren} className="space-y-2"><Field label="Zur Sicherheit: dein Passwort"><input name="passwort" type="password" required className="input" autoComplete="current-password" /></Field><button className="btn btn-secondary">2FA deaktivieren</button></form></> : <TotpSetup aktivieren={totpAktivieren} />}
+            {me.totpSecret ? <><p className="text-[14px] mb-3"><Badge tone="teal">2FA aktiv</Badge> Beim Login wird zusätzlich ein Code aus deiner Authenticator-App abgefragt.</p><form action={totpDeaktivieren} className="space-y-2"><Field label="Zur Sicherheit: dein Passwort"><input name="passwort" type="password" required className="input" autoComplete="current-password" /></Field><button className="btn btn-secondary">2FA deaktivieren</button></form></> : <TotpSetup aktivieren={totpAktivieren} />}
           </Card>
           <Card title="Passwort ändern" className="reveal reveal-2">
             <form action={passwortAendern} className="space-y-3">

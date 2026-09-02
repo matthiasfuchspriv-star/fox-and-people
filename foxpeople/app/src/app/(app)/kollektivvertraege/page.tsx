@@ -76,7 +76,7 @@ export default async function Kollektivvertraege({ searchParams }: { searchParam
           <Field label="Wochenstunden"><input name="wochenstunden" defaultValue="38.5" className="input num" inputMode="decimal" /></Field>
           <Field label="Monatsteiler"><input name="monatsteiler" defaultValue="167" className="input num" inputMode="decimal" /></Field>
           <Field label="Gilt für"><select name="gruppe" className="select" defaultValue="ARBEITER"><option value="ARBEITER">Arbeiter</option><option value="ANGESTELLTE">Angestellte</option><option value="BEIDE">Beide</option></select></Field>
-          <label className="flex items-center gap-2 text-[13.5px] sm:col-span-2"><input type="checkbox" name="istReferenz" /> Beschäftiger-KV (Referenzlohn § 10 AÜG)</label>
+          <label className="flex items-center gap-2 text-[14px] sm:col-span-2"><input type="checkbox" name="istReferenz" /> Beschäftiger-KV (Referenzlohn § 10 AÜG)</label>
           <div className="sm:col-span-3"><button className="btn btn-primary">Anlegen und Lohntafel pflegen</button></div>
         </form>
       </Card>
@@ -117,37 +117,37 @@ export default async function Kollektivvertraege({ searchParams }: { searchParam
                 <tr key={z.kv.id} className={z.meine.length ? "" : "opacity-60"}>
                   <td>
                     <Link href={`/kollektivvertraege/${z.kv.id}`} className="font-semibold hover:text-brand">{z.kv.name}</Link>
-                    <div className="text-[12px] text-muted">{z.kv.kuerzel} · {z.kv.wochenstunden ?? "–"} h/Woche · Teiler {z.kv.monatsteiler ?? "–"}</div>
+                    <div className="text-[12.5px] text-muted">{z.kv.kuerzel} · {z.kv.wochenstunden ?? "–"} h/Woche · Teiler {z.kv.monatsteiler ?? "–"}</div>
                   </td>
-                  <td className="text-[13px]">
+                  <td className="text-[12.5px]">
                     {z.meine.length === 0 ? <span className="text-muted">–</span> : (
                       <div>{z.meine.slice(0, 3).map((k) => <div key={k.id}><Link href={`/kunden/${k.id}`} className="hover:text-brand">{k.firmenname}</Link></div>)}{z.meine.length > 3 && <div className="text-muted">+{z.meine.length - 3} weitere</div>}</div>
                     )}
                   </td>
-                  <td className="text-[13px]">
+                  <td className="text-[12.5px]">
                     {z.tafeln.length === 0
                       ? <Badge tone="grey">nicht hinterlegt</Badge>
-                      : <>{z.tafeln.map((t) => <div key={t}>{datum(new Date(t))}</div>)}<div className="text-[12px] text-muted">{z.kv.lohntabelle.length} Stufen</div></>}
+                      : <>{z.tafeln.map((t) => <div key={t}>{datum(new Date(t))}</div>)}<div className="text-[12.5px] text-muted">{z.kv.lohntabelle.length} Stufen</div></>}
                   </td>
-                  <td className="text-[13px]">
+                  <td className="text-[12.5px]">
                     {z.mitZuschlag > 0
                       ? <Badge tone="teal">Sätze hinterlegt</Badge>
                       : z.entschieden
-                        ? <><Badge tone="brand">kein Zuschlag</Badge><div className="text-[12px] text-muted">{z.entschieden.von} · {datum(new Date(z.entschieden.am))}</div></>
+                        ? <><Badge tone="brand">kein Zuschlag</Badge><div className="text-[12.5px] text-muted">{z.entschieden.von} · {datum(new Date(z.entschieden.am))}</div></>
                         : <Badge tone="amber">offen</Badge>}
                   </td>
-                  <td className="text-[13px]">
+                  <td className="text-[12.5px]">
                     {z.info?.stand ? datum(new Date(z.info.stand)) : <span className="text-muted">bei der WKO prüfen</span>}
-                    {z.veraltet && <div className="text-[12px] text-red font-semibold">neuer als unsere Tafel</div>}
+                    {z.veraltet && <div className="text-[12.5px] text-red font-semibold">neuer als unsere Tafel</div>}
                   </td>
-                  <td className="text-[13px]">
+                  <td className="text-[12.5px]">
                     {z.termin
-                      ? <><div className={z.tageBis != null && z.tageBis <= VORWARNUNG_KV_TAGE && z.meine.length ? "text-amber font-semibold" : ""}>{datum(z.termin)}</div><div className="text-[12px] text-muted">in {z.tageBis} Tagen{z.info?.bestaetigt ? "" : " · Termin unbestätigt"}</div></>
+                      ? <><div className={z.tageBis != null && z.tageBis <= VORWARNUNG_KV_TAGE && z.meine.length ? "text-amber font-semibold" : ""}>{datum(z.termin)}</div><div className="text-[12.5px] text-muted">in {z.tageBis} Tagen{z.info?.bestaetigt ? "" : " · Termin unbestätigt"}</div></>
                       : <span className="text-muted">Termin bei der WKO prüfen</span>}
                   </td>
-                  <td className="text-[13px]">
+                  <td className="text-[12.5px]">
                     {z.info ? <a href={z.info.url} target="_blank" rel="noopener noreferrer" className="text-brand font-semibold hover:underline">WKO</a> : <span className="text-muted">–</span>}
-                    {z.info && <div className="text-[11.5px] text-muted max-w-[220px]">{z.info.titel}</div>}
+                    {z.info && <div className="text-[12.5px] text-muted max-w-[220px]">{z.info.titel}</div>}
                   </td>
                 </tr>
               ))}

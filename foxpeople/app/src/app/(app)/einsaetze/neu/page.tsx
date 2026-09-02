@@ -113,7 +113,7 @@ export default async function NeuerEinsatz({ searchParams }: { searchParams: Pro
                   <select name="kostenstelleId" defaultValue={sp.kostenstelleId ?? ""} className="select"><option value="">– wie beim Kunden –</option>{kostenstellen.map((k) => <option key={k.id} value={k.id}>{k.name}</option>)}</select>
                 </Field>
               )}
-              <Field label="Stundenerfassung in der Mitarbeiter-App" help="Standardmäßig aus. Erst wenn das angehakt ist, kann der Mitarbeiter für diesen Einsatz seine Stunden selbst eintragen."><label className="flex items-center gap-2 text-[13.5px] mt-2"><input type="checkbox" name="stundenerfassungApp" defaultChecked={sp.stundenerfassungApp === "on"} /> Mitarbeiter darf Stunden in der App erfassen</label></Field>
+              <Field label="Stundenerfassung in der Mitarbeiter-App" help="Standardmäßig aus. Erst wenn das angehakt ist, kann der Mitarbeiter für diesen Einsatz seine Stunden selbst eintragen."><label className="flex items-center gap-2 text-[14px] mt-2"><input type="checkbox" name="stundenerfassungApp" defaultChecked={sp.stundenerfassungApp === "on"} /> Mitarbeiter darf Stunden in der App erfassen</label></Field>
               {/* key: Der unkontrollierte Input behält beim Soft-Navigieren (Kundenwahl über UrlWahl)
                   seinen alten DOM-Wert – erst der Remount je Kunde übernimmt dessen Ort als Vorschlag. */}
               <Field label="Einsatzort" help="Vorbelegt mit dem Ort des Kunden – bei abweichender Arbeitsstätte überschreiben. Steht in der Überlassungsmitteilung (§ 12 AÜG).">
@@ -128,7 +128,7 @@ export default async function NeuerEinsatz({ searchParams }: { searchParams: Pro
               <Field label="Beginn" required><input type="date" name="von" required defaultValue={sp.von ?? heute} className="input" /></Field>
               <Field label="Ende" help="Leer = unbefristet"><input type="date" name="bis" defaultValue={sp.bis ?? ""} className="input" /></Field>
               <Field label="Schichtmodell"><select name="schichtmodell" defaultValue={sp.schichtmodell ?? "TAG"} className="select"><option value="TAG">Tagschicht</option><option value="ZWEI_SCHICHT">2-Schicht</option><option value="DREI_SCHICHT">3-Schicht</option><option value="FREI">Frei / nach Bedarf</option></select></Field>
-              <Field label="Schwerarbeit" help="Steht in der Überlassungsmitteilung (Punkte 9/10) und als Kennzeichen am Einsatz."><div className="space-y-1 mt-1"><label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="nachtschwerarbeit" defaultChecked={sp.nachtschwerarbeit === "on"} /> Nachtschwerarbeitsgesetz (NSchG) kommt zur Anwendung</label><label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="schwerarbeit" defaultChecked={sp.schwerarbeit === "on"} /> Schwerarbeitsverordnung kommt zur Anwendung</label></div></Field>
+              <Field label="Schwerarbeit" help="Steht in der Überlassungsmitteilung (Punkte 9/10) und als Kennzeichen am Einsatz."><div className="space-y-1 mt-1"><label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="nachtschwerarbeit" defaultChecked={sp.nachtschwerarbeit === "on"} /> Nachtschwerarbeitsgesetz (NSchG) kommt zur Anwendung</label><label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="schwerarbeit" defaultChecked={sp.schwerarbeit === "on"} /> Schwerarbeitsverordnung kommt zur Anwendung</label></div></Field>
               <div className="grid grid-cols-2 gap-3"><Field label="Wochenstunden"><input name="wochenstunden" defaultValue={sp.wochenstunden ?? gewaehlt?.wochenstunden ?? person?.wochenstunden ?? 38.5} className="input num" /></Field><Field label="Auslastung %"><input name="auslastung" defaultValue={sp.auslastung ?? 100} className="input num" /></Field></div>
             </div>
           </Card>
@@ -188,7 +188,7 @@ export default async function NeuerEinsatz({ searchParams }: { searchParams: Pro
                     <tr>
                       <td className="font-semibold text-red">Referenzlohn fehlt</td>
                       <td colSpan={2}>
-                        <div className="text-[13px]">
+                        <div className="text-[12.5px]">
                           Für <b>{kunde?.kollektivvertrag ?? "diesen Kunden"}</b> ist keine Lohntafel verknüpft. Ohne sie wird nur gegen den KV AKÜ
                           und die Hausregel geprüft – <b>der Einsatz lässt sich so nicht anlegen</b>.
                         </div>
@@ -198,8 +198,8 @@ export default async function NeuerEinsatz({ searchParams }: { searchParams: Pro
                       </td>
                       <td className="r">
                         <input name="referenzlohn" defaultValue={sp.referenzlohn ?? ""} placeholder="€/Std" className="input num !w-28 !py-1" inputMode="decimal" />
-                        <label className="flex items-center gap-1.5 justify-end text-[12px] mt-1.5 whitespace-nowrap"><input type="checkbox" name="referenzGeprueft" defaultChecked={sp.referenzGeprueft === "on"} /> erfragt, kein Zuschlag</label>
-                        {kunde?.kollektivvertrag && <label className="flex items-start gap-1.5 justify-end text-[12px] mt-1.5 text-right"><input type="checkbox" name="keinZuschlagKv" className="mt-0.5" /> <span>für <b>{kunde.kollektivvertrag}</b> gibt es generell keinen Referenzzuschlag – einmal festhalten, gilt dann für alle Kunden dieses KV</span></label>}
+                        <label className="flex items-center gap-1.5 justify-end text-[12.5px] mt-1.5 whitespace-nowrap"><input type="checkbox" name="referenzGeprueft" defaultChecked={sp.referenzGeprueft === "on"} /> erfragt, kein Zuschlag</label>
+                        {kunde?.kollektivvertrag && <label className="flex items-start gap-1.5 justify-end text-[12.5px] mt-1.5 text-right"><input type="checkbox" name="keinZuschlagKv" className="mt-0.5" /> <span>für <b>{kunde.kollektivvertrag}</b> gibt es generell keinen Referenzzuschlag – einmal festhalten, gilt dann für alle Kunden dieses KV</span></label>}
                       </td>
                     </tr>
                   )}
@@ -228,8 +228,8 @@ export default async function NeuerEinsatz({ searchParams }: { searchParams: Pro
                     const lohnAnteil = zulageProStunde(z, Number(sp.stundenlohn) || person?.stundenlohn || ml?.mindest || 0);
                     return (
                       <tr key={z.id}>
-                        <td><label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="zulage" value={z.kuerzel} defaultChecked={angehakt} /> {z.name}</label>
-                          {(imAngebot || passtKv || passtSchicht) && <div className="text-[11.5px] text-teal ml-6">{imAngebot ? `im Angebot ${gewaehlt?.angebot.nummer} ausgewiesen` : passtKv ? "gilt für den KV des Beschäftigers" : `gilt bei ${sp.schichtmodell === "DREI_SCHICHT" ? "3-Schicht" : "2-Schicht"}`}</div>}
+                        <td><label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="zulage" value={z.kuerzel} defaultChecked={angehakt} /> {z.name}</label>
+                          {(imAngebot || passtKv || passtSchicht) && <div className="text-[12.5px] text-teal ml-6">{imAngebot ? `im Angebot ${gewaehlt?.angebot.nummer} ausgewiesen` : passtKv ? "gilt für den KV des Beschäftigers" : `gilt bei ${sp.schichtmodell === "DREI_SCHICHT" ? "3-Schicht" : "2-Schicht"}`}</div>}
                         </td>
                         <td className="text-[12.5px] text-muted">{zulageText(z)}{z.steuerfrei ? " · steuerfrei" : ""}{z.weiterverrechnen ? "" : " · nicht weiterverrechnet"}</td>
                         <td className="r num">{lohnAnteil ? lohnAnteil.toFixed(2).replace(".", ",") : "–"}</td>
@@ -244,7 +244,7 @@ export default async function NeuerEinsatz({ searchParams }: { searchParams: Pro
         </div>
         <div className="space-y-4">
           <Card title="Notizen" className="reveal reveal-2"><textarea name="notizen" defaultValue={sp.notizen ?? ""} rows={6} className="textarea" placeholder="Ansprechpartner vor Ort, Arbeitsbeginn, Schutzausrüstung …" /></Card>
-          {konflikte.length > 0 && !hart && <label className="flex items-start gap-2 text-[13.5px] card p-4 reveal"><input type="checkbox" name="konflikteAkzeptiert" className="mt-1" /> <span>Konflikte geprüft – Einsatz trotzdem anlegen.</span></label>}
+          {konflikte.length > 0 && !hart && <label className="flex items-start gap-2 text-[14px] card p-4 reveal"><input type="checkbox" name="konflikteAkzeptiert" className="mt-1" /> <span>Konflikte geprüft – Einsatz trotzdem anlegen.</span></label>}
           <div className="flex gap-2 reveal reveal-3"><button className="btn btn-primary flex-1 justify-center">{konflikte.length ? "Erneut prüfen & anlegen" : "Prüfen & anlegen"}</button><Link href="/einsaetze" className="btn btn-secondary">Abbrechen</Link></div>
         </div>
       </form>

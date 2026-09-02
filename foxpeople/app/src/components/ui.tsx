@@ -62,7 +62,7 @@ export function Empty({ title, text, action }: { title: string; text?: string; a
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 7h16M4 12h10M4 17h7" strokeLinecap="round" /></svg>
       </div>
       <h3 className="font-display font-semibold text-[15px]">{title}</h3>
-      {text && <p className="text-muted text-[13px] mt-1 max-w-sm mx-auto">{text}</p>}
+      {text && <p className="text-muted text-[12.5px] mt-1 max-w-sm mx-auto">{text}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -102,7 +102,7 @@ export function Avatar({ name, src, size = 40, className }: { name: string; src?
 
 export function Stat({ label, value, className }: { label: string; value: ReactNode; className?: string }) {
   return (
-    <div className={clsx("flex justify-between gap-4 py-2 border-b border-line last:border-0 text-[13.5px]", className)}>
+    <div className={clsx("flex justify-between gap-4 py-2 border-b border-line last:border-0 text-[14px]", className)}>
       <span className="text-muted">{label}</span>
       <span className="num font-semibold text-right">{value}</span>
     </div>

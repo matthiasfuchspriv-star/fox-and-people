@@ -54,9 +54,9 @@ export default async function NeueMail({ searchParams }: { searchParams: Promise
           </form>
         </Card>
         <Card title="Empfänger" className="reveal reveal-2">
-          {person && <div className="text-[13.5px] space-y-1"><div className="font-semibold">{person.vorname} {person.nachname}</div><div className="text-muted">{person.standardrolle ?? ""}{person.ort ? ` · ${person.ort}` : ""}</div><div>{person.email ?? <span className="text-red">keine E-Mail hinterlegt</span>}</div><div>{person.telefon}</div>{einsatz && <div className="text-muted">Im Einsatz bei {einsatz.kunde.firmenname}</div>}</div>}
-          {kunde && <div className="text-[13.5px] space-y-2"><div className="font-semibold">{kunde.firmenname}</div>{kunde.ansprechpartner.map((a) => <div key={a.id}><div>{a.name}{a.istHaupt && " (Haupt)"}{a.funktion ? ` – ${a.funktion}` : ""}</div><div className="text-muted">{a.email ?? "keine E-Mail"}{a.telefon ? ` · ${a.telefon}` : ""}</div></div>)}</div>}
-          {!person && !kunde && <p className="text-muted text-[13px]">Freie E-Mail ohne Bezug – wird nur im Mail-Protokoll gespeichert.</p>}
+          {person && <div className="text-[14px] space-y-1"><div className="font-semibold">{person.vorname} {person.nachname}</div><div className="text-muted">{person.standardrolle ?? ""}{person.ort ? ` · ${person.ort}` : ""}</div><div>{person.email ?? <span className="text-red">keine E-Mail hinterlegt</span>}</div><div>{person.telefon}</div>{einsatz && <div className="text-muted">Im Einsatz bei {einsatz.kunde.firmenname}</div>}</div>}
+          {kunde && <div className="text-[14px] space-y-2"><div className="font-semibold">{kunde.firmenname}</div>{kunde.ansprechpartner.map((a) => <div key={a.id}><div>{a.name}{a.istHaupt && " (Haupt)"}{a.funktion ? ` – ${a.funktion}` : ""}</div><div className="text-muted">{a.email ?? "keine E-Mail"}{a.telefon ? ` · ${a.telefon}` : ""}</div></div>)}</div>}
+          {!person && !kunde && <p className="text-muted text-[12.5px]">Freie E-Mail ohne Bezug – wird nur im Mail-Protokoll gespeichert.</p>}
           <p className="help mt-4">Die Signatur wird automatisch angehängt. Der Versand wird im Audit-Log und in der Historie der Person bzw. des Kunden vermerkt.</p>
         </Card>
       </div>

@@ -79,7 +79,7 @@ export default async function AppHome() {
 
   return (
     <AppShell navLabels={navLabels(t)}>
-      <AppKopf rechts={<Link href="/app/profil" aria-label={t("nav.profil")} className="avatar w-9 h-9 text-[13px] bg-brand text-white">{p.vorname[0]}{p.nachname[0]}</Link>} />
+      <AppKopf rechts={<Link href="/app/profil" aria-label={t("nav.profil")} className="avatar w-9 h-9 text-[12.5px] bg-brand text-white">{p.vorname[0]}{p.nachname[0]}</Link>} />
       <div className="px-4 pt-3 space-y-4">
         <div>
           <h1 className="app-title">{gruss}, {p.vorname}!</h1>
@@ -91,8 +91,8 @@ export default async function AppHome() {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-white/12 text-white flex items-center justify-center shrink-0">{jetzt.icon}</div>
               <div className="flex-1 min-w-0">
-                <div className="text-[11.5px] font-semibold tracking-wide uppercase text-[#e6a98c]">{t("start.jetzt")}</div>
-                <div className="font-display font-semibold text-[16px] leading-snug mt-0.5">{jetzt.titel}</div>
+                <div className="text-[12.5px] font-semibold tracking-wide uppercase text-[#e6a98c]">{t("start.jetzt")}</div>
+                <div className="font-display font-semibold text-[17px] leading-snug mt-0.5">{jetzt.titel}</div>
                 <div className="text-[12.5px] text-white/70 mt-0.5">{jetzt.text}</div>
               </div>
               <ChevronRight size={20} className="text-white/50 shrink-0" />
@@ -101,7 +101,7 @@ export default async function AppHome() {
         ) : (
           <div className="card card-pad flex items-center gap-3">
             <CheckCircle2 size={22} className="text-teal shrink-0" />
-            <div><div className="font-semibold text-[14.5px]">{t("start.allesErledigt")}</div><div className="text-[12.5px] text-muted">{t("start.allesErledigtText")}</div></div>
+            <div><div className="font-semibold text-[15px]">{t("start.allesErledigt")}</div><div className="text-[12.5px] text-muted">{t("start.allesErledigtText")}</div></div>
           </div>
         )}
 
@@ -109,8 +109,8 @@ export default async function AppHome() {
           <section className="app-list">
             <div className="px-4 pt-3.5 pb-3">
               <div className="section-title">{einsatz.status === "AKTIV" ? t("start.einsatz") : t("start.naechsterEinsatz")}</div>
-              <div className="font-display font-semibold text-[18px] tracking-[-0.01em] mt-0.5">{einsatz.kunde.firmenname}</div>
-              <div className="text-[13.5px] text-muted">{einsatz.rolleImEinsatz} · seit {datum(einsatz.von)}{einsatz.bis ? ` bis ${datum(einsatz.bis)}` : ""}</div>
+              <div className="font-display font-semibold text-[17px] tracking-[-0.01em] mt-0.5">{einsatz.kunde.firmenname}</div>
+              <div className="text-[14px] text-muted">{einsatz.rolleImEinsatz} · seit {datum(einsatz.von)}{einsatz.bis ? ` bis ${datum(einsatz.bis)}` : ""}</div>
             </div>
             <a href={`https://maps.google.com/?q=${encodeURIComponent(einsatz.einsatzort ?? `${einsatz.kunde.strasse ?? ""} ${einsatz.kunde.plz ?? ""} ${einsatz.kunde.ort ?? ""}`)}`} target="_blank" className="app-row border-t border-line">
               <span className="app-row-icon"><MapPin size={15} /></span>
@@ -134,7 +134,7 @@ export default async function AppHome() {
             </div>
           </section>
         ) : (
-          <section className="card card-pad text-[13.5px] text-muted">{t("start.keinEinsatz")}</section>
+          <section className="card card-pad text-[14px] text-muted">{t("start.keinEinsatz")}</section>
         )}
 
         {cfg.aktiv && (
@@ -148,13 +148,13 @@ export default async function AppHome() {
               {werbung.eingereicht > 0 ? (
                 <>
                   <div className="mt-3 flex items-end gap-5">
-                    <div><div className="font-display font-bold text-[28px] leading-none num tracking-[-0.03em] text-ink">{werbung.erfolgreich}</div><div className="text-[12px] text-fox-ink/80 mt-1">{t("werben.geworben")}</div></div>
-                    <div><div className="font-display font-bold text-[28px] leading-none num tracking-[-0.03em] text-fox">{eur(werbung.gesamt, 0)}</div><div className="text-[12px] text-fox-ink/80 mt-1">{t("werben.verdient")}</div></div>
+                    <div><div className="font-display font-bold text-[28px] leading-none num tracking-[-0.03em] text-ink">{werbung.erfolgreich}</div><div className="text-[12.5px] text-fox-ink/80 mt-1">{t("werben.geworben")}</div></div>
+                    <div><div className="font-display font-bold text-[28px] leading-none num tracking-[-0.03em] text-fox">{eur(werbung.gesamt, 0)}</div><div className="text-[12.5px] text-fox-ink/80 mt-1">{t("werben.verdient")}</div></div>
                   </div>
                   {werbung.offen > 0 && <div className="text-[12.5px] text-fox-ink/80 mt-2">{t("werben.inAuszahlung", { betrag: eur(werbung.offen, 0) })}</div>}
                   {cfg.bonusJeAnzahl > 0 && (
                     <div className="mt-3">
-                      <div className="flex items-center justify-between text-[12px] text-fox-ink/80 mb-1">
+                      <div className="flex items-center justify-between text-[12.5px] text-fox-ink/80 mb-1">
                         <span>{werbung.bonusErreicht > 0 ? t("werben.bonusErreicht", { n: werbung.bonusErreicht }) : t("werben.bonusFortschritt")}</span>
                         <span>{t("werben.nochBis", { n: werbung.bisZumBonus, betrag: eur(cfg.bonusBetrag, 0) })}</span>
                       </div>
@@ -166,10 +166,10 @@ export default async function AppHome() {
               ) : (
                 <>
                   <div className="font-display font-bold text-[22px] tracking-[-0.02em] mt-2 leading-tight text-ink">{t("werben.pitch", { praemie: eur(cfg.praemieWerber, 0), bonus: eur(cfg.praemieGeworbener, 0) })}</div>
-                  <p className="text-[13.5px] text-fox-ink/85 mt-1.5">{t("werben.pitchText", { n: cfg.bonusJeAnzahl, betrag: eur(cfg.bonusBetrag, 0) })}</p>
+                  <p className="text-[14px] text-fox-ink/85 mt-1.5">{t("werben.pitchText", { n: cfg.bonusJeAnzahl, betrag: eur(cfg.bonusBetrag, 0) })}</p>
                 </>
               )}
-              <div className="text-[12px] text-fox-ink/65 mt-3 leading-snug">{t("werben.bedingung", { monate: cfg.praemieNachMonaten })}</div>
+              <div className="text-[12.5px] text-fox-ink/65 mt-3 leading-snug">{t("werben.bedingung", { monate: cfg.praemieNachMonaten })}</div>
             </div>
           </Link>
         )}
@@ -204,7 +204,7 @@ export default async function AppHome() {
           ]}
         />
 
-        <section className="card card-pad text-[13.5px] text-muted">
+        <section className="card card-pad text-[14px] text-muted">
           <div className="font-semibold text-ink mb-1.5 flex items-center gap-2"><User size={14} /> {t("start.ansprechpartner")}</div>
           {p.kostenstelle.name} · <a href={`tel:${telefon}`} className="text-brand font-semibold">{telefon}</a> · <a href={`mailto:${mail}`} className="text-brand font-semibold">{mail}</a>
           <p className="mt-1.5" dangerouslySetInnerHTML={{ __html: t("start.krankHinweis") }} />
@@ -218,7 +218,7 @@ function Kachel({ href, icon, label, sub, badge }: { href: string; icon: React.R
   return (
     <Link href={href} className="app-tile">
       <div className="app-row-icon">{icon}</div>
-      <div className="font-semibold text-[14.5px] mt-3 leading-tight">{label}</div>
+      <div className="font-semibold text-[15px] mt-3 leading-tight">{label}</div>
       <div className="text-[12.5px] text-muted mt-0.5">{sub}</div>
       {badge ? <span className="nav-count absolute top-3 right-3 !ml-0">{badge}</span> : null}
     </Link>

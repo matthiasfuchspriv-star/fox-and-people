@@ -33,7 +33,7 @@ export function MehrKacheln({ eintraege, label, wenigerLabel }: { eintraege: Meh
             return (
               <Link key={e.href + e.label} href={e.href} className="app-tile">
                 <div className="app-row-icon"><Icon size={16} /></div>
-                <div className="font-semibold text-[14.5px] mt-3 leading-tight">{e.label}</div>
+                <div className="font-semibold text-[15px] mt-3 leading-tight">{e.label}</div>
                 <div className="text-[12.5px] text-muted mt-0.5">{e.sub}</div>
                 {e.badge ? <span className="nav-count absolute top-3 right-3 !ml-0">{e.badge}</span> : null}
               </Link>

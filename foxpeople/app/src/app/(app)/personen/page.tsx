@@ -66,11 +66,13 @@ export default async function PersonenPage({ searchParams }: { searchParams: Pro
       <PageHeader title={bereich === "bewerber" ? "Bewerber" : "Mitarbeiter"} sub={bereich === "bewerber" ? "Bewerber-Pool (für alle Kostenstellen sichtbar) und Sperrliste. Sobald ein Einsatz geplant wird, wandert die Person automatisch zu den Mitarbeitern." : "Aktive Mitarbeiter im Einsatz und ausgeschiedene Mitarbeiter. Ohne Einsatz kehrt eine Person automatisch in den Bewerber-Pool zurück."} actions={<><Link href="/personen/geburtstage" className="btn btn-secondary">Geburtstage</Link><Link href={bereich === "bewerber" ? "/personen/import" : "/personen/import?art=MITARBEITER"} className="btn btn-secondary"><Upload size={16} /> Aus Liste importieren</Link><Link href="/personen/neu" className="btn btn-primary"><Plus size={16} /> Person aufnehmen</Link></>} />
       {sp.geloescht && <div className="alert alert-teal mb-4">{sp.geloescht} wurde endgültig gelöscht.</div>}
       <div className="flex flex-wrap items-center gap-2 mb-4 reveal">
+        <div className="seg">
         {STATUS.map((st) => (
-          <Link key={st.key} href={`/personen?bereich=${bereich}&status=${st.key}${q ? `&q=${encodeURIComponent(q)}` : ""}`} className={`chip-filter ${status === st.key ? "active" : ""}`}>
-            {st.label} <span className="opacity-70 num">{cnt(st.key)}</span>
-          </Link>
-        ))}
+            <Link key={st.key} href={`/personen?bereich=${bereich}&status=${st.key}${q ? `&q=${encodeURIComponent(q)}` : ""}`} className={`chip-filter ${status === st.key ? "active" : ""}`}>
+              {st.label} <span className="opacity-70 num">{cnt(st.key)}</span>
+            </Link>
+          ))}
+        </div>
         <form className="ml-auto flex gap-2">
           {status && <input type="hidden" name="status" value={status} />}<input type="hidden" name="bereich" value={bereich} />
           <input name="q" defaultValue={q} placeholder="Name, Rolle, Ort, Kunde…" className="input !w-64" />
@@ -97,7 +99,7 @@ export default async function PersonenPage({ searchParams }: { searchParams: Pro
                     <tr key={p.id}>
                       <td>
                         <Link href={`/personen/${p.id}`} className="row-link">{p.nachname} {p.vorname}</Link>
-                        {p.geburtsdatum && <div className="text-[12px] text-muted">geb. {datum(p.geburtsdatum)}</div>}
+                        {p.geburtsdatum && <div className="text-[12.5px] text-muted">geb. {datum(p.geburtsdatum)}</div>}
                       </td>
                       <td>{personStatusBadge(p.status)}{p.amsGefoerdert && sensibel && <div className="mt-1"><Badge tone="teal">AMS</Badge></div>}</td>
                       <td>{p.standardrolle ?? <span className="text-muted">–</span>}</td>
@@ -106,13 +108,13 @@ export default async function PersonenPage({ searchParams }: { searchParams: Pro
                           {p.qualifikationen.slice(0, 3).map((qu) => (
                             <span key={qu.id} className={`badge ${qu.gultigBis && qu.gultigBis < heute ? "badge-red" : "badge-grey"}`}>{qu.typ}</span>
                           ))}
-                          {p.qualifikationen.length > 3 && <span className="text-muted text-[12px]">+{p.qualifikationen.length - 3}</span>}
+                          {p.qualifikationen.length > 3 && <span className="text-muted text-[12.5px]">+{p.qualifikationen.length - 3}</span>}
                           {abgelaufen && <ShieldAlert size={14} className="text-red" />}
                         </div>
                       </td>
                       <td>{p.einsaetze[0]?.kunde.firmenname ?? p.hinterlegterKunde?.firmenname ?? <span className="text-muted">–</span>}</td>
                       <td>{p.status === "GESPERRT" ? <Badge tone="red">seit {datum(p.gesperrtSeit)}</Badge> : p.verfuegbarSofort ? <Badge tone="teal">sofort</Badge> : p.verfuegbarAb ? datum(p.verfuegbarAb) : <span className="text-muted">–</span>}</td>
-                      <td>{p.bewertungen.length ? <Fuechse n={p.bewertungen.reduce((a, b) => a + b.sterne, 0) / p.bewertungen.length} size="text-[12px]" /> : <span className="text-muted">–</span>}</td>
+                      <td>{p.bewertungen.length ? <Fuechse n={p.bewertungen.reduce((a, b) => a + b.sterne, 0) / p.bewertungen.length} size="text-[12.5px]" /> : <span className="text-muted">–</span>}</td>
                       <td className="r num">{p.status === "VERMITTELT" ? <span className={kranktage365(p.abwesenheiten) > 10 ? "text-red font-semibold" : ""}>{kranktage365(p.abwesenheiten)}</span> : <span className="text-muted">–</span>}</td>
                       <td className="text-muted">{[p.plz, p.ort].filter(Boolean).join(" ")}{p.status === "SUCHT" && <div className="text-[11px]">{p.kostenstelle.name}</div>}</td>
                       <td className="r text-muted">{datum(p.aufnahmedatum)}</td>
@@ -123,7 +125,7 @@ export default async function PersonenPage({ searchParams }: { searchParams: Pro
             </table>
           </div>
         )}
-        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-t border-line text-[13px] text-muted">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-t border-line text-[12.5px] text-muted">
           <span>{total} Personen{seiten > 1 ? ` · Seite ${seite} von ${seiten}` : ""}</span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">Pro Seite:{GROESSEN.map((g) => (

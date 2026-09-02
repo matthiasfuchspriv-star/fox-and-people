@@ -28,8 +28,8 @@ export default async function AppBewerten({ searchParams }: { searchParams: Prom
         {kunden.length ? (
           <form action={beschaeftigerBewerten} className="card card-pad space-y-4">
             <div>
-              <h1 className="font-display font-bold text-[19px]">Wie war es bei deinem Beschäftiger?</h1>
-              <p className="text-muted text-[13.5px] mt-1">Deine Bewertung sehen nur wir bei Fox &amp; People – nicht der Kunde. Sie hilft uns bei der Frage, wen wir wohin schicken.</p>
+              <h1 className="font-display font-bold text-[22px]">Wie war es bei deinem Beschäftiger?</h1>
+              <p className="text-muted text-[14px] mt-1">Deine Bewertung sehen nur wir bei Fox &amp; People – nicht der Kunde. Sie hilft uns bei der Frage, wen wir wohin schicken.</p>
             </div>
             <div className="field"><label className="label">Beschäftiger</label>
               <select name="kundeId" required defaultValue={sp.einsatz ? einsaetze.find((e) => e.id === sp.einsatz)?.kundeId ?? "" : kunden[0]?.kundeId} className="select">
@@ -41,15 +41,15 @@ export default async function AppBewerten({ searchParams }: { searchParams: Prom
             <button className="btn btn-primary w-full justify-center !h-12">Bewertung abgeben</button>
           </form>
         ) : (
-          <section className="card card-pad text-[13.5px] text-muted">Du hattest noch keinen Einsatz – sobald der erste läuft, kannst du hier eine Rückmeldung geben.</section>
+          <section className="card card-pad text-[14px] text-muted">Du hattest noch keinen Einsatz – sobald der erste läuft, kannst du hier eine Rückmeldung geben.</section>
         )}
 
         {bisher.length > 0 && (
           <section className="card">
             <div className="px-5 pt-4 pb-1 section-title">Deine bisherigen Bewertungen</div>
             <ul className="divide-y divide-line">{bisher.map((b) => (
-              <li key={b.id} className="px-5 py-3 text-[13.5px]">
-                <div className="flex items-center gap-2"><Fuechse n={b.sterne} /><span className="font-semibold">{b.kunde.firmenname}</span><span className="text-muted text-[12px] ml-auto">{datum(b.datum)}</span></div>
+              <li key={b.id} className="px-5 py-3 text-[14px]">
+                <div className="flex items-center gap-2"><Fuechse n={b.sterne} /><span className="font-semibold">{b.kunde.firmenname}</span><span className="text-muted text-[12.5px] ml-auto">{datum(b.datum)}</span></div>
                 {b.kommentar && <p className="text-muted mt-1">{b.kommentar}</p>}
               </li>
             ))}</ul>

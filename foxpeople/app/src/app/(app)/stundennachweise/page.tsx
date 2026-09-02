@@ -35,7 +35,7 @@ export default async function StundennachweisePage({ searchParams }: { searchPar
   return (
     <>
       <PageHeader title="Stundennachweise" sub="Aus der Mitarbeiter-App eingereichte Wochenstunden – prüfen, bestätigen oder zur Korrektur zurückgeben. Bestätigte Stunden fließen automatisch in die Monatsabrechnung." />
-      <div className="flex gap-2 mb-4 reveal">{[["EINGEREICHT", "Offen"], ["BESTAETIGT", "Bestätigt"], ["ABGELEHNT", "Zur Korrektur"]].map(([k, l]) => <Link key={k} href={`/stundennachweise?status=${k}`} className={`chip-filter ${status === k ? "active" : ""}`}>{l}</Link>)}</div>
+      <div className="seg mb-4 reveal">{[["EINGEREICHT", "Offen"], ["BESTAETIGT", "Bestätigt"], ["ABGELEHNT", "Zur Korrektur"]].map(([k, l]) => <Link key={k} href={`/stundennachweise?status=${k}`} className={`chip-filter ${status === k ? "active" : ""}`}>{l}</Link>)}</div>
       {sp.ok && <div className="alert alert-teal mb-4">{Number(sp.ok) > 1 ? `${sp.ok} Stundennachweise bestätigt – die Stunden sind in der Monatsabrechnung.` : "Erledigt."}</div>}
       {status === "EINGEREICHT" && liste.length > 1 && sensibel && (
         <Card className="reveal mb-4">
@@ -63,10 +63,10 @@ export default async function StundennachweisePage({ searchParams }: { searchPar
       )}
       {nutzung && nutzung.aktiv > 0 && (
         <Card title="App-Nutzung" className="reveal mb-4">
-          <div className="grid sm:grid-cols-3 gap-4 text-[13.5px]">
-            <div><div className="text-muted text-[12px]">Aktive Mitarbeiter</div><div className="font-display font-bold text-[20px]">{nutzung.aktiv}</div></div>
-            <div><div className="text-muted text-[12px]">Nachweise über die App {kwHeute.jahr}</div><div className="font-display font-bold text-[20px]">{nutzung.gesamt ? Math.round((nutzung.ausApp / nutzung.gesamt) * 100) : 0} %</div><div className="text-[11.5px] text-muted">{nutzung.ausApp} von {nutzung.gesamt}</div></div>
-            <div><div className="text-muted text-[12px]">Nie in der App angemeldet</div><div className="font-display font-bold text-[20px]">{nutzung.nieAngemeldet.length}</div></div>
+          <div className="grid sm:grid-cols-3 gap-4 text-[14px]">
+            <div><div className="text-muted text-[12.5px]">Aktive Mitarbeiter</div><div className="font-display font-bold text-[22px]">{nutzung.aktiv}</div></div>
+            <div><div className="text-muted text-[12.5px]">Nachweise über die App {kwHeute.jahr}</div><div className="font-display font-bold text-[22px]">{nutzung.gesamt ? Math.round((nutzung.ausApp / nutzung.gesamt) * 100) : 0} %</div><div className="text-[12.5px] text-muted">{nutzung.ausApp} von {nutzung.gesamt}</div></div>
+            <div><div className="text-muted text-[12.5px]">Nie in der App angemeldet</div><div className="font-display font-bold text-[22px]">{nutzung.nieAngemeldet.length}</div></div>
           </div>
           {nutzung.nieAngemeldet.length > 0 && <p className="help mt-2">Noch nie angemeldet: {nutzung.nieAngemeldet.slice(0, 12).map((x) => <Link key={x.id} href={`/personen/${x.id}`} className="text-brand font-semibold mr-2">{x.vorname} {x.nachname}</Link>)}{nutzung.nieAngemeldet.length > 12 ? `und ${nutzung.nieAngemeldet.length - 12} weitere` : ""} – hier lohnt ein Anruf, dann spart ihr euch die Papierzettel.</p>}
         </Card>
@@ -77,22 +77,22 @@ export default async function StundennachweisePage({ searchParams }: { searchPar
             <thead><tr><th>Mitarbeiter</th><th>Woche</th><th>Einsatz</th>{TAGE.map((t) => <th key={t} className="r">{t}</th>)}<th className="r">Summe</th><th className="r">Ü50</th><th className="r">Ü100</th><th>Nachweis</th><th>Notiz</th><th></th></tr></thead>
             <tbody>{liste.map((n) => { const t = (n.tage as number[]) ?? []; const e = einsaetze.find((x) => x.id === n.einsatzId); return (
               <tr key={n.id}>
-                <td><Link href={`/personen/${n.personId}`} className="row-link">{n.person.nachname} {n.person.vorname}</Link><div className="text-[11.5px] text-muted">{n.person.kostenstelle.name}</div></td>
-                <td className="whitespace-nowrap">KW {n.kw}/{n.jahr}<div className="text-[11.5px] text-muted">eingereicht {datum(n.eingereichtAm)}</div></td>
+                <td><Link href={`/personen/${n.personId}`} className="row-link">{n.person.nachname} {n.person.vorname}</Link><div className="text-[12.5px] text-muted">{n.person.kostenstelle.name}</div></td>
+                <td className="whitespace-nowrap">KW {n.kw}/{n.jahr}<div className="text-[12.5px] text-muted">eingereicht {datum(n.eingereichtAm)}</div></td>
                 <td>{e?.kunde.firmenname ?? <span className="text-muted">–</span>}</td>
                 {TAGE.map((_, i) => <td key={i} className="r num">{t[i] || "·"}</td>)}
                 <td className="r num font-bold">{n.summe}</td>
                 <td className="r num">{n.summeUe50 || "·"}</td>
                 <td className="r num">{n.summeUe100 || "·"}</td>
                 <td className="whitespace-nowrap"><a href={`/stundennachweise/${n.id}/pdf`} target="_blank" className="btn btn-ghost btn-sm">PDF</a>{n.fotoDokumentId ? <a href={`/dokumente/${n.fotoDokumentId}`} target="_blank" className="btn btn-ghost btn-sm">Foto</a> : <Badge tone="amber">Foto fehlt</Badge>}</td>
-                <td className="text-[12px] text-muted max-w-[200px]">{n.notiz ?? ""}{n.status === "ABGELEHNT" && n.rueckmeldung ? <div className="text-red">→ {n.rueckmeldung}</div> : null}</td>
+                <td className="text-[12.5px] text-muted max-w-[200px]">{n.notiz ?? ""}{n.status === "ABGELEHNT" && n.rueckmeldung ? <div className="text-red">→ {n.rueckmeldung}</div> : null}</td>
                 <td className="r whitespace-nowrap">
                   {n.status !== "BESTAETIGT" && sensibel && <form action={nachweisEntscheiden.bind(null, n.id)} className="flex items-center gap-1 justify-end">
-                    <input name="rueckmeldung" placeholder="Rückmeldung bei Ablehnung" className="input !w-44 !py-1 text-[12px]" />
+                    <input name="rueckmeldung" placeholder="Rückmeldung bei Ablehnung" className="input !w-44 !py-1 text-[12.5px]" />
                     <button name="entscheidung" value="ABLEHNEN" className="btn btn-ghost btn-sm text-red">Zurück</button>
                     <button name="entscheidung" value="BESTAETIGEN" className="btn btn-primary btn-sm">Bestätigen</button>
                   </form>}
-                  {n.status === "BESTAETIGT" && <span className="text-[12px] text-muted">{n.geprueftVon} · {datum(n.geprueftAm)}</span>}
+                  {n.status === "BESTAETIGT" && <span className="text-[12.5px] text-muted">{n.geprueftVon} · {datum(n.geprueftAm)}</span>}
                 </td>
               </tr>); })}</tbody>
           </table></div>

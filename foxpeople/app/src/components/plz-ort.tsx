@@ -47,7 +47,7 @@ export function PlzOrt({ plzName = "plz", ortName = "ort", plzWert, ortWert }: {
           <div className="flex flex-wrap gap-1 mt-1">
             {vorschlaege.map((o) => (
               <button key={o} type="button" onClick={() => { ortBerührt.current = true; setOrt(o); }}
-                className={`px-2 py-0.5 rounded-lg text-[12px] border ${o === ort ? "bg-brand-soft text-brand border-brand" : "border-line hover:bg-surface-2"}`}>{o}</button>
+                className={`px-2 py-0.5 rounded-lg text-[12.5px] border ${o === ort ? "bg-brand-soft text-brand border-brand" : "border-line hover:bg-surface-2"}`}>{o}</button>
             ))}
           </div>
         )}

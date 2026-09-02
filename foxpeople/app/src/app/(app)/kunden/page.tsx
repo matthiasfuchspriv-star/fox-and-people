@@ -25,9 +25,11 @@ export default async function KundenPage({ searchParams }: { searchParams: Promi
       {hinweis === "angebot" && <div className="alert alert-brand mb-4"><span>Angebote werden beim Kunden erstellt: Kunde öffnen → Tab „Angebote“ → „Neues Angebot“.</span></div>}
       {geloescht && <div className="alert alert-teal mb-4">{geloescht} wurde endgültig gelöscht.</div>} Kunde anlegen</Link>} />
       <div className="flex flex-wrap items-center gap-2 mb-4 reveal">
-        <Link href="/kunden?status=AKTIV" className={`chip-filter ${status === "AKTIV" ? "active" : ""}`}>Aktiv</Link>
-        <Link href="/kunden?status=INAKTIV" className={`chip-filter ${status === "INAKTIV" ? "active" : ""}`}>Inaktiv</Link>
-        <Link href="/kunden?status=" className={`chip-filter ${status === "" ? "active" : ""}`}>Alle</Link>
+        <div className="seg">
+          <Link href="/kunden?status=AKTIV" className={`chip-filter ${status === "AKTIV" ? "active" : ""}`}>Aktiv</Link>
+          <Link href="/kunden?status=INAKTIV" className={`chip-filter ${status === "INAKTIV" ? "active" : ""}`}>Inaktiv</Link>
+          <Link href="/kunden?status=" className={`chip-filter ${status === "" ? "active" : ""}`}>Alle</Link>
+        </div>
         <form className="ml-auto flex gap-2"><input type="hidden" name="status" value={status} /><input name="q" defaultValue={q} placeholder="Firma oder Ort…" className="input !w-64" /><button className="btn btn-secondary">Suchen</button></form>
       </div>
       <Card pad={false} className="reveal reveal-2">
@@ -40,8 +42,8 @@ export default async function KundenPage({ searchParams }: { searchParams: Promi
               const rv = !rvEnde ? <span className="text-muted">–</span> : rvEnde < heute ? <Badge tone="red">abgelaufen {datum(rvEnde)}</Badge> : rvEnde < new Date(heute.getTime() + k.erinnerungTageVorher * 86400000) ? <Badge tone="amber">bis {datum(rvEnde)}</Badge> : <Badge tone="teal">bis {datum(rvEnde)}</Badge>;
               return (
                 <tr key={k.id}>
-                  <td><Link href={`/kunden/${k.id}`} className="row-link">{k.firmenname}</Link><div className="text-[12px] text-muted">{[k.plz, k.ort].filter(Boolean).join(" ")}{!tenantWhere(s).kostenstelleId && ` · ${k.kostenstelle.name}`}</div></td>
-                  <td>{k.ansprechpartner[0] ? <>{k.ansprechpartner[0].name}<div className="text-[12px] text-muted">{k.ansprechpartner[0].funktion}</div></> : <span className="text-muted">–</span>}</td>
+                  <td><Link href={`/kunden/${k.id}`} className="row-link">{k.firmenname}</Link><div className="text-[12.5px] text-muted">{[k.plz, k.ort].filter(Boolean).join(" ")}{!tenantWhere(s).kostenstelleId && ` · ${k.kostenstelle.name}`}</div></td>
+                  <td>{k.ansprechpartner[0] ? <>{k.ansprechpartner[0].name}<div className="text-[12.5px] text-muted">{k.ansprechpartner[0].funktion}</div></> : <span className="text-muted">–</span>}</td>
                   <td className="num">{k.einsaetze.length}</td>
                   <td>{k.konditionen.length ? k.konditionen.slice(0, 2).map((x) => <div key={x.id} className="text-[12.5px]">{x.rolle} <span className="num text-muted">{eur(x.stundensatz)}</span></div>) : <span className="text-muted">–</span>}</td>
                   <td>{rv}</td>

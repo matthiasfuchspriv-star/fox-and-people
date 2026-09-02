@@ -70,8 +70,10 @@ export default async function AbrechnungPage({ searchParams }: { searchParams: P
           <span className="font-display font-bold px-2 min-w-[150px] text-center">{MONATE_LANG[monat - 1]} {jahr}</span>
           <Link href={`/abrechnung?jahr=${next.jahr}&monat=${next.monat}&ansicht=${ansicht}`} className="btn btn-ghost btn-sm"><ChevronRight size={16} /></Link>
         </div>
-        <Link href={`/abrechnung?jahr=${jahr}&monat=${monat}&ansicht=monat`} className={`chip-filter ${ansicht === "monat" ? "active" : ""}`}>Monat erfassen</Link>
-        <Link href={`/abrechnung?jahr=${jahr}&monat=${monat}&ansicht=jahr`} className={`chip-filter ${ansicht === "jahr" ? "active" : ""}`}>Jahresübersicht</Link>
+        <div className="seg">
+          <Link href={`/abrechnung?jahr=${jahr}&monat=${monat}&ansicht=monat`} className={`chip-filter ${ansicht === "monat" ? "active" : ""}`}>Monat erfassen</Link>
+          <Link href={`/abrechnung?jahr=${jahr}&monat=${monat}&ansicht=jahr`} className={`chip-filter ${ansicht === "jahr" ? "active" : ""}`}>Jahresübersicht</Link>
+        </div>
         {sp.gespeichert && <span className="badge badge-teal ml-2">{sp.gespeichert} Zeilen gespeichert</span>}
         {sp.fehler === "berechtigung" && <span className="badge badge-red ml-2">Keine Berechtigung</span>}
       </div>
@@ -111,7 +113,7 @@ export default async function AbrechnungPage({ searchParams }: { searchParams: P
                       // DOM-Wert und zeigen den neuen Betrag erst nach einem harten Reload.
                       <Fragment key={`${e.id}|${m?.stunden ?? ""}|${m?.verrechnung ?? ""}|${m?.zulagenBetrag ?? ""}`}>
                       <tr>
-                        <td><Link href={`/personen/${e.personId}`} className="row-link">{e.person.nachname} {e.person.vorname}</Link><div className="text-[12px] text-muted">{e.rolleImEinsatz}{e.art === "DIREKTVERMITTLUNG" && <span className="badge badge-fox ml-1">Vermittlung</span>}</div></td>
+                        <td><Link href={`/personen/${e.personId}`} className="row-link">{e.person.nachname} {e.person.vorname}</Link><div className="text-[12.5px] text-muted">{e.rolleImEinsatz}{e.art === "DIREKTVERMITTLUNG" && <span className="badge badge-fox ml-1">Vermittlung</span>}</div></td>
                         <td>{e.kunde.firmenname}</td>
                         <td className="r num text-muted">{e.art === "DIREKTVERMITTLUNG" ? "Honorar" : eur(e.verrechnungssatz)}</td>
                         <td className="r"><input name={`stunden_${e.id}`} defaultValue={m?.stunden ?? ""} placeholder={(() => { const sp2 = sollM.jePerson.find((x) => x.personId === e.personId); return sp2?.soll ? `Soll ${Math.round(sp2.soll)}` : ""; })()} title="Leer lassen = Sollstunden aus der Einsatzplanung (X-Tage) bzw. bestätigte Stundennachweise werden übernommen" className="input !w-20 !py-1.5 num text-right" inputMode="decimal" readOnly={fix || !sensibel} /></td>
@@ -173,7 +175,7 @@ export default async function AbrechnungPage({ searchParams }: { searchParams: P
               <thead><tr><th>Mitarbeiter / Kunde</th><th>Typ</th>{MONATE.map((m) => <th key={m} className="r">{m}</th>)}<th className="r">Jahr</th>{!prov && <th className="r">Marge</th>}</tr></thead>
               <tbody>{c.mitarbeiter.map((m) => (
                 <>
-                  <tr key={m.personId + m.kundeId + "v"}><td rowSpan={prov ? 2 : 4} className="font-semibold align-top"><Link href={`/personen/${m.personId}`} className="row-link">{m.name}</Link><div className="text-[12px] text-muted font-normal">{m.kunde}</div></td><td className="text-muted">Verrechnung</td>{m.monate.map((x) => <td key={x.monat} className="r num">{x.verrechnung ? eur(x.verrechnung, 0) : "·"}</td>)}<td className="r num font-semibold">{eur(m.verrechnungJahr, 0)}</td>{!prov && <td rowSpan={4} className={`r num font-bold align-middle ${m.db1Marge < 0 ? "text-red" : "text-teal"}`}>{pct(m.db1Marge)}</td>}</tr>
+                  <tr key={m.personId + m.kundeId + "v"}><td rowSpan={prov ? 2 : 4} className="font-semibold align-top"><Link href={`/personen/${m.personId}`} className="row-link">{m.name}</Link><div className="text-[12.5px] text-muted font-normal">{m.kunde}</div></td><td className="text-muted">Verrechnung</td>{m.monate.map((x) => <td key={x.monat} className="r num">{x.verrechnung ? eur(x.verrechnung, 0) : "·"}</td>)}<td className="r num font-semibold">{eur(m.verrechnungJahr, 0)}</td>{!prov && <td rowSpan={4} className={`r num font-bold align-middle ${m.db1Marge < 0 ? "text-red" : "text-teal"}`}>{pct(m.db1Marge)}</td>}</tr>
                   {!prov && <tr key={m.personId + m.kundeId + "l"}><td className="text-muted">Bruttolohn</td>{m.monate.map((x) => <td key={x.monat} className="r num">{x.grundlohn ? eur(x.grundlohn, 0) : "·"}</td>)}<td className="r num">{eur(m.selbstkostenJahr, 0)}</td></tr>}
                   {!prov && <tr key={m.personId + m.kundeId + "a"}><td className="text-muted">Abgaben & RSt</td>{m.monate.map((x) => <td key={x.monat} className="r num text-muted">{x.abgaben ? eur(x.abgaben, 0) : "·"}</td>)}<td className="r num">{eur(m.abgabenRueckstellungenJahr, 0)}</td></tr>}
                   <tr key={m.personId + m.kundeId + "d"} className="!bg-surface-2"><td className="font-semibold">{EL}</td>{m.monate.map((x) => <td key={x.monat} className={`r num font-semibold ${x.db1 < 0 ? "text-red" : x.db1 > 0 ? "text-teal" : "text-muted"}`}>{x.verrechnung || x.grundlohn ? (ohneKosten ? "–" : eur(prov ? x.provision : x.db1, 0)) : "·"}</td>)}<td className={`r num font-bold ${m.db1Jahr < 0 ? "text-red" : "text-teal"}`}>{ohneKosten ? "–" : eur(prov ? m.provisionJahr : m.db1Jahr, 0)}</td></tr>

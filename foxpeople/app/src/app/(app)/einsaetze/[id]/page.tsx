@@ -65,9 +65,9 @@ export default async function EinsatzDetail({ params, searchParams }: { params: 
               <Field label="Angebot (Verrechnungssatz)"><select name="angebotId" defaultValue={e.angebotId ?? ""} className="select"><option value="">– ohne Angebot –</option>{angebote.map((a) => <option key={a.id} value={a.id}>{a.nummer} · {a.positionen.map((p) => `${p.rolle} ${p.verrechnungssatz?.toFixed(2) ?? "–"} €`).join(", ")}</option>)}</select></Field>
               <Field label="Beginn"><input type="date" name="von" defaultValue={isoDate(e.von)} className="input" /></Field>
               <Field label="Ende"><input type="date" name="bis" defaultValue={isoDate(e.bis)} className="input" /></Field>
-              <Field label="Grenzüberschreitend / ZKO"><div className="space-y-1 mt-1"><label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="grenzueberschreitend" defaultChecked={e.grenzueberschreitend} /> Überlassung ins Ausland</label><label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="zkoGemeldet" defaultChecked={e.zkoGemeldet} /> ZKO-Meldung erledigt</label></div></Field>
-              <Field label="Stundenerfassung in der Mitarbeiter-App" help="Standardmäßig aus. Erst wenn das angehakt ist, sieht der Mitarbeiter für diesen Einsatz den Stundenzettel in der App."><label className="flex items-center gap-2 text-[13.5px] mt-2"><input type="checkbox" name="stundenerfassungApp" defaultChecked={e.stundenerfassungApp} /> Mitarbeiter darf Stunden in der App erfassen</label></Field>
-              <Field label="Schwerarbeit" help="Steht in der Überlassungsmitteilung (Punkte 9/10) und als Kennzeichen am Einsatz."><div className="space-y-1 mt-1"><label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="nachtschwerarbeit" defaultChecked={e.nachtschwerarbeit} /> Nachtschwerarbeitsgesetz (NSchG) kommt zur Anwendung</label><label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="schwerarbeit" defaultChecked={e.schwerarbeit} /> Schwerarbeitsverordnung kommt zur Anwendung</label></div></Field>
+              <Field label="Grenzüberschreitend / ZKO"><div className="space-y-1 mt-1"><label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="grenzueberschreitend" defaultChecked={e.grenzueberschreitend} /> Überlassung ins Ausland</label><label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="zkoGemeldet" defaultChecked={e.zkoGemeldet} /> ZKO-Meldung erledigt</label></div></Field>
+              <Field label="Stundenerfassung in der Mitarbeiter-App" help="Standardmäßig aus. Erst wenn das angehakt ist, sieht der Mitarbeiter für diesen Einsatz den Stundenzettel in der App."><label className="flex items-center gap-2 text-[14px] mt-2"><input type="checkbox" name="stundenerfassungApp" defaultChecked={e.stundenerfassungApp} /> Mitarbeiter darf Stunden in der App erfassen</label></Field>
+              <Field label="Schwerarbeit" help="Steht in der Überlassungsmitteilung (Punkte 9/10) und als Kennzeichen am Einsatz."><div className="space-y-1 mt-1"><label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="nachtschwerarbeit" defaultChecked={e.nachtschwerarbeit} /> Nachtschwerarbeitsgesetz (NSchG) kommt zur Anwendung</label><label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="schwerarbeit" defaultChecked={e.schwerarbeit} /> Schwerarbeitsverordnung kommt zur Anwendung</label></div></Field>
               <Field label="Art"><select name="art" defaultValue={e.art} className="select"><option value="UEBERLASSUNG">Arbeitskräfteüberlassung</option><option value="DIREKTVERMITTLUNG">Direktvermittlung</option></select></Field>
               {kostenstellen.length > 0 && (
                 <Field label="Umsatz zählt zu Kostenstelle" help="Bestimmt, welcher Kostenstelle Umsatz und Provision zugeordnet werden. Noch nicht abgerechnete Monate ziehen mit.">
@@ -80,7 +80,7 @@ export default async function EinsatzDetail({ params, searchParams }: { params: 
               {sensibel && <><Field label="Verrechnungssatz €/Std"><input name="verrechnungssatz" defaultValue={e.verrechnungssatz ?? ""} className="input num" /></Field><Field label="Bruttostundenlohn €/Std"><input name="stundenlohn" defaultValue={e.stundenlohn ?? ""} className="input num" /></Field></>}
               <div className="sm:col-span-2 section-title pt-2">Dienstvertrag (Arbeitsrecht) – wird im Personalstamm gespeichert</div>
               <DienstvertragFelder kvs={kvs} w={e.person} eintrittVorschlag={isoDate(e.von)} mitAustritt />
-              {alleZulagen.length > 0 && <Field label="Zulagen & Zuschläge" className="sm:col-span-2"><div className="grid sm:grid-cols-2 gap-1.5 mt-1">{alleZulagen.map((z) => <label key={z.id} className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="zulage" value={z.kuerzel} defaultChecked={zul.some((x) => x.kuerzel === z.kuerzel)} /> {z.name} <span className="text-muted text-[12px]">{zulageText(z)}</span></label>)}</div></Field>}
+              {alleZulagen.length > 0 && <Field label="Zulagen & Zuschläge" className="sm:col-span-2"><div className="grid sm:grid-cols-2 gap-1.5 mt-1">{alleZulagen.map((z) => <label key={z.id} className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="zulage" value={z.kuerzel} defaultChecked={zul.some((x) => x.kuerzel === z.kuerzel)} /> {z.name} <span className="text-muted text-[12.5px]">{zulageText(z)}</span></label>)}</div></Field>}
               <Field label="Notizen" className="sm:col-span-2"><textarea name="notizen" defaultValue={e.notizen ?? ""} rows={3} className="textarea" /></Field>
               <div className="sm:col-span-2"><button className="btn btn-primary">Speichern</button></div>
             </form>
@@ -105,7 +105,7 @@ export default async function EinsatzDetail({ params, searchParams }: { params: 
               {!prov && <Gauge kosten={kalk.kalkulationProStunde} preis={kalk.verrechnungssatz} />}
               <div className="mt-3">
                 {!prov && <Stat label="Selbstkosten / Std" value={eur(kalk.kalkulationProStunde)} />}
-                <Stat label="Verrechnungssatz" value={<span>{eur(e.verrechnungssatz)}{zps.weiter > 0 && <span className="text-muted text-[12px]"> + Zulagen {eur(zps.weiter)} × Faktor = {eur(kalk.verrechnungssatz)}</span>}</span>} />
+                <Stat label="Verrechnungssatz" value={<span>{eur(e.verrechnungssatz)}{zps.weiter > 0 && <span className="text-muted text-[12.5px]"> + Zulagen {eur(zps.weiter)} × Faktor = {eur(kalk.verrechnungssatz)}</span>}</span>} />
                 {zul.length > 0 && <Stat label="Zulagen (Lohnseite)" value={`${eur(zps.lohn)}/Std · ${zul.map((z) => z.name).join(", ")}`} />}
                 {prov ? (
                   <>
@@ -125,7 +125,7 @@ export default async function EinsatzDetail({ params, searchParams }: { params: 
                 <div className={`mt-4 rounded-lg border p-3 ${edb.ampel === "gruen" ? "border-teal/40 bg-teal/5" : edb.ampel === "gelb" ? "border-amber/40 bg-amber/5" : "border-red/40 bg-red/5"}`}>
                   <div className="flex items-center gap-2 mb-1">
                     <span className={`inline-block w-2.5 h-2.5 rounded-full ${edb.ampel === "gruen" ? "bg-teal" : edb.ampel === "gelb" ? "bg-amber" : "bg-red"}`} />
-                    <span className="text-[13px] font-semibold">Deckungsbeitrag {edb.ampel === "gruen" ? "in Ordnung" : edb.ampel === "gelb" ? "knapp" : "zu niedrig"} · {pct(edb.marge)}</span>
+                    <span className="text-[12.5px] font-semibold">Deckungsbeitrag {edb.ampel === "gruen" ? "in Ordnung" : edb.ampel === "gelb" ? "knapp" : "zu niedrig"} · {pct(edb.marge)}</span>
                   </div>
                   <div className="text-[12.5px] text-muted">DB {eur(edb.db1ProStd)}/Std bei {eur(edb.verrechnungssatz)} Verrechnungssatz und {eur(edb.selbstkostenProStd)} Selbstkosten · rund {eur(edb.db1Monat)} im Monat bei {edb.stundenMonat.toLocaleString("de-AT")} Stunden. Zielkorridor: ab 18 % grün, ab 10 % gelb.</div>
                   {edb.hinweise.length > 0 && <ul className="mt-1.5 text-[12.5px] list-disc pl-4 space-y-0.5">{edb.hinweise.map((h, i) => <li key={i}>{h}</li>)}</ul>}
@@ -140,12 +140,12 @@ export default async function EinsatzDetail({ params, searchParams }: { params: 
                 const vorhanden = e.vertraege.find((v) => v.typ === t);
                 return vorhanden ? (
                   <div key={t} className="flex items-center justify-between gap-2">
-                    <span className="text-[13.5px]">{vertragTitel(t)}</span>
+                    <span className="text-[14px]">{vertragTitel(t)}</span>
                     <Link href={`/vertraege/${vorhanden.id}`} className="btn btn-secondary btn-sm">{vorhanden.nummer} öffnen</Link>
                   </div>
                 ) : (
                   <form key={t} action={arbeitspapiereErzeugen.bind(null, id)} className="flex items-center justify-between gap-2">
-                    <span className="text-[13.5px]">{vertragTitel(t)}</span>
+                    <span className="text-[14px]">{vertragTitel(t)}</span>
                     <input type="hidden" name="typ" value={t} />
                     <button className="btn btn-secondary btn-sm">Erzeugen</button>
                   </form>
@@ -166,10 +166,10 @@ export default async function EinsatzDetail({ params, searchParams }: { params: 
               <Field label="Auflösungsart" help="Steht in der Einsatzhistorie des Mitarbeiters – Grundlage für Wiedereinsatzquote und Sperrlisten."><select name="aufloesungsart" defaultValue={e.aufloesungsart ?? ""} className="select">{AUFLOESUNGSARTEN.map((a) => <option key={a} value={a === "– offen –" ? "" : a}>{a}</option>)}</select></Field>
               <button className="btn btn-secondary w-full justify-center">Übernehmen</button>
             </form>
-            <p className="text-[12px] text-muted mt-3">Beim Beenden ohne weiteren Einsatz wandert die Person automatisch zurück in den Bewerber-Pool.</p>
-            {s.rolle === "SYSTEMADMIN" && <form action={einsatzLoeschen.bind(null, id)} className="mt-3"><button className="btn btn-ghost btn-sm w-full justify-center text-red">Einsatz endgültig löschen (nur Systemadmin)</button><p className="help mt-1">Planung, Verträge und Nachweise werden vom Einsatz gelöst.</p><label className="flex items-start gap-2 mt-2 text-[12px] text-muted"><input type="checkbox" name="erzwingen" value="ja" className="mt-[3px]" /><span>Auch Rechnungspositionen und abgerechnete Monate mitlöschen (Rechnungen werden neu gerechnet).</span></label></form>}
+            <p className="text-[12.5px] text-muted mt-3">Beim Beenden ohne weiteren Einsatz wandert die Person automatisch zurück in den Bewerber-Pool.</p>
+            {s.rolle === "SYSTEMADMIN" && <form action={einsatzLoeschen.bind(null, id)} className="mt-3"><button className="btn btn-ghost btn-sm w-full justify-center text-red">Einsatz endgültig löschen (nur Systemadmin)</button><p className="help mt-1">Planung, Verträge und Nachweise werden vom Einsatz gelöst.</p><label className="flex items-start gap-2 mt-2 text-[12.5px] text-muted"><input type="checkbox" name="erzwingen" value="ja" className="mt-[3px]" /><span>Auch Rechnungspositionen und abgerechnete Monate mitlöschen (Rechnungen werden neu gerechnet).</span></label></form>}
           </Card>
-          {e.vertraege.length > 0 && <Card title="Verträge" className="reveal reveal-4"><ul className="divide-y divide-line">{e.vertraege.map((v) => <li key={v.id} className="py-2 flex justify-between text-[13.5px]"><Link href={`/vertraege/${v.id}`} className="font-semibold hover:text-brand">{v.nummer}</Link><span className="text-muted">{v.typ.replace("_", " ")} · {v.status}</span></li>)}</ul></Card>}
+          {e.vertraege.length > 0 && <Card title="Verträge" className="reveal reveal-4"><ul className="divide-y divide-line">{e.vertraege.map((v) => <li key={v.id} className="py-2 flex justify-between text-[14px]"><Link href={`/vertraege/${v.id}`} className="font-semibold hover:text-brand">{v.nummer}</Link><span className="text-muted">{v.typ.replace("_", " ")} · {v.status}</span></li>)}</ul></Card>}
         </div>
       </div>
     </>

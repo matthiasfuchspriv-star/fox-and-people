@@ -28,7 +28,7 @@ export function TeilenKnoepfe({ url, text }: { url: string; text: string }) {
         <a href={`https://wa.me/?text=${encodeURIComponent(text)}`} target="_blank" rel="noopener" className="btn btn-secondary justify-center"><MessageCircle size={16} /> WhatsApp</a>
         <button onClick={kopieren} className="btn btn-secondary justify-center">{kopiert ? <><Check size={16} /> Kopiert</> : <><Copy size={16} /> Kopieren</>}</button>
       </div>
-      <div className="text-[12px] text-muted break-all bg-surface-2 rounded-md px-3 py-2">{url}</div>
+      <div className="text-[12.5px] text-muted break-all bg-surface-2 rounded-md px-3 py-2">{url}</div>
     </div>
   );
 }

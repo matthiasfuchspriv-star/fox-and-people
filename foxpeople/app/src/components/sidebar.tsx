@@ -26,7 +26,7 @@ const items: { href: string; label: string; icon: LucideIcon; group?: string; nu
 const ICON = { size: 17, strokeWidth: 1.75 } as const;
 
 function Group({ children }: { children: string }) {
-  return <div className="hidden lg:block section-title px-3 pt-5 pb-1.5 text-[11.5px] font-semibold">{children}</div>;
+  return <div className="hidden lg:block section-title px-3 pt-5 pb-1.5 text-[12.5px] font-semibold">{children}</div>;
 }
 
 export function Sidebar({ rolle, admin, offeneAufgaben, neueNachrichten = 0, offeneNachweise = 0, offeneFehler = 0 }: { rolle: string; admin: boolean; offeneAufgaben: number; neueNachrichten?: number; offeneNachweise?: number; offeneFehler?: number }) {
@@ -39,7 +39,7 @@ export function Sidebar({ rolle, admin, offeneAufgaben, neueNachrichten = 0, off
     <aside className="bg-surface-2/70 border-b lg:border-b-0 lg:border-r border-line lg:min-h-screen lg:sticky lg:top-0 lg:h-screen flex lg:flex-col px-3 py-2 lg:py-5 overflow-x-auto lg:overflow-y-auto">
       <Link href="/" className="hidden lg:block px-3 mb-6">
         <Logo dark size={34} />
-        <div className="text-[12px] text-muted mt-1 pl-px">Personaldisposition</div>
+        <div className="text-[12.5px] text-muted mt-1 pl-px">Personaldisposition</div>
       </Link>
       <nav className="flex lg:flex-col gap-1 lg:gap-0.5 flex-1">
         {items.filter((it) => !it.nurZentrale || zentrale).map((it) => (
@@ -77,7 +77,7 @@ export function Sidebar({ rolle, admin, offeneAufgaben, neueNachrichten = 0, off
           </>
         )}
       </nav>
-      <a href="/app" target="_blank" className="hidden lg:flex items-center gap-2 px-3 pt-4 text-[12px] font-medium text-muted hover:text-ink transition-colors"><Smartphone size={13} /> Mitarbeiter-App öffnen</a>
+      <a href="/app" target="_blank" className="hidden lg:flex items-center gap-2 px-3 pt-4 text-[12.5px] font-medium text-muted hover:text-ink transition-colors"><Smartphone size={13} /> Mitarbeiter-App öffnen</a>
       <div className="hidden lg:block px-3 pt-2 text-[11px] text-muted/80">WIFI-NÖ-Schema 2023 · v{VERSION}</div>
     </aside>
   );

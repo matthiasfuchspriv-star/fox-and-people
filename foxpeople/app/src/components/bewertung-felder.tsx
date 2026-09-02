@@ -8,7 +8,7 @@ export function BewertungFelder({ ziel, kommentarPlaceholder, standard = 4, komp
     <div className="space-y-3">
       <div>
         <div className="label mb-1">Bewertung in Füchsen (1 = schlecht, 5 = sehr gut) <span className="text-red">*</span></div>
-        <div className="flex gap-1.5">{[1, 2, 3, 4, 5].map((n) => <label key={n} className="flex-1"><input type="radio" name="sterne" value={n} defaultChecked={n === standard} required className="peer sr-only" /><span className={`block text-center ${kompakt ? "py-2 text-[13px]" : "py-3 text-[15px]"} border border-line-2 rounded-[3px] cursor-pointer peer-checked:bg-fox peer-checked:text-white peer-checked:border-fox font-display font-bold whitespace-nowrap`}>{kompakt ? `${n} 🦊` : "🦊".repeat(n)}</span></label>)}</div>
+        <div className="flex gap-1.5">{[1, 2, 3, 4, 5].map((n) => <label key={n} className="flex-1"><input type="radio" name="sterne" value={n} defaultChecked={n === standard} required className="peer sr-only" /><span className={`block text-center ${kompakt ? "py-2 text-[12.5px]" : "py-3 text-[15px]"} border border-line-2 rounded-[3px] cursor-pointer peer-checked:bg-fox peer-checked:text-white peer-checked:border-fox font-display font-bold whitespace-nowrap`}>{kompakt ? `${n} 🦊` : "🦊".repeat(n)}</span></label>)}</div>
       </div>
       <div>
         <div className="label mb-1">Was trifft zu? <span className="text-muted font-normal">(mehrere möglich)</span></div>

@@ -97,9 +97,9 @@ export function PersonForm({ p, kunden, kvs, kostenstellen, sensibel, action, sv
             <Field label="Mobilität" help="Fließt ins Matching (Entfernung Wohnsitz → Kunde)."><div className="flex flex-wrap items-center gap-4">
               {/* Farbe statt bloßem Haken: Ob jemand Auto, Führerschein und Staplerschein hat,
                   entscheidet beim Telefonat mit dem Kunden in Sekunden, ob er passt. Grün = da. */}
-              <label className={`flex items-center gap-2 text-[13.5px] px-2 py-1 rounded-lg ${p.fuehrerschein ? "bg-teal-soft text-teal font-semibold" : "text-muted"}`}><input type="checkbox" name="fuehrerschein" defaultChecked={p.fuehrerschein} /> Führerschein B</label>
-              <label className={`flex items-center gap-2 text-[13.5px] px-2 py-1 rounded-lg ${p.autoVorhanden ? "bg-teal-soft text-teal font-semibold" : "text-muted"}`}><input type="checkbox" name="autoVorhanden" defaultChecked={p.autoVorhanden} /> Auto vorhanden</label>
-              <div className={`flex items-center gap-2 text-[13.5px] px-2 py-1 rounded-lg ${stapler ? "bg-teal-soft text-teal font-semibold" : "text-muted"}`}>{stapler ? "✓" : "–"} Staplerschein {stapler ? "" : <span className="text-[12px]">(unter Qualifikationen eintragen)</span>}</div>
+              <label className={`flex items-center gap-2 text-[14px] px-2 py-1 rounded-lg ${p.fuehrerschein ? "bg-teal-soft text-teal font-semibold" : "text-muted"}`}><input type="checkbox" name="fuehrerschein" defaultChecked={p.fuehrerschein} /> Führerschein B</label>
+              <label className={`flex items-center gap-2 text-[14px] px-2 py-1 rounded-lg ${p.autoVorhanden ? "bg-teal-soft text-teal font-semibold" : "text-muted"}`}><input type="checkbox" name="autoVorhanden" defaultChecked={p.autoVorhanden} /> Auto vorhanden</label>
+              <div className={`flex items-center gap-2 text-[14px] px-2 py-1 rounded-lg ${stapler ? "bg-teal-soft text-teal font-semibold" : "text-muted"}`}>{stapler ? "✓" : "–"} Staplerschein {stapler ? "" : <span className="text-[12.5px]">(unter Qualifikationen eintragen)</span>}</div>
               <input name="maxPendelKm" defaultValue={p.maxPendelKm ?? ""} className="input !w-28 num" placeholder="max. km" />
             </div></Field>
           </div>
@@ -109,7 +109,7 @@ export function PersonForm({ p, kunden, kvs, kostenstellen, sensibel, action, sv
         {sensibel && (
           <Card title="AMS-Förderung" className="reveal reveal-3">
             <div className="space-y-4">
-              <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="amsGefoerdert" defaultChecked={p.amsGefoerdert} /> Mitarbeiter wird vom AMS gefördert</label>
+              <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="amsGefoerdert" defaultChecked={p.amsGefoerdert} /> Mitarbeiter wird vom AMS gefördert</label>
               <div className="grid sm:grid-cols-3 gap-4">
                 <Field label="Förderart">
                   <input name="amsFoerderungArt" defaultValue={p.amsFoerderungArt ?? ""} className="input" list="ams-arten" placeholder="z. B. Eingliederungsbeihilfe" />
@@ -141,10 +141,10 @@ export function PersonForm({ p, kunden, kvs, kostenstellen, sensibel, action, sv
             <Field label="Notizen"><textarea name="notizen" defaultValue={p.notizen ?? ""} rows={6} className="textarea" placeholder="Gesprächsnotizen, Wünsche, Einschränkungen …" /></Field>
           </div>
         </Card>
-        <div className="flex gap-2 reveal reveal-3">
-          <button className="btn btn-primary flex-1 justify-center">{neu ? "Person aufnehmen" : "Änderungen speichern"}</button>
-          <a href={neu ? "/personen" : `/personen/${p.id}`} className="btn btn-secondary">Abbrechen</a>
-        </div>
+      </div>
+      <div className="action-bar lg:col-span-3 justify-end">
+        <a href={neu ? "/personen" : `/personen/${p.id}`} className="btn btn-secondary">Abbrechen</a>
+        <button className="btn btn-primary min-w-40">{neu ? "Person aufnehmen" : "Änderungen speichern"}</button>
       </div>
     </form>
   );

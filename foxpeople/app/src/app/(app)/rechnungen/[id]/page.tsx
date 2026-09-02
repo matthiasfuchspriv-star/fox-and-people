@@ -40,7 +40,7 @@ export default async function RechnungDetail({ params, searchParams }: { params:
             <table className="table"><thead><tr><th>Leistung</th><th className="r">Menge</th><th>Einheit</th><th className="r">Einzelpreis</th><th className="r">Betrag</th></tr></thead>
               <tbody>{r.positionen.map((p) => <tr key={p.id}><td>{p.person ? <Link href={`/personen/${p.personId}`} className="row-link">{p.beschreibung}</Link> : p.beschreibung}</td><td className="r num">{p.menge.toLocaleString("de-AT")}</td><td className="text-muted">{p.einheit}</td><td className="r num">{eur(p.einzelpreis)}</td><td className="r num font-semibold">{eur(p.betrag)}</td></tr>)}</tbody>
             </table>
-            <div className="px-5 py-4 border-t border-line flex justify-end"><div className="w-64"><Stat label="Netto" value={eur(r.netto)} /><Stat label={`${r.ustProzent} % USt`} value={eur(r.ust || r.brutto - r.netto)} /><Stat label="Brutto" value={<span className="text-[16px]">{eur(r.brutto)}</span>} /><Stat label="Bezahlt" value={eur(r.bezahltBetrag)} /><Stat label="Offen" value={<span className={rest > 0.005 && r.status !== "ENTWURF" ? "text-amber" : ""}>{eur(rest)}</span>} /></div></div>
+            <div className="px-5 py-4 border-t border-line flex justify-end"><div className="w-64"><Stat label="Netto" value={eur(r.netto)} /><Stat label={`${r.ustProzent} % USt`} value={eur(r.ust || r.brutto - r.netto)} /><Stat label="Brutto" value={<span className="text-[17px]">{eur(r.brutto)}</span>} /><Stat label="Bezahlt" value={eur(r.bezahltBetrag)} /><Stat label="Offen" value={<span className={rest > 0.005 && r.status !== "ENTWURF" ? "text-amber" : ""}>{eur(rest)}</span>} /></div></div>
           </Card>
           <Card title="Fälligkeit & Notiz" className="reveal reveal-2">
             <form action={rechnungNotiz.bind(null, id)} className="grid sm:grid-cols-[180px_1fr_auto] gap-3 items-end">
@@ -90,7 +90,7 @@ export default async function RechnungDetail({ params, searchParams }: { params:
               <p className="help mt-2">Nur für Test-/Fehlbuchungen: Entwürfe, stornierte Rechnungen und Storno-Gutschriften. Monatszeilen werden wieder offen; war es die letzte vergebene Nummer, wird der Nummernkreis zurückgesetzt und die Nummer erneut vergeben. Wird im Audit-Log protokolliert.</p>
             </Card>
           )}
-          {r.dokumente.length > 0 && <Card title="Versendete PDFs" className="reveal reveal-4"><ul className="divide-y divide-line">{r.dokumente.map((d) => <li key={d.id} className="py-2 flex justify-between text-[13px]"><span>{d.dateiname}<span className="text-muted"> · {datum(d.hochgeladenAm)}</span></span><a href={`/dokumente/${d.id}`} className="text-brand font-semibold">Öffnen</a></li>)}</ul></Card>}
+          {r.dokumente.length > 0 && <Card title="Versendete PDFs" className="reveal reveal-4"><ul className="divide-y divide-line">{r.dokumente.map((d) => <li key={d.id} className="py-2 flex justify-between text-[12.5px]"><span>{d.dateiname}<span className="text-muted"> · {datum(d.hochgeladenAm)}</span></span><a href={`/dokumente/${d.id}`} className="text-brand font-semibold">Öffnen</a></li>)}</ul></Card>}
         </div>
       </div>
     </>

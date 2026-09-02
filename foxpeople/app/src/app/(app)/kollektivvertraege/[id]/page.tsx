@@ -32,8 +32,8 @@ export default async function KvBearbeiten({ params, searchParams }: { params: P
             </div>
             <Field label="Gilt ab"><input type="date" name="gultigAb" defaultValue={isoDate(kv.gultigAb)} className="input" /></Field>
             <Field label="Gilt für"><select name="gruppe" defaultValue={kv.gruppe} className="select"><option value="ARBEITER">Arbeiter</option><option value="ANGESTELLTE">Angestellte</option><option value="BEIDE">Beide</option></select></Field>
-            <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="istReferenz" defaultChecked={kv.istReferenz} /> Beschäftiger-KV (Referenzlohn § 10 AÜG)</label>
-            <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="referenzzuschlagPruefen" defaultChecked={kv.referenzzuschlagPruefen} /> Lohntafel nicht exakt gepflegt – Referenzzuschlag beim Einsatz manuell prüfen</label>
+            <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="istReferenz" defaultChecked={kv.istReferenz} /> Beschäftiger-KV (Referenzlohn § 10 AÜG)</label>
+            <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="referenzzuschlagPruefen" defaultChecked={kv.referenzzuschlagPruefen} /> Lohntafel nicht exakt gepflegt – Referenzzuschlag beim Einsatz manuell prüfen</label>
             <Field label="Hinweis"><textarea name="hinweis" defaultValue={kv.hinweis ?? ""} rows={2} className="textarea" /></Field>
             <button className="btn btn-primary w-full justify-center">Speichern</button>
           </form>
@@ -52,11 +52,11 @@ export default async function KvBearbeiten({ params, searchParams }: { params: P
                 <tbody>{kv.lohntabelle.map((l) => (
                   <tr key={l.id}>
                     <td className="font-semibold">{l.beschaeftigungsgruppe}</td>
-                    <td className="text-[13px] text-muted">{l.bezeichnung ?? "–"}</td>
+                    <td className="text-[12.5px] text-muted">{l.bezeichnung ?? "–"}</td>
                     <td className="r num">{l.mindestStundenlohn != null ? eur(l.mindestStundenlohn) : "–"}</td>
                     <td className="r num">{l.mindestMonatsbrutto != null ? eur(l.mindestMonatsbrutto) : "–"}</td>
                     <td className="r num">{l.referenzzuschlagProzent != null ? `${l.referenzzuschlagProzent} %` : "–"}</td>
-                    <td className="text-[13px]">{l.gultigAb ? datum(l.gultigAb) : "–"}</td>
+                    <td className="text-[12.5px]">{l.gultigAb ? datum(l.gultigAb) : "–"}</td>
                     <td className="r whitespace-nowrap">
                       <details className="inline-block text-left">
                         <summary className="btn btn-ghost btn-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden">Bearbeiten</summary>

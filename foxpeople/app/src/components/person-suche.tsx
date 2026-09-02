@@ -57,16 +57,16 @@ export function PersonSuche({ name = "personId", pflicht = false }: { name?: str
         onKeyDown={(e) => { if (e.key === "Escape") setOffen(false); }}
       />
       {gewaehlt && (
-        <button type="button" className="absolute right-2 top-2 text-[12px] text-muted underline" onClick={() => { setGewaehlt(null); setText(""); }}>ändern</button>
+        <button type="button" className="absolute right-2 top-2 text-[12.5px] text-muted underline" onClick={() => { setGewaehlt(null); setText(""); }}>ändern</button>
       )}
       {offen && !gewaehlt && (
         <div className="absolute z-20 mt-1 w-full rounded-lg border border-line bg-surface shadow-lg max-h-72 overflow-auto">
-          {laeuft && <div className="px-3 py-2 text-[13px] text-muted">sucht …</div>}
+          {laeuft && <div className="px-3 py-2 text-[12.5px] text-muted">sucht …</div>}
           {!laeuft && treffer.length === 0 && text.trim().length >= 2 && (
-            <div className="px-3 py-2 text-[13px] text-muted">Niemand gefunden. Anderer Namensteil? Gesucht wird in Vor- und Nachname.</div>
+            <div className="px-3 py-2 text-[12.5px] text-muted">Niemand gefunden. Anderer Namensteil? Gesucht wird in Vor- und Nachname.</div>
           )}
           {treffer.map((t) => (
-            <button key={t.id} type="button" className="block w-full text-left px-3 py-2 hover:bg-surface-2 text-[13px]" onClick={() => { setGewaehlt(t); setOffen(false); }}>
+            <button key={t.id} type="button" className="block w-full text-left px-3 py-2 hover:bg-surface-2 text-[12.5px]" onClick={() => { setGewaehlt(t); setOffen(false); }}>
               <span className="font-semibold">{t.name}</span>
               {t.zusatz && <span className="text-muted"> · {t.zusatz}</span>}
             </button>

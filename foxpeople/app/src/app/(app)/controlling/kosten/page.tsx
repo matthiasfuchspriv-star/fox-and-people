@@ -68,7 +68,7 @@ export default async function KostenSeite({ searchParams }: { searchParams: Prom
               <tbody>
                 {positionen.map((p) => (
                   <tr key={p.id}>
-                    <td className="font-semibold">{p.bezeichnung}{p.notiz && <div className="text-[12px] text-muted font-normal">{p.notiz}</div>}</td>
+                    <td className="font-semibold">{p.bezeichnung}{p.notiz && <div className="text-[12.5px] text-muted font-normal">{p.notiz}</div>}</td>
                     <td className="text-[12.5px]">{p.kategorie}</td>
                     <td>{p.fix ? <Badge tone="brand">fix</Badge> : <Badge tone="amber">variabel</Badge>}</td>
                     <td className="r num font-semibold">{eur(p.betrag)}</td>
@@ -105,11 +105,11 @@ export default async function KostenSeite({ searchParams }: { searchParams: Prom
             {jahresbild.jeKategorie.length ? (
               <table className="table"><tbody>
                 {jahresbild.jeKategorie.map((k) => (
-                  <tr key={k.kategorie}><td>{k.kategorie}</td><td className="r num">{eur(k.betrag, 0)}</td><td className="r text-[12px] text-muted">{jahresbild.summeJahr ? Math.round((k.betrag / jahresbild.summeJahr) * 100) : 0} %</td></tr>
+                  <tr key={k.kategorie}><td>{k.kategorie}</td><td className="r num">{eur(k.betrag, 0)}</td><td className="r text-[12.5px] text-muted">{jahresbild.summeJahr ? Math.round((k.betrag / jahresbild.summeJahr) * 100) : 0} %</td></tr>
                 ))}
                 <tr className="font-bold"><td>Summe</td><td className="r num">{eur(jahresbild.summeJahr, 0)}</td><td /></tr>
               </tbody></table>
-            ) : <p className="p-5 text-[13px] text-muted">Noch nichts erfasst.</p>}
+            ) : <p className="p-5 text-[12.5px] text-muted">Noch nichts erfasst.</p>}
           </Card>
 
           <Card title="Monatsverlauf" pad={false} className="reveal reveal-4">

@@ -99,7 +99,7 @@ export default async function BewerberImport({ searchParams }: { searchParams: P
       {/* Schritt 2 und 3 */}
       {tabelle && zuordnung && zeigen && doc && (
         <Card title="3. Nur neuere Bewerbungen übernehmen (freiwillig)" className="mb-4">
-          <p className="text-[13.5px] text-muted mb-3">
+          <p className="text-[14px] text-muted mb-3">
             Bei gewachsenen Listen steckt die halbe Datei in alten Karteileichen. Trag ein Datum ein, dann kommen nur
             Zeilen mit einem Bewerbungsdatum ab diesem Tag in den Pool. Voraussetzung: Die Spalte „Beworben am" ist oben
             zugeordnet. Ohne Datum wird alles übernommen.
@@ -122,7 +122,7 @@ export default async function BewerberImport({ searchParams }: { searchParams: P
           <input type="hidden" name="art" value={art} />
 
           <Card title={`2. Spalten zuordnen – ${doc.dateiname}, ${zahl(tabelle.zeilen.length, "Zeile", "Zeilen")}`} className="mb-4">
-            <p className="text-[13.5px] text-muted mb-3">
+            <p className="text-[14px] text-muted mb-3">
               Der Vorschlag kommt aus den Überschriften deiner Datei. Prüf ihn kurz und ändere, was nicht passt. Alles, was du auf
               „– nicht übernehmen –" stellst, bleibt draußen.
             </p>
@@ -146,7 +146,7 @@ export default async function BewerberImport({ searchParams }: { searchParams: P
           <input type="hidden" name="nurAb" value={sp.nurAb ?? ""} />
 
           <Card title="4. Vorschau" className="mb-4" pad={false}>
-            <div className="px-5 pt-4 text-[13.5px]">
+            <div className="px-5 pt-4 text-[14px]">
               <b>{zeigen.filter((v) => v.status === "NEU").length}</b> werden übernommen,{" "}
               <b>{zeigen.filter((v) => v.status === "DUBLETTE").length}</b> gibt es schon oder stehen doppelt in der Datei,{" "}
               <b>{zeigen.filter((v) => v.status === "FEHLT").length}</b> haben keinen Namen{nurAb ? <>, <b>{zeigen.filter((v) => v.status === "ALT").length}</b> fallen unter den Datumsfilter</> : null}.

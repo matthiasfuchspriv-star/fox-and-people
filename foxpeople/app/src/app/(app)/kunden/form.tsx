@@ -84,8 +84,8 @@ export function KundeForm({ k, kostenstellen, referenzKvs = [], action }: { k: K
             <Field label="Notizen"><textarea name="notizen" defaultValue={k.notizen ?? ""} rows={7} className="textarea" /></Field>
           </div>
         </Card>
-        <div className="flex gap-2 reveal reveal-3"><button className="btn btn-primary flex-1 justify-center">{neu ? "Kunde anlegen" : "Speichern"}</button><a href={neu ? "/kunden" : `/kunden/${k.id}`} className="btn btn-secondary">Abbrechen</a></div>
       </div>
+      <div className="action-bar lg:col-span-3 justify-end"><a href={neu ? "/kunden" : `/kunden/${k.id}`} className="btn btn-secondary">Abbrechen</a><button className="btn btn-primary min-w-40">{neu ? "Kunde anlegen" : "Speichern"}</button></div>
     </form>
   );
 }

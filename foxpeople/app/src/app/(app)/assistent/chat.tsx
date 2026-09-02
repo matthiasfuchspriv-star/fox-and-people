@@ -32,17 +32,17 @@ export function Chat({ beispiele }: { beispiele: string[] }) {
     <div className="grid lg:grid-cols-[1fr_300px] gap-4">
       <section className="card flex flex-col min-h-[560px] reveal">
         <div className="flex-1 p-5 space-y-4 overflow-y-auto">
-          {msgs.length === 0 && <div className="text-center py-10"><div className="mx-auto w-12 h-12 rounded-2xl bg-brand-soft text-brand flex items-center justify-center mb-3"><Sparkles size={20} /></div><h3 className="font-display font-bold">Frag mich etwas</h3><p className="text-muted text-[13px] max-w-md mx-auto mt-1">Arbeitsrecht, AÜG, Kollektivvertrag, Kalkulation, unsere Vorlagen – oder Fragen zu den aktuellen Zahlen.</p></div>}
+          {msgs.length === 0 && <div className="text-center py-10"><div className="mx-auto w-12 h-12 rounded-2xl bg-brand-soft text-brand flex items-center justify-center mb-3"><Sparkles size={20} /></div><h3 className="font-display font-bold">Frag mich etwas</h3><p className="text-muted text-[12.5px] max-w-md mx-auto mt-1">Arbeitsrecht, AÜG, Kollektivvertrag, Kalkulation, unsere Vorlagen – oder Fragen zu den aktuellen Zahlen.</p></div>}
           {msgs.map((m, i) => (
             <div key={i} className={`flex ${m.rolle === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13.5px] leading-relaxed ${m.rolle === "user" ? "bg-brand text-white" : "bg-surface-2 border border-line"}`}>
+              <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-[14px] leading-relaxed ${m.rolle === "user" ? "bg-brand text-white" : "bg-surface-2 border border-line"}`}>
                 <div dangerouslySetInnerHTML={{ __html: md(m.text) }} />
-                {m.quellen && m.quellen.length > 0 && <details className="mt-2 text-[12px] text-muted"><summary className="cursor-pointer flex items-center gap-1"><BookOpen size={12} /> {m.quellen.length} Quellen</summary><ol className="mt-1 space-y-1 list-decimal ml-4">{m.quellen.map((q, j) => <li key={j}><b>{q.titel}</b> ({q.kategorie}): {q.text}…</li>)}</ol></details>}
+                {m.quellen && m.quellen.length > 0 && <details className="mt-2 text-[12.5px] text-muted"><summary className="cursor-pointer flex items-center gap-1"><BookOpen size={12} /> {m.quellen.length} Quellen</summary><ol className="mt-1 space-y-1 list-decimal ml-4">{m.quellen.map((q, j) => <li key={j}><b>{q.titel}</b> ({q.kategorie}): {q.text}…</li>)}</ol></details>}
                 {m.modus === "extraktiv" && <div className="text-[11px] text-amber mt-1">extraktiver Modus</div>}
               </div>
             </div>
           ))}
-          {pending && <div className="text-muted text-[13px] animate-pulse">Der Assistent denkt nach …</div>}
+          {pending && <div className="text-muted text-[12.5px] animate-pulse">Der Assistent denkt nach …</div>}
           <div ref={end} />
         </div>
         <form onSubmit={(e) => { e.preventDefault(); senden(text); }} className="border-t border-line p-3 flex gap-2">
@@ -52,7 +52,7 @@ export function Chat({ beispiele }: { beispiele: string[] }) {
       </section>
       <aside className="space-y-2 reveal reveal-2">
         <div className="section-title mb-2">Beispiele</div>
-        {beispiele.map((b) => <button key={b} type="button" onClick={() => senden(b)} className="block w-full text-left card px-4 py-3 text-[13px] hover:border-brand/50 transition-colors">{b}</button>)}
+        {beispiele.map((b) => <button key={b} type="button" onClick={() => senden(b)} className="block w-full text-left card px-4 py-3 text-[12.5px] hover:border-brand/50 transition-colors">{b}</button>)}
       </aside>
     </div>
   );

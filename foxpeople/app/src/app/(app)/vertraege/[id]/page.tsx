@@ -35,14 +35,14 @@ export default async function VertragDetail({ params, searchParams }: { params: 
           {istArbeitspapier ? (
             <div>
               <div className="alert alert-brand mb-3"><span><b>Dieses Papier wird direkt aus den Stammdaten erzeugt</b> – im Layout der Word-Vorlage, mit Ausfüllfeldern für alles, was die Software nicht weiß. Änderungen gehören in den Einsatz bzw. die Stammdaten (Person, Kunde, Firma) – ein hier bearbeiteter Text würde <u>nicht</u> im PDF landen, deshalb gibt es den Text-Editor für Arbeitspapiere nicht. Das fertige PDF: Knopf „PDF“ oben rechts.</span></div>
-              <div className="prose-contract whitespace-pre-wrap text-[13px] text-muted">{v.inhalt ? v.inhalt.replace(/^# .*\n/, "").replace(/\*\*/g, "") : "–"}</div>
+              <div className="prose-contract whitespace-pre-wrap text-[12.5px] text-muted">{v.inhalt ? v.inhalt.replace(/^# .*\n/, "").replace(/\*\*/g, "") : "–"}</div>
             </div>
           ) : v.status === "ENTWURF" ? (
             <form action={vertragSpeichern.bind(null, id)} className="space-y-3">
               <textarea name="inhalt" defaultValue={v.inhalt} rows={32} className="textarea font-mono text-[12.5px] leading-relaxed" />
               <div className="flex gap-2"><button className="btn btn-primary">Text speichern</button><span className="help self-center">Markdown-light: # Titel, ## Abschnitt, **fett**, Tabellen mit |</span></div>
             </form>
-          ) : <div className="prose-contract whitespace-pre-wrap text-[13.5px]">{v.inhalt.replace(/^# .*\n/, "").replace(/\*\*/g, "")}</div>}
+          ) : <div className="prose-contract whitespace-pre-wrap text-[14px]">{v.inhalt.replace(/^# .*\n/, "").replace(/\*\*/g, "")}</div>}
         </Card>
         <div className="space-y-4">
           {v.status !== "UNTERSCHRIEBEN" && (
@@ -61,7 +61,7 @@ export default async function VertragDetail({ params, searchParams }: { params: 
               <p className="help">E-Signatur (z. B. Dropbox Sign / DocuSign) ist vorbereitet und kann später angebunden werden.</p>
             </form>
           </Card>
-          {v.dokumente.length > 0 && <Card title="Abgelegte Dokumente" className="reveal reveal-4"><ul className="divide-y divide-line">{v.dokumente.map((d) => <li key={d.id} className="py-2 flex justify-between text-[13px]"><span>{d.dateiname}</span><a href={`/dokumente/${d.id}`} className="text-brand font-semibold">Öffnen</a></li>)}</ul></Card>}
+          {v.dokumente.length > 0 && <Card title="Abgelegte Dokumente" className="reveal reveal-4"><ul className="divide-y divide-line">{v.dokumente.map((d) => <li key={d.id} className="py-2 flex justify-between text-[12.5px]"><span>{d.dateiname}</span><a href={`/dokumente/${d.id}`} className="text-brand font-semibold">Öffnen</a></li>)}</ul></Card>}
           {s.rolle === "SYSTEMADMIN" && <Card title="Löschen (nur Systemadmin)" className="reveal reveal-4"><form action={vertragLoeschen.bind(null, id)}><button className="btn btn-ghost btn-sm w-full justify-center text-red">Vertrag endgültig löschen</button></form><p className="help mt-2">Abgelegte PDFs bleiben bei Mitarbeiter/Kunde unter Dokumente erhalten.</p></Card>}
           <Card title="Status" className="reveal reveal-4"><form action={vertragStatus.bind(null, id)} className="flex flex-wrap gap-2">{v.status !== "ENTWURF" && <button name="status" value="ENTWURF" className="btn btn-secondary btn-sm">Entwurf</button>}{v.status !== "BEENDET" && <button name="status" value="BEENDET" className="btn btn-secondary btn-sm">Beendet</button>}</form></Card>
         </div>

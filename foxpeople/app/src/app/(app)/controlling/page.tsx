@@ -95,7 +95,7 @@ async function KostenTab({ jahr, ks, kostenstellen, jahrForm }: { jahr: number; 
             {c.gesamt.anzahlMitarbeiter > 0 && c.kosten && <p className="help">Zur Orientierung: Gesamtkosten ÷ (Mitarbeiter in Abrechnung × 12) = {eur(c.kosten.gesamtkosten / (c.gesamt.anzahlMitarbeiter * 12), 0)} je Mitarbeiter und Monat.</p>}
           </form>
           {c.praemien.summe > 0 && (
-            <div className="mt-4 pt-4 border-t border-line text-[13px]">
+            <div className="mt-4 pt-4 border-t border-line text-[12.5px]">
               <div className="flex justify-between font-semibold"><span>Empfehlungsprämien {jahr}</span><span className="num text-red">− {eur(c.praemien.summe, 0)}</span></div>
               <p className="help mt-1">{c.praemien.anzahl} ausbezahlte Prämie{c.praemien.anzahl === 1 ? "" : "n"} aus „Freunde werben Freunde“. Die Zentrale trägt sie; sie sind im DB1 oben bereits abgezogen (DB1 vor Prämien: {eur(c.gesamt.db1Brutto, 0)}).</p>
             </div>
@@ -109,7 +109,7 @@ async function KostenTab({ jahr, ks, kostenstellen, jahrForm }: { jahr: number; 
                 <td className="font-semibold">{k.name} {k.isZentrale ? <Badge tone="fox">Zentrale</Badge> : <span className="text-[11px] text-muted font-normal">{k.provisionUeberlassung} % Überl. · {k.provisionVermittlung} % Verm.</span>}</td>
                 <td className="r num">{eur(kc.gesamt.umsatz, 0)}</td>
                 <td className={`r num ${kc.gesamt.db1 < 0 ? "text-red" : ""}`}>{eur(kc.gesamt.db1, 0)}</td>
-                <td className="r num text-muted">{kc.kosten ? <Link href={`/controlling?tab=kosten&jahr=${jahr}&ks=${k.id}`} className="hover:text-brand">{eur(kc.kosten.kostenProMitarbeiterMonat, 0)}{kc.kosten.kostenstelleId === k.id && <span className="text-[10px] ml-1">eigen</span>}</Link> : "–"}</td>
+                <td className="r num text-muted">{kc.kosten ? <Link href={`/controlling?tab=kosten&jahr=${jahr}&ks=${k.id}`} className="hover:text-brand">{eur(kc.kosten.kostenProMitarbeiterMonat, 0)}{kc.kosten.kostenstelleId === k.id && <span className="text-[11px] ml-1">eigen</span>}</Link> : "–"}</td>
                 <td className="r num text-muted">{kc.kosten ? eur(kc.gesamt.kostenUmlage, 0) : "–"}</td>
                 <td className={`r num font-semibold ${kc.gesamt.db2 < 0 ? "text-red" : "text-teal"}`}>{kc.kosten ? eur(kc.gesamt.db2, 0) : "–"}</td>
                 <td className="r num font-semibold">{k.isZentrale || !kc.kosten ? <span className="text-muted">–</span> : eur(kc.gesamt.provision, 0)}</td>
@@ -208,7 +208,7 @@ async function LiquiTab({ ks, kostenstellen }: { ks: string; kostenstellen: Kst[
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <form className="flex items-center gap-2"><input type="hidden" name="tab" value="liquiditaet" /><select name="ks" defaultValue={ks} className="select !w-auto !py-1.5"><option value="">Gesamt</option>{kostenstellen.map((k) => <option key={k.id} value={k.id}>{k.name}</option>)}</select><button className="btn btn-secondary btn-sm">Anzeigen</button></form>
-        <form action={kontostandSpeichern} className="flex items-center gap-2"><span className="text-[13px] text-muted">Kontostand heute €</span><input name="betrag" defaultValue={l.kontostand || ""} className="input !w-36 num" inputMode="decimal" /><button className="btn btn-secondary btn-sm">Speichern</button></form>
+        <form action={kontostandSpeichern} className="flex items-center gap-2"><span className="text-[12.5px] text-muted">Kontostand heute €</span><input name="betrag" defaultValue={l.kontostand || ""} className="input !w-36 num" inputMode="decimal" /><button className="btn btn-secondary btn-sm">Speichern</button></form>
       </div>
       {l.hinweise.map((h, i) => <div key={i} className="alert alert-amber mb-3"><span>{h}</span></div>)}
       {l.minimum && l.minimum.betrag < 0 && <div className="alert alert-red mb-4"><span><strong>Engpass:</strong> In der Woche ab {datum(l.minimum.woche)} sinkt der Kontostand auf {eur(l.minimum.betrag, 0)} – Rechnungen früher stellen, Mahnlauf, Factoring oder Kontokorrent prüfen.</span></div>}
@@ -231,7 +231,7 @@ async function LiquiTab({ ks, kostenstellen }: { ks: string; kostenstellen: Kst[
               <td className="r num">{w.provisionen ? eur(w.provisionen, 0) : "·"}</td>
               <td className={`r num font-semibold ${w.saldo < 0 ? "text-red" : "text-teal"}`}>{eur(w.saldo, 0)}</td>
               <td className={`r num font-bold ${w.kumuliert < 0 ? "text-red" : ""}`}>{eur(w.kumuliert, 0)}</td>
-              <td className="text-[11.5px] text-muted">{w.positionen.length ? <details><summary className="cursor-pointer">{w.positionen.length} Positionen</summary><ul className="mt-1 space-y-0.5 min-w-[260px]">{w.positionen.map((p, i) => <li key={i}>{p}</li>)}</ul></details> : "·"}</td>
+              <td className="text-[12.5px] text-muted">{w.positionen.length ? <details><summary className="cursor-pointer">{w.positionen.length} Positionen</summary><ul className="mt-1 space-y-0.5 min-w-[260px]">{w.positionen.map((p, i) => <li key={i}>{p}</li>)}</ul></details> : "·"}</td>
             </tr>
           ))}</tbody>
         </table></div>
@@ -293,7 +293,7 @@ async function AuegTab({ jahr, stichtag, kostenstellen }: { jahr: number; sticht
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <form className="flex items-center gap-2"><input type="hidden" name="tab" value="aueg" /><span className="text-[13px] text-muted">Stichtag</span><input type="date" name="stichtag" defaultValue={st.toISOString().slice(0, 10)} className="input !w-auto !py-1.5" /><button className="btn btn-secondary btn-sm">Berechnen</button></form>
+        <form className="flex items-center gap-2"><input type="hidden" name="tab" value="aueg" /><span className="text-[12.5px] text-muted">Stichtag</span><input type="date" name="stichtag" defaultValue={st.toISOString().slice(0, 10)} className="input !w-auto !py-1.5" /><button className="btn btn-secondary btn-sm">Berechnen</button></form>
         <a href={csv} className="btn btn-primary">CSV für die Meldung herunterladen</a>
       </div>
       <div className="alert alert-amber mb-4"><span><strong>§ 13 Abs. 2 AÜG:</strong> Überlasser melden jährlich zum Stichtag 31. Juli die Überlassungsstatistik an die Gewerbebehörde (Formular der Landesgeschäftsstelle). Die Zahlen unten sind aus Einsätzen und Personalstamm berechnet – Hinweise beachten.</span></div>

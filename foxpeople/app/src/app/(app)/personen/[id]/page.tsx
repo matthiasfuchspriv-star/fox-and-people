@@ -102,8 +102,8 @@ export default async function PersonDetail({ params, searchParams }: { params: P
           <details className="relative">
             <summary className="btn btn-secondary list-none cursor-pointer [&::-webkit-details-marker]:hidden"><Phone size={15} /> Anruf</summary>
             <div className="absolute right-0 top-full mt-2 w-80 z-30 card card-pad text-left">
-              <div className="font-semibold text-[13.5px] mb-1">Anruf festhalten</div>
-              {p.telefon ? <a href={`tel:${p.telefon.replace(/[^+\d]/g, "")}`} className="text-[13px] text-brand font-semibold">{p.telefon} anrufen</a> : <span className="text-[13px] text-muted">Keine Telefonnummer hinterlegt.</span>}
+              <div className="font-semibold text-[14px] mb-1">Anruf festhalten</div>
+              {p.telefon ? <a href={`tel:${p.telefon.replace(/[^+\d]/g, "")}`} className="text-[12.5px] text-brand font-semibold">{p.telefon} anrufen</a> : <span className="text-[12.5px] text-muted">Keine Telefonnummer hinterlegt.</span>}
               <form action={anrufFesthalten.bind(null, id)} className="space-y-2 mt-3">
                 <input name="notiz" className="input" placeholder="Notiz (optional) – z. B. Rückruf morgen" />
                 <div className="flex gap-2">
@@ -141,7 +141,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
         <div className="grid lg:grid-cols-3 gap-4">
           <Card title="Stammdaten" className="reveal">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-20 h-20 rounded-2xl bg-brand-soft overflow-hidden flex items-center justify-center text-brand font-display font-extrabold text-xl">
+              <div className="avatar w-20 h-20 overflow-hidden flex items-center justify-center text-brand font-extrabold text-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 {p.fotoDokumentId ? <img src={`/dokumente/${p.fotoDokumentId}`} alt="" className="w-full h-full object-cover" /> : <span>{p.vorname.charAt(0)}{p.nachname.charAt(0)}</span>}
               </div>
@@ -168,8 +168,8 @@ export default async function PersonDetail({ params, searchParams }: { params: P
               return zeige.length ? (
                 <>
                   <ul className="divide-y divide-line -mx-5 max-h-[420px] overflow-y-auto">{zeige.map((x) => (
-                    <li key={x.id} className="px-5 py-2 flex gap-3 text-[13px]">
-                      <span className="text-muted w-[42px] shrink-0 text-[11.5px] leading-5">{x.zeitpunkt.toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "2-digit" })}</span>
+                    <li key={x.id} className="px-5 py-2 flex gap-3 text-[12.5px]">
+                      <span className="text-muted w-[42px] shrink-0 text-[12.5px] leading-5">{x.zeitpunkt.toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "2-digit" })}</span>
                       <span className="w-4 shrink-0 text-center text-muted">{ICON[x.typ] ?? "•"}</span>
                       <span className="flex-1 min-w-0"><span className="break-words">{x.text}</span>{x.nutzerName && <span className="text-muted"> · {x.nutzerName}</span>}</span>
                     </li>
@@ -177,19 +177,19 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                   {sp.verlauf !== "alle" && aeltere > 0 && <div className="pt-3"><Link href={`/personen/${id}?tab=profil&verlauf=alle`} className="btn btn-secondary btn-sm w-full justify-center">Ältere Einträge anzeigen ({aeltere})</Link></div>}
                   {sp.verlauf === "alle" && <div className="pt-3"><Link href={`/personen/${id}?tab=profil`} className="btn btn-ghost btn-sm w-full justify-center">Nur letzte 3 Monate</Link></div>}
                 </>
-              ) : <div className="text-[13px] text-muted">Keine Einträge in den letzten 3 Monaten.{aeltere > 0 && <> <Link href={`/personen/${id}?tab=profil&verlauf=alle`} className="text-brand font-semibold">Ältere Einträge anzeigen ({aeltere})</Link></>}</div>;
+              ) : <div className="text-[12.5px] text-muted">Keine Einträge in den letzten 3 Monaten.{aeltere > 0 && <> <Link href={`/personen/${id}?tab=profil&verlauf=alle`} className="text-brand font-semibold">Ältere Einträge anzeigen ({aeltere})</Link></>}</div>;
             })()}
           </Card>
           <div className="space-y-4">
             <Card title="Aktueller Einsatz" className="reveal reveal-3">
               {aktiverEinsatz ? (
                 <div>
-                  <div className="font-display font-bold text-[16px]"><Link href={`/kunden/${aktiverEinsatz.kundeId}`} className="hover:text-brand">{aktiverEinsatz.kunde.firmenname}</Link></div>
-                  <div className="text-muted text-[13px]">{aktiverEinsatz.rolleImEinsatz} · seit {datum(aktiverEinsatz.von)}{aktiverEinsatz.bis ? ` bis ${datum(aktiverEinsatz.bis)}` : ""}</div>
-                  {sensibel && aktiverEinsatz.verrechnungssatz && <div className="mt-3 flex gap-4 text-[13px]"><span>Verrechnung <b className="num">{eur(aktiverEinsatz.verrechnungssatz)}/Std</b></span><span>Lohn <b className="num">{eur(aktiverEinsatz.stundenlohn)}/Std</b></span></div>}
-                  {avgSterne && <div className="mt-2 flex items-center gap-2 text-[13px]"><Fuechse n={avgSterne} zahl /> <span className="text-muted">{p.bewertungen.length} Bewertung{p.bewertungen.length !== 1 && "en"}</span></div>}
+                  <div className="font-display font-bold text-[17px]"><Link href={`/kunden/${aktiverEinsatz.kundeId}`} className="hover:text-brand">{aktiverEinsatz.kunde.firmenname}</Link></div>
+                  <div className="text-muted text-[12.5px]">{aktiverEinsatz.rolleImEinsatz} · seit {datum(aktiverEinsatz.von)}{aktiverEinsatz.bis ? ` bis ${datum(aktiverEinsatz.bis)}` : ""}</div>
+                  {sensibel && aktiverEinsatz.verrechnungssatz && <div className="mt-3 flex gap-4 text-[12.5px]"><span>Verrechnung <b className="num">{eur(aktiverEinsatz.verrechnungssatz)}/Std</b></span><span>Lohn <b className="num">{eur(aktiverEinsatz.stundenlohn)}/Std</b></span></div>}
+                  {avgSterne && <div className="mt-2 flex items-center gap-2 text-[12.5px]"><Fuechse n={avgSterne} zahl /> <span className="text-muted">{p.bewertungen.length} Bewertung{p.bewertungen.length !== 1 && "en"}</span></div>}
                 </div>
-              ) : <p className="text-muted text-[13px]">Kein laufender Einsatz.{p.status === "SUCHT" && " Person ist im Bewerber-Pool."}</p>}
+              ) : <p className="text-muted text-[12.5px]">Kein laufender Einsatz.{p.status === "SUCHT" && " Person ist im Bewerber-Pool."}</p>}
             </Card>
             <Card title="Status ändern" className="reveal reveal-4">
               <form action={personStatus.bind(null, id)} className="space-y-3">
@@ -206,10 +206,10 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                 <form action={personAnonymisieren.bind(null, id)} className="mt-3"><button className="btn btn-danger w-full justify-center">Anonymisieren (Löschkonzept)</button></form>
               )}
               {s.rolle === "SYSTEMADMIN" && (
-                <form action={personLoeschen.bind(null, id)} className="mt-3"><button className="btn btn-ghost btn-sm w-full justify-center text-red">Endgültig löschen (nur Systemadmin)</button><p className="help mt-1">Löscht Bewerber/Mitarbeiter samt Einsätzen, Nachweisen und Dokumenten.</p><label className="flex items-start gap-2 mt-2 text-[12px] text-muted"><input type="checkbox" name="erzwingen" value="ja" className="mt-[3px]" /><span>Auch Rechnungspositionen und abgerechnete Monate mitlöschen. Rechnungen werden dabei neu gerechnet, Rechnungen ohne verbleibende Position ganz gelöscht. Nur für Testdaten und echte Fehleingaben – versendete Rechnungen gehören storniert (§ 132 BAO).</span></label></form>
+                <form action={personLoeschen.bind(null, id)} className="mt-3"><button className="btn btn-ghost btn-sm w-full justify-center text-red">Endgültig löschen (nur Systemadmin)</button><p className="help mt-1">Löscht Bewerber/Mitarbeiter samt Einsätzen, Nachweisen und Dokumenten.</p><label className="flex items-start gap-2 mt-2 text-[12.5px] text-muted"><input type="checkbox" name="erzwingen" value="ja" className="mt-[3px]" /><span>Auch Rechnungspositionen und abgerechnete Monate mitlöschen. Rechnungen werden dabei neu gerechnet, Rechnungen ohne verbleibende Position ganz gelöscht. Nur für Testdaten und echte Fehleingaben – versendete Rechnungen gehören storniert (§ 132 BAO).</span></label></form>
               )}
             </Card>
-            {p.notizen && <Card title="Notizen" className="reveal reveal-4"><p className="whitespace-pre-wrap text-[13.5px]">{p.notizen}</p></Card>}
+            {p.notizen && <Card title="Notizen" className="reveal reveal-4"><p className="whitespace-pre-wrap text-[14px]">{p.notizen}</p></Card>}
           </div>
         </div>
       )}
@@ -221,7 +221,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
               {(["A", "B"] as const).map((g) => (
                 <div key={g}>
                   <div className="section-title mb-2">{g === "A" ? "A · Unterlagen von der/dem Mitarbeiter/in" : "B · Unsere Pflichten als Dienstgeber"}</div>
-                  <ul className="divide-y divide-line">{ONBOARDING.filter((o) => o.gruppe === g).map((o) => <li key={o.key} className="py-2.5 flex items-start gap-3"><input type="checkbox" name={`ob_${o.key}`} defaultChecked={!!ob[o.key]} className="mt-1" disabled={fremd} /><div className="flex-1"><div className="text-[13.5px]">{o.text}</div>{o.hinweis && <div className="text-[12px] text-muted">{o.hinweis}</div>}</div>{ob[o.key] && <span className="text-[12px] text-teal num">{datum(ob[o.key])}</span>}</li>)}</ul>
+                  <ul className="divide-y divide-line">{ONBOARDING.filter((o) => o.gruppe === g).map((o) => <li key={o.key} className="py-2.5 flex items-start gap-3"><input type="checkbox" name={`ob_${o.key}`} defaultChecked={!!ob[o.key]} className="mt-1" disabled={fremd} /><div className="flex-1"><div className="text-[14px]">{o.text}</div>{o.hinweis && <div className="text-[12.5px] text-muted">{o.hinweis}</div>}</div>{ob[o.key] && <span className="text-[12.5px] text-teal num">{datum(ob[o.key])}</span>}</li>)}</ul>
                 </div>
               ))}
               {!fremd && <button className="btn btn-primary">Checkliste speichern</button>}
@@ -229,7 +229,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
           </Card>
           <div className="space-y-4">
             <div className="kpi reveal reveal-2"><div className="label">Vollständigkeit</div><div className={`value ${done === ONBOARDING.length ? "text-teal" : done < 8 ? "text-red" : ""}`}>{Math.round((done / ONBOARDING.length) * 100)} %</div><div className="sub">{ONBOARDING.length - done} Punkte offen</div></div>
-            <Card title="Hinweise" className="reveal reveal-3"><ul className="text-[13px] space-y-2 text-ink-2"><li>ÖGK-Anmeldung muss <b>vor</b> Arbeitsantritt erfolgen – die Wiedervorlage erscheint automatisch 7 Tage vor Einsatzbeginn.</li><li>Aufenthaltstitel bitte zusätzlich als Qualifikation mit Ablaufdatum erfassen, damit die Erinnerung greift.</li><li>Unterschriebene Verträge unter „Dokumente“ ablegen (Portal-Freigabe für den Mitarbeiter).</li></ul></Card>
+            <Card title="Hinweise" className="reveal reveal-3"><ul className="text-[12.5px] space-y-2 text-ink-2"><li>ÖGK-Anmeldung muss <b>vor</b> Arbeitsantritt erfolgen – die Wiedervorlage erscheint automatisch 7 Tage vor Einsatzbeginn.</li><li>Aufenthaltstitel bitte zusätzlich als Qualifikation mit Ablaufdatum erfassen, damit die Erinnerung greift.</li><li>Unterschriebene Verträge unter „Dokumente“ ablegen (Portal-Freigabe für den Mitarbeiter).</li></ul></Card>
           </div>
         </div>
       ); })()}
@@ -241,7 +241,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
               <table className="table"><thead><tr><th>Nachweis</th><th>Nummer / Bezeichnung</th><th>Ausgestellt</th><th>Gültig bis</th><th>Status</th><th></th></tr></thead>
                 <tbody>{p.qualifikationen.map((q) => {
                   const st = !q.gultigBis ? <Badge tone="teal">unbefristet</Badge> : q.gultigBis < heute ? <Badge tone="red">abgelaufen</Badge> : q.gultigBis < new Date(heute.getTime() + q.erinnerungTageVorher * 86400000) ? <Badge tone="amber">läuft ab</Badge> : <Badge tone="teal">gültig</Badge>;
-                  return <tr key={q.id}><td className="font-semibold">{q.typ}{q.notiz && <div className="text-[12px] text-muted font-normal">{q.notiz}</div>}</td><td>{q.nummer ?? "–"}{q.bezeichnung && <div className="text-[12px] text-muted">{q.bezeichnung}</div>}</td><td>{datum(q.ausgestelltAm)}</td><td>{datum(q.gultigBis)}</td><td>{st}{q.dokumentId && <a href={`/dokumente/${q.dokumentId}`} className="ml-2 text-brand inline-flex"><FileDown size={14} /></a>}</td><td className="r"><form action={qualifikationLoeschen.bind(null, id, q.id)}><button className="btn btn-ghost btn-sm text-red">Entfernen</button></form></td></tr>;
+                  return <tr key={q.id}><td className="font-semibold">{q.typ}{q.notiz && <div className="text-[12.5px] text-muted font-normal">{q.notiz}</div>}</td><td>{q.nummer ?? "–"}{q.bezeichnung && <div className="text-[12.5px] text-muted">{q.bezeichnung}</div>}</td><td>{datum(q.ausgestelltAm)}</td><td>{datum(q.gultigBis)}</td><td>{st}{q.dokumentId && <a href={`/dokumente/${q.dokumentId}`} className="ml-2 text-brand inline-flex"><FileDown size={14} /></a>}</td><td className="r"><form action={qualifikationLoeschen.bind(null, id, q.id)}><button className="btn btn-ghost btn-sm text-red">Entfernen</button></form></td></tr>;
                 })}</tbody></table>
             ) : <Empty title="Noch keine Nachweise" text="Führerschein, Staplerschein, Arbeitserlaubnis, Sicherheitsunterweisung … mit Ablaufdatum – das System erinnert automatisch." />}
           </Card>
@@ -278,13 +278,13 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                   <tbody>{p.profilVersand.map((v) => (
                     <tr key={v.id}>
                       <td><Link href={`/kunden/${v.kundeId}`} className="row-link">{v.kunde.firmenname}</Link></td>
-                      <td className="whitespace-nowrap">{datum(v.gesendetAm)} <span className="text-muted">{v.gesendetAm.toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" })}</span><div className="text-[11.5px] text-muted">{v.gesendetVon}</div></td>
+                      <td className="whitespace-nowrap">{datum(v.gesendetAm)} <span className="text-muted">{v.gesendetAm.toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" })}</span><div className="text-[12.5px] text-muted">{v.gesendetVon}</div></td>
                       <td className="text-[12.5px]">{v.an ?? <span className="text-muted">nur abgelegt</span>}</td>
                       <td className="text-[12.5px]">{v.rueckmeldungAm ? <span className="text-teal">{v.rueckmeldung} · {datum(v.rueckmeldungAm)}</span> : <span className="text-amber">offen</span>}</td>
                       <td className="r">
                         {!v.rueckmeldungAm && (
                           <form action={profilRueckmeldung.bind(null, id, v.id)} className="flex gap-1 justify-end">
-                            <select name="rueckmeldung" className="select !w-auto !py-1 text-[12px]"><option>Interesse</option><option>Vorstellungstermin</option><option>Absage</option><option>Keine Rückmeldung</option></select>
+                            <select name="rueckmeldung" className="select !w-auto !py-1 text-[12.5px]"><option>Interesse</option><option>Vorstellungstermin</option><option>Absage</option><option>Keine Rückmeldung</option></select>
                             <button className="btn btn-ghost btn-sm">Festhalten</button>
                           </form>
                         )}
@@ -336,7 +336,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
               {meine.length ? (
                 <table className="table"><thead><tr><th>Kunde</th><th className="r">Verrechnung</th>{!prov && <><th className="r">Bruttolohn</th><th className="r">DG-Abgaben</th></>}<th className="r">{prov ? "Provision" : "DB1"}</th>{!prov && <th className="r">Marge</th>}</tr></thead>
                   <tbody>{meine.map((m) => <tr key={m.kundeId}><td className="font-semibold">{m.kunde}</td><td className="r num">{eur(m.verrechnungJahr)}</td>{!prov && <><td className="r num">{eur(m.selbstkostenJahr)}</td><td className="r num">{eur(m.abgabenRueckstellungenJahr)}</td></>}<td className={`r num font-bold ${m.db1Jahr < 0 ? "text-red" : "text-teal"}`}>{prov && !c.kosten ? "–" : eur(prov ? m.provisionJahr : m.db1Jahr)}</td>{!prov && <td className="r num">{pct(m.db1Marge)}</td>}</tr>)}</tbody></table>
-              ) : <p className="text-muted text-[13px] p-5">Noch keine Monatswerte in {jahr}. <Link href="/abrechnung" className="text-brand font-semibold">Zur Monatsabrechnung</Link></p>}
+              ) : <p className="text-muted text-[12.5px] p-5">Noch keine Monatswerte in {jahr}. <Link href="/abrechnung" className="text-brand font-semibold">Zur Monatsabrechnung</Link></p>}
             </Card>
           )}
           </div>
@@ -365,10 +365,10 @@ export default async function PersonDetail({ params, searchParams }: { params: P
             <div className="grid grid-cols-3 gap-3 reveal">
               <div className="kpi"><div className="label">Urlaub freigeschaltet {jahr}</div><div className="value">{tg(ul.erworben)}</div><div className="sub">{ul.aktiv ? `${ul.monate} Monate × ${tg(ul.proMonat)} Tage (${p.urlaubsanspruchTage}/Jahr)` : "nur aktive Mitarbeiter"}</div></div>
               <div className="kpi"><div className="label">Resturlaub {jahr}</div><div className={`value ${ul.rest < 0 ? "text-red" : ul.rest < 2 ? "text-amber" : "text-teal"}`}>{tg(ul.rest)}</div><div className="sub">{urlaubGenommen} Tage genommen{ul.rest < 0 ? " – Vorgriff" : ""}</div></div>
-              <div className="kpi"><div className="label">Krankenstand {jahr} / 365 Tage</div><div className={`value ${krank365 > 10 ? "text-red" : ""}`}>{krank} <span className="text-muted text-[16px]">/ {krank365}</span></div><div className="sub">Tage im Jahr / rollierend 365 Tage</div></div>
+              <div className="kpi"><div className="label">Krankenstand {jahr} / 365 Tage</div><div className={`value ${krank365 > 10 ? "text-red" : ""}`}>{krank} <span className="text-muted text-[17px]">/ {krank365}</span></div><div className="sub">Tage im Jahr / rollierend 365 Tage</div></div>
             </div>
             <Card title="Abwesenheiten" pad={false} className="reveal reveal-2">
-              {p.abwesenheiten.length ? <table className="table"><thead><tr><th>Typ</th><th>Von</th><th>Bis</th><th className="r">Tage</th><th>Status</th><th>Notiz</th><th></th></tr></thead><tbody>{p.abwesenheiten.map((a) => <tr key={a.id}><td>{a.typ === "URLAUB" ? <Badge tone="brand">Urlaub</Badge> : a.typ === "KRANKENSTAND" ? <Badge tone="red">Krankenstand</Badge> : a.notiz?.includes("Zeitausgleich") ? <Badge tone="amber">Zeitausgleich</Badge> : <Badge tone="grey">{a.typ === "PFLEGEFREISTELLUNG" ? "Pflegefreistellung" : "Sonstiges"}</Badge>}{a.quelle === "APP" && <div className="text-[10.5px] text-muted">über App</div>}</td><td>{datum(a.von)}</td><td>{datum(a.bis)}</td><td className="r num">{a.tage}</td><td>{a.status === "BEANTRAGT" ? <Badge tone="amber">beantragt</Badge> : a.status === "ABGELEHNT" ? <Badge tone="red">abgelehnt</Badge> : <Badge tone="teal">{a.typ === "URLAUB" ? "genehmigt" : "gemeldet"}</Badge>}</td><td className="text-muted">{a.notiz}{a.dokumentId && <a href={`/dokumente/${a.dokumentId}`} target="_blank" className="text-brand ml-1">Nachweis</a>}</td><td className="r whitespace-nowrap">{a.status === "BEANTRAGT" && sensibel && <><form action={abwesenheitEntscheiden.bind(null, id, a.id, "GENEHMIGT")} className="inline"><button className="btn btn-primary btn-sm">Genehmigen</button></form><form action={abwesenheitEntscheiden.bind(null, id, a.id, "ABGELEHNT")} className="inline ml-1"><button className="btn btn-ghost btn-sm text-red">Ablehnen</button></form></>}</td></tr>)}</tbody></table> : <Empty title="Keine Abwesenheiten erfasst" />}
+              {p.abwesenheiten.length ? <table className="table"><thead><tr><th>Typ</th><th>Von</th><th>Bis</th><th className="r">Tage</th><th>Status</th><th>Notiz</th><th></th></tr></thead><tbody>{p.abwesenheiten.map((a) => <tr key={a.id}><td>{a.typ === "URLAUB" ? <Badge tone="brand">Urlaub</Badge> : a.typ === "KRANKENSTAND" ? <Badge tone="red">Krankenstand</Badge> : a.notiz?.includes("Zeitausgleich") ? <Badge tone="amber">Zeitausgleich</Badge> : <Badge tone="grey">{a.typ === "PFLEGEFREISTELLUNG" ? "Pflegefreistellung" : "Sonstiges"}</Badge>}{a.quelle === "APP" && <div className="text-[11px] text-muted">über App</div>}</td><td>{datum(a.von)}</td><td>{datum(a.bis)}</td><td className="r num">{a.tage}</td><td>{a.status === "BEANTRAGT" ? <Badge tone="amber">beantragt</Badge> : a.status === "ABGELEHNT" ? <Badge tone="red">abgelehnt</Badge> : <Badge tone="teal">{a.typ === "URLAUB" ? "genehmigt" : "gemeldet"}</Badge>}</td><td className="text-muted">{a.notiz}{a.dokumentId && <a href={`/dokumente/${a.dokumentId}`} target="_blank" className="text-brand ml-1">Nachweis</a>}</td><td className="r whitespace-nowrap">{a.status === "BEANTRAGT" && sensibel && <><form action={abwesenheitEntscheiden.bind(null, id, a.id, "GENEHMIGT")} className="inline"><button className="btn btn-primary btn-sm">Genehmigen</button></form><form action={abwesenheitEntscheiden.bind(null, id, a.id, "ABGELEHNT")} className="inline ml-1"><button className="btn btn-ghost btn-sm text-red">Ablehnen</button></form></>}</td></tr>)}</tbody></table> : <Empty title="Keine Abwesenheiten erfasst" />}
             </Card>
           </div>
           <Card title="Abwesenheit erfassen" className="reveal reveal-3">
@@ -391,9 +391,9 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                 <li key={b.id} className="py-3 flex gap-4">
                   <div className="shrink-0"><Fuechse n={b.sterne} /></div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[13.5px] font-semibold">{b.kunde?.firmenname ?? "Allgemein"} <span className="text-muted font-normal">· {datum(b.datum)} · {b.erfasstVon}</span></div>
+                    <div className="text-[14px] font-semibold">{b.kunde?.firmenname ?? "Allgemein"} <span className="text-muted font-normal">· {datum(b.datum)} · {b.erfasstVon}</span></div>
                     <MerkmalChips merkmale={b.merkmale} />
-                    {b.kommentar && <p className="text-[13.5px] mt-0.5">{b.kommentar}</p>}
+                    {b.kommentar && <p className="text-[14px] mt-0.5">{b.kommentar}</p>}
                   </div>
                   {b.wiedereinsatzEmpfohlen ? <Badge tone="teal">Wiedereinsatz ja</Badge> : <Badge tone="red">Kein Wiedereinsatz</Badge>}
                   {s.rolle === "SYSTEMADMIN" && <form action={bewertungLoeschen.bind(null, id, b.id, "MA")}><button className="btn btn-ghost btn-sm text-red">Löschen</button></form>}
@@ -402,13 +402,13 @@ export default async function PersonDetail({ params, searchParams }: { params: P
             ) : <Empty title="Noch keine Bewertung" text="Nach jedem Einsatz kurz festhalten, wie es beim Kunden lief – entscheidend für Wiedereinsatz-Entscheidungen." />}
           </Card>
           <Card title="So bewertet der Mitarbeiter seine Beschäftiger" className="lg:col-span-2 reveal reveal-2">
-            {p.kundenBewertungen.length ? <ul className="divide-y divide-line">{p.kundenBewertungen.map((b) => <li key={b.id} className="py-2.5 flex gap-3 text-[13.5px]"><Fuechse n={b.sterne} /><div className="flex-1"><Link href={`/kunden/${b.kundeId}`} className="font-semibold hover:text-brand">{b.kunde.firmenname}</Link><span className="text-muted text-[12px]"> · {datum(b.datum)} · {b.quelle === "PORTAL" ? "Portal" : "intern"}</span><MerkmalChips merkmale={b.merkmale} />{b.kommentar && <p className="mt-0.5">{b.kommentar}</p>}</div>{b.wiederArbeiten ? <Badge tone="teal">würde wieder</Badge> : <Badge tone="red">nicht wieder</Badge>}{s.rolle === "SYSTEMADMIN" && <form action={bewertungLoeschen.bind(null, id, b.id, "KUNDE")}><button className="btn btn-ghost btn-sm text-red">Löschen</button></form>}</li>)}</ul> : <p className="text-muted text-[13px]">Noch keine Rückmeldung – Mitarbeiter können ihren Beschäftiger in der Mitarbeiter-App bewerten oder ihr erfasst die Rückmeldung beim Kunden unter „Bewertungen“.</p>}
+            {p.kundenBewertungen.length ? <ul className="divide-y divide-line">{p.kundenBewertungen.map((b) => <li key={b.id} className="py-2.5 flex gap-3 text-[14px]"><Fuechse n={b.sterne} /><div className="flex-1"><Link href={`/kunden/${b.kundeId}`} className="font-semibold hover:text-brand">{b.kunde.firmenname}</Link><span className="text-muted text-[12.5px]"> · {datum(b.datum)} · {b.quelle === "PORTAL" ? "Portal" : "intern"}</span><MerkmalChips merkmale={b.merkmale} />{b.kommentar && <p className="mt-0.5">{b.kommentar}</p>}</div>{b.wiederArbeiten ? <Badge tone="teal">würde wieder</Badge> : <Badge tone="red">nicht wieder</Badge>}{s.rolle === "SYSTEMADMIN" && <form action={bewertungLoeschen.bind(null, id, b.id, "KUNDE")}><button className="btn btn-ghost btn-sm text-red">Löschen</button></form>}</li>)}</ul> : <p className="text-muted text-[12.5px]">Noch keine Rückmeldung – Mitarbeiter können ihren Beschäftiger in der Mitarbeiter-App bewerten oder ihr erfasst die Rückmeldung beim Kunden unter „Bewertungen“.</p>}
           </Card>
           <Card title="Bewertung erfassen" className="reveal reveal-2">
             <form action={bewertungAnlegen.bind(null, id)} className="space-y-3">
               <Field label="Kunde"><select name="kundeId" className="select" defaultValue={aktiverEinsatz?.kundeId ?? ""}><option value="">Allgemein</option>{kunden.map((k) => <option key={k.id} value={k.id}>{k.firmenname}</option>)}</select></Field>
               <BewertungFelder ziel="MITARBEITER" kompakt kommentarPlaceholder="Wie lief der Einsatz? Rückmeldung des Kunden, Besonderheiten …" />
-              <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="wiedereinsatz" defaultChecked /> Wiedereinsatz empfohlen</label>
+              <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="wiedereinsatz" defaultChecked /> Wiedereinsatz empfohlen</label>
               <button className="btn btn-primary w-full justify-center">Speichern</button>
             </form>
           </Card>
@@ -426,7 +426,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                     <td>{sp.kunde ? <Link href={`/kunden/${sp.kunde.id}`} className="row-link">{sp.kunde.firmenname}</Link> : <Badge tone="red">alle Kunden</Badge>}</td>
                     <td className="whitespace-nowrap">{datum(sp.ab)}</td>
                     <td className="whitespace-nowrap">{sp.bis ? datum(sp.bis) : "unbefristet"}</td>
-                    <td className="text-[12.5px] text-muted max-w-[240px]">{sp.notiz}{sp.erfasstVon ? <div className="text-[11.5px]">erfasst von {sp.erfasstVon}</div> : null}</td>
+                    <td className="text-[12.5px] text-muted max-w-[240px]">{sp.notiz}{sp.erfasstVon ? <div className="text-[12.5px]">erfasst von {sp.erfasstVon}</div> : null}</td>
                     <td className="r"><form action={sperreAufheben.bind(null, id, sp.id)}><button className="btn btn-ghost btn-sm text-red">Aufheben</button></form></td>
                   </tr>
                 ))}</tbody>
@@ -452,7 +452,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
       {tab === "dokumente" && (
         <div className="grid lg:grid-cols-3 gap-4">
           <Card title="Dokumente" pad={false} className="lg:col-span-2 reveal">
-            {p.dokumente.length ? <table className="table"><thead><tr><th>Dokument</th><th>Kategorie</th><th>Portal</th><th>Hochgeladen</th><th></th></tr></thead><tbody>{p.dokumente.map((d) => <tr key={d.id}><td className="font-semibold">{d.dateiname}<div className="text-[12px] text-muted font-normal">{Math.round(d.groesse / 1024)} KB</div></td><td><Badge tone="grey">{d.kategorie}</Badge></td><td>{d.sichtbarImPortal ? <Badge tone="teal">sichtbar</Badge> : <span className="text-muted">–</span>}{!d.geprueft && <Badge tone="amber">ungeprüft (App)</Badge>}</td><td className="text-muted">{datum(d.hochgeladenAm)} · {d.hochgeladenVon}</td><td className="r whitespace-nowrap">{!d.geprueft && <form action={dokumentGeprueft.bind(null, id, d.id)} className="inline"><button className="btn btn-secondary btn-sm">Geprüft</button></form>}<a href={`/dokumente/${d.id}`} className="btn btn-ghost btn-sm ml-1"><FileDown size={14} /> Öffnen</a>{s.rolle === "SYSTEMADMIN" && <form action={dokumentLoeschen.bind(null, id, d.id)} className="inline ml-2"><button className="btn btn-ghost btn-sm text-red">Löschen</button></form>}</td></tr>)}</tbody></table> : <Empty title="Keine Dokumente" text="Lohnzettel, Dienstverträge, Einsatzbestätigungen – mit Freigabe fürs Mitarbeiter-Portal." />}
+            {p.dokumente.length ? <table className="table"><thead><tr><th>Dokument</th><th>Kategorie</th><th>Portal</th><th>Hochgeladen</th><th></th></tr></thead><tbody>{p.dokumente.map((d) => <tr key={d.id}><td className="font-semibold">{d.dateiname}<div className="text-[12.5px] text-muted font-normal">{Math.round(d.groesse / 1024)} KB</div></td><td><Badge tone="grey">{d.kategorie}</Badge></td><td>{d.sichtbarImPortal ? <Badge tone="teal">sichtbar</Badge> : <span className="text-muted">–</span>}{!d.geprueft && <Badge tone="amber">ungeprüft (App)</Badge>}</td><td className="text-muted">{datum(d.hochgeladenAm)} · {d.hochgeladenVon}</td><td className="r whitespace-nowrap">{!d.geprueft && <form action={dokumentGeprueft.bind(null, id, d.id)} className="inline"><button className="btn btn-secondary btn-sm">Geprüft</button></form>}<a href={`/dokumente/${d.id}`} className="btn btn-ghost btn-sm ml-1"><FileDown size={14} /> Öffnen</a>{s.rolle === "SYSTEMADMIN" && <form action={dokumentLoeschen.bind(null, id, d.id)} className="inline ml-2"><button className="btn btn-ghost btn-sm text-red">Löschen</button></form>}</td></tr>)}</tbody></table> : <Empty title="Keine Dokumente" text="Lohnzettel, Dienstverträge, Einsatzbestätigungen – mit Freigabe fürs Mitarbeiter-Portal." />}
           </Card>
           <div className="space-y-4">
             <Card title="Dokument hochladen" className="reveal reveal-2">
@@ -460,12 +460,12 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                 <Field label="Datei" required><input type="file" name="datei" required className="input" /></Field>
                 <Field label="Kategorie"><select name="kategorie" className="select">{KATEGORIEN.map((k) => <option key={k}>{k}</option>)}</select></Field>
                 <Field label="Gültig bis" help="Pflicht bei Reisepass, Personalausweis, Aufenthaltstitel, Arbeitserlaubnis und Führerschein – daraus kommt die Erinnerung vor dem Ablauf."><input type="date" name="gultigBis" className="input" /></Field>
-                <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="portal" defaultChecked /> Im Mitarbeiter-Portal sichtbar</label>
+                <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="portal" defaultChecked /> Im Mitarbeiter-Portal sichtbar</label>
                 <button className="btn btn-primary w-full justify-center">Hochladen</button>
               </form>
             </Card>
             <Card title="Mitarbeiter-Portal" className="reveal reveal-3">
-              <p className="text-[13px] text-muted mb-3">Sicherer Zugang per E-Mail-Link (gültig 7 Tage) zu allen freigegebenen Dokumenten.</p>
+              <p className="text-[12.5px] text-muted mb-3">Sicherer Zugang per E-Mail-Link (gültig 7 Tage) zu allen freigegebenen Dokumenten.</p>
               <form action={`/portal/einladen/${id}`} method="post"><button className="btn btn-secondary w-full justify-center" disabled={!p.email}>{p.email ? "Portal-Link senden" : "Keine E-Mail hinterlegt"}</button></form>
             </Card>
             {sensibel && (
@@ -483,7 +483,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                 <p className="help mt-2">Beim Sperren werden offene Anmeldecodes und alle Benachrichtigungs-Geräte gelöscht; eine laufende Sitzung endet beim nächsten Aufruf sofort.</p>
               </Card>
             )}
-            {p.vertraege.length > 0 && <Card title="Verträge" className="reveal reveal-4"><ul className="divide-y divide-line">{p.vertraege.map((v) => <li key={v.id} className="py-2 text-[13.5px] flex justify-between"><Link href={`/vertraege/${v.id}`} className="font-semibold hover:text-brand">{v.nummer}</Link><span className="text-muted">{v.status}</span></li>)}</ul></Card>}
+            {p.vertraege.length > 0 && <Card title="Verträge" className="reveal reveal-4"><ul className="divide-y divide-line">{p.vertraege.map((v) => <li key={v.id} className="py-2 text-[14px] flex justify-between"><Link href={`/vertraege/${v.id}`} className="font-semibold hover:text-brand">{v.nummer}</Link><span className="text-muted">{v.status}</span></li>)}</ul></Card>}
           </div>
         </div>
       )}
@@ -497,7 +497,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                 <table className="table"><thead><tr><th>Lohnzettel</th><th>App</th><th>Abgelegt</th><th></th></tr></thead><tbody>
                   {lohnzettel.map((d) => (
                     <tr key={d.id}>
-                      <td className="font-semibold">{d.dateiname}<div className="text-[12px] text-muted font-normal">{Math.round(d.groesse / 1024)} KB</div></td>
+                      <td className="font-semibold">{d.dateiname}<div className="text-[12.5px] text-muted font-normal">{Math.round(d.groesse / 1024)} KB</div></td>
                       <td>{d.sichtbarImPortal ? <Badge tone="teal">in der App sichtbar</Badge> : <Badge tone="grey">nur intern</Badge>}</td>
                       <td className="text-muted">{datum(d.hochgeladenAm)} · {d.hochgeladenVon}</td>
                       <td className="r whitespace-nowrap"><a href={`/dokumente/${d.id}`} className="btn btn-ghost btn-sm"><FileDown size={14} /> Öffnen</a>{s.rolle === "SYSTEMADMIN" && <form action={dokumentLoeschen.bind(null, id, d.id)} className="inline ml-2"><button className="btn btn-ghost btn-sm text-red">Löschen</button></form>}</td>
@@ -511,7 +511,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                 <input type="hidden" name="kategorie" value="Lohnzettel" />
                 <input type="hidden" name="zielTab" value="lohnzettel" />
                 <Field label="Datei (PDF)" required><input type="file" name="datei" required accept="application/pdf,image/*" className="input" /></Field>
-                <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="portal" defaultChecked /> Für den Mitarbeiter in der App sichtbar</label>
+                <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="portal" defaultChecked /> Für den Mitarbeiter in der App sichtbar</label>
                 <button className="btn btn-primary w-full justify-center">Hochladen</button>
                 <p className="help">Der Mitarbeiter bekommt eine Push-Nachricht und findet den Lohnzettel in der App unter „Lohn“. Die Ablage erscheint auch in der Historie.</p>
               </form>
@@ -533,7 +533,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
               {zk.monate.length ? <table className="table"><thead><tr><th>Monat</th><th className="r">Soll</th><th className="r">Ist</th><th className="r">Differenz</th></tr></thead><tbody>{zk.monate.map((m) => <tr key={`${m.jahr}-${m.monat}`}><td>{String(m.monat).padStart(2, "0")}/{m.jahr}</td><td className="r num">{m.soll}</td><td className="r num">{m.ist}</td><td className={`r num font-semibold ${m.saldo < 0 ? "text-red" : m.saldo > 0 ? "text-teal" : "text-muted"}`}>{m.saldo > 0 ? "+" : ""}{m.saldo}</td></tr>)}</tbody></table> : <Empty title="Noch keine Monate im Zeitraum" />}
             </Card>
             <Card title="Buchungen" pad={false} className="reveal reveal-3">
-              {p.zeitbuchungen.length ? <table className="table"><thead><tr><th>Datum</th><th>Typ</th><th className="r">Stunden</th><th>Notiz</th></tr></thead><tbody>{p.zeitbuchungen.map((b) => <tr key={b.id}><td>{datum(b.datum)}</td><td>{({ KORREKTUR: "Korrektur", ZEITAUSGLEICH: "Zeitausgleich", AUSZAHLUNG: "Auszahlung", UEBERTRAG: "Übertrag" })[b.typ]}</td><td className={`r num font-semibold ${b.stunden < 0 ? "text-red" : "text-teal"}`}>{b.stunden > 0 ? "+" : ""}{b.stunden}</td><td className="text-muted">{b.notiz ?? "–"}</td></tr>)}</tbody></table> : <p className="text-muted text-[13px] p-5">Noch keine Buchungen.</p>}
+              {p.zeitbuchungen.length ? <table className="table"><thead><tr><th>Datum</th><th>Typ</th><th className="r">Stunden</th><th>Notiz</th></tr></thead><tbody>{p.zeitbuchungen.map((b) => <tr key={b.id}><td>{datum(b.datum)}</td><td>{({ KORREKTUR: "Korrektur", ZEITAUSGLEICH: "Zeitausgleich", AUSZAHLUNG: "Auszahlung", UEBERTRAG: "Übertrag" })[b.typ]}</td><td className={`r num font-semibold ${b.stunden < 0 ? "text-red" : "text-teal"}`}>{b.stunden > 0 ? "+" : ""}{b.stunden}</td><td className="text-muted">{b.notiz ?? "–"}</td></tr>)}</tbody></table> : <p className="text-muted text-[12.5px] p-5">Noch keine Buchungen.</p>}
             </Card>
           </div>
           {sensibel && (
@@ -571,7 +571,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
                 <p className="help mt-3">Berechnet aus der heutigen Betriebszugehörigkeit; Frist + nächstmöglicher Kündigungstermin.</p>
               </Card>
               <Card title="Letzter Kündigungstag für ein Wunsch-Ende" className="reveal reveal-3">
-                <div className="space-y-2 text-[13.5px]">
+                <div className="space-y-2 text-[14px]">
                   {[1, 2, 3, 6].map((m) => { const ziel = new Date(new Date().getFullYear(), new Date().getMonth() + m + 1, 0); const r = letzterKuendigungstag(p.angestellt ? fristenTab.angestellteDienstgeber : fristenTab.arbeiterDienstgeber, p.eintrittsdatum!, ziel); return <div key={m} className="flex justify-between border-b border-line py-1.5"><span>Ende {datum(ziel)}</span><span className="font-semibold num">{r ? `Kündigung bis ${datum(r.tag)}` : "nicht erreichbar"}</span></div>; })}
                 </div>
                 <p className="help mt-3">Dienstgeber-Kündigung, jeweils zum Monatsletzten der nächsten 1, 2, 3 und 6 Monate.</p>
@@ -588,8 +588,8 @@ export default async function PersonDetail({ params, searchParams }: { params: P
               <ol className="relative border-l border-line ml-2">{p.aktivitaeten.map((a) => (
                 <li key={a.id} className="ml-5 pb-5 last:pb-0">
                   <span className="absolute -left-[5px] mt-1.5 w-2.5 h-2.5 rounded-full bg-brand border-2 border-surface" />
-                  <div className="text-[12px] text-muted">{datum(a.zeitpunkt)} · {a.nutzerName} · {a.typ}</div>
-                  <div className="text-[13.5px]">{a.text}</div>
+                  <div className="text-[12.5px] text-muted">{datum(a.zeitpunkt)} · {a.nutzerName} · {a.typ}</div>
+                  <div className="text-[14px]">{a.text}</div>
                 </li>
               ))}</ol>
             ) : <Empty title="Noch keine Einträge" />}
@@ -606,7 +606,7 @@ export default async function PersonDetail({ params, searchParams }: { params: P
               <Card title="Arbeitspapiere & Verträge" className="reveal reveal-3">
                 <ul className="divide-y divide-line">
                   {p.vertraege.map((v) => (
-                    <li key={v.id} className="py-2 text-[13.5px] flex items-center justify-between gap-2">
+                    <li key={v.id} className="py-2 text-[14px] flex items-center justify-between gap-2">
                       <span><Link href={`/vertraege/${v.id}`} className="font-semibold hover:text-brand">{vertragTitel(v.typ)}</Link><span className="text-muted"> · {v.nummer} · {datum(v.erstelltAm)}</span></span>
                       <Badge tone={v.status === "UNTERSCHRIEBEN" ? "teal" : v.status === "VERSENDET" ? "amber" : "grey"}>{v.status}</Badge>
                     </li>

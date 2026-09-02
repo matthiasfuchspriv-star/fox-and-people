@@ -61,8 +61,8 @@ export default async function FehlerPage({ searchParams }: { searchParams: Promi
                   <td className="whitespace-nowrap"><Badge tone={e.stufe === "FEHLER" ? "red" : "amber"}>{e.quelle}</Badge></td>
                   <td>
                     {e.meldung}
-                    {e.detail && <details className="mt-1"><summary className="text-[12px] text-muted cursor-pointer">Einzelheiten</summary><pre className="text-[11.5px] whitespace-pre-wrap mt-1 text-muted">{e.detail}</pre></details>}
-                    {e.gemeldetAm && <div className="text-[11.5px] text-muted mt-0.5">war im Bericht vom {zeit(e.gemeldetAm)}</div>}
+                    {e.detail && <details className="mt-1"><summary className="text-[12.5px] text-muted cursor-pointer">Einzelheiten</summary><pre className="text-[12.5px] whitespace-pre-wrap mt-1 text-muted">{e.detail}</pre></details>}
+                    {e.gemeldetAm && <div className="text-[12.5px] text-muted mt-0.5">war im Bericht vom {zeit(e.gemeldetAm)}</div>}
                   </td>
                   <td className="r num">{e.anzahl}×</td>
                   <td className="whitespace-nowrap text-[12.5px] text-muted">{zeit(e.zuerstAm)}</td>
@@ -80,7 +80,7 @@ export default async function FehlerPage({ searchParams }: { searchParams: Promi
       </Card>
 
       <div className="mt-4">
-        <a href={alle ? "/fehler" : "/fehler?alle=1"} className="text-[13.5px] underline text-muted">{alle ? "Abgehakte ausblenden" : "Abgehakte anzeigen"}</a>
+        <a href={alle ? "/fehler" : "/fehler?alle=1"} className="text-[14px] underline text-muted">{alle ? "Abgehakte ausblenden" : "Abgehakte anzeigen"}</a>
       </div>
 
       {alle && erledigt.length > 0 && (

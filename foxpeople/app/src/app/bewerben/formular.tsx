@@ -32,21 +32,21 @@ export function BewerbungsFormular({
 }) {
   const eur = (n: number) => `${n.toLocaleString("de-AT")} €`;
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: "#10222a" }}>
+    <main className="min-h-screen flex flex-col bg-brand-ink">
       <div className="px-6 pt-12 pb-7 text-white">
         <Logo size={38} />
         {werber ? (
           <>
-            <h1 className="font-display font-extrabold text-[26px] mt-5 leading-tight">{werber.vorname} empfiehlt dich für einen Job bei uns.</h1>
-            <p className="text-white/75 text-[14.5px] mt-2">
+            <h1 className="font-display font-extrabold text-[28px] mt-5 leading-tight">{werber.vorname} empfiehlt dich für einen Job bei uns.</h1>
+            <p className="text-white/75 text-[15px] mt-2">
               Wir sind Fox &amp; People aus Kilb – wir bringen Leute und Betriebe in Niederösterreich zusammen.
               {praemieGeworbener ? ` Wenn es passt, bekommst du ${eur(praemieGeworbener)} Startbonus.` : ""}
             </p>
           </>
         ) : (
           <>
-            <h1 className="font-display font-extrabold text-[26px] mt-5 leading-tight">In 30 Sekunden bewerben.</h1>
-            <p className="text-white/75 text-[14.5px] mt-2">Kein Lebenslauf, kein Anschreiben. Name, Handynummer, was du kannst – wir rufen dich zurück.</p>
+            <h1 className="font-display font-extrabold text-[28px] mt-5 leading-tight">In 30 Sekunden bewerben.</h1>
+            <p className="text-white/75 text-[15px] mt-2">Kein Lebenslauf, kein Anschreiben. Name, Handynummer, was du kannst – wir rufen dich zurück.</p>
           </>
         )}
       </div>
@@ -68,14 +68,14 @@ export function BewerbungsFormular({
             {fehler === "einverstanden" && <div className="alert alert-red"><span>Ohne dein Einverständnis dürfen wir dich leider nicht kontaktieren.</span></div>}
             {fehler === "zuoft" && <div className="alert alert-amber"><span>Es sind gerade sehr viele Bewerbungen von diesem Anschluss gekommen. Bitte ruf uns einfach an: +43 676 4574096</span></div>}
 
-            <div className="field"><label className="label">Wie heißt du?</label><input name="name" required autoFocus autoComplete="name" placeholder="Vor- und Nachname" className="input !py-3 !text-[16px]" /></div>
-            <div className="field"><label className="label">Handynummer</label><input name="telefon" required inputMode="tel" autoComplete="tel" placeholder="0664 1234567" className="input !py-3 !text-[16px]" /></div>
-            <div className="field"><label className="label">E-Mail <span className="text-muted font-normal">(freiwillig)</span></label><input name="email" type="email" inputMode="email" autoComplete="email" className="input !py-3 !text-[16px]" /></div>
+            <div className="field"><label className="label">Wie heißt du?</label><input name="name" required autoFocus autoComplete="name" placeholder="Vor- und Nachname" className="input !py-3 !text-[17px]" /></div>
+            <div className="field"><label className="label">Handynummer</label><input name="telefon" required inputMode="tel" autoComplete="tel" placeholder="0664 1234567" className="input !py-3 !text-[17px]" /></div>
+            <div className="field"><label className="label">E-Mail <span className="text-muted font-normal">(freiwillig)</span></label><input name="email" type="email" inputMode="email" autoComplete="email" className="input !py-3 !text-[17px]" /></div>
             <div className="field"><label className="label">Was kannst du?</label>
-              <select name="rolle" className="select !py-3 !text-[16px]"><option value="">– bitte wählen –</option>{ROLLEN.map((r) => <option key={r} value={r}>{r}</option>)}</select>
+              <select name="rolle" className="select !py-3 !text-[17px]"><option value="">– bitte wählen –</option>{ROLLEN.map((r) => <option key={r} value={r}>{r}</option>)}</select>
             </div>
             <div className="field"><label className="label">Ab wann?</label>
-              <select name="verfuegbar" defaultValue="sofort" className="select !py-3 !text-[16px]">
+              <select name="verfuegbar" defaultValue="sofort" className="select !py-3 !text-[17px]">
                 <option value="sofort">sofort</option>
                 <option value="2wochen">in 2 Wochen</option>
                 <option value="1monat">in einem Monat</option>
@@ -84,12 +84,12 @@ export function BewerbungsFormular({
             </div>
             <div className="field"><label className="label">Noch etwas, das wir wissen sollen? <span className="text-muted font-normal">(freiwillig)</span></label><textarea name="notiz" rows={2} className="textarea" placeholder="z. B. Staplerschein, Führerschein B, Schichtbereitschaft, wo du wohnst" /></div>
 
-            <label className="flex items-start gap-2.5 text-[13.5px]">
+            <label className="flex items-start gap-2.5 text-[14px]">
               <input type="checkbox" name="einverstanden" required className="mt-1 w-5 h-5" />
               <span>Ihr dürft mich zu passenden Jobs kontaktieren und meine Angaben dafür speichern. Ich kann das jederzeit widerrufen.</span>
             </label>
 
-            <button className="btn btn-primary w-full justify-center !h-13 !text-[16px]">Absenden</button>
+            <button className="btn btn-primary w-full justify-center !h-13 !text-[17px]">Absenden</button>
             <p className="text-[12.5px] text-muted text-center">Lieber telefonisch? <a href="tel:+436764574096" className="text-brand font-semibold">+43 676 4574096</a></p>
           </form>
         )}

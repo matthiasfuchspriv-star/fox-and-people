@@ -122,7 +122,7 @@ export function AngebotEditor({ id, kopf, positionen: init, saetze, kvs, kundenK
           return (
             <section key={i} className="card reveal overflow-hidden">
               <div className="flex items-center gap-3 px-5 pt-4 pb-3 border-b border-line">
-                <span className="w-7 h-7 rounded-lg bg-brand-soft text-brand font-bold text-[12px] flex items-center justify-center">{i + 1}</span>
+                <span className="w-7 h-7 rounded-lg bg-brand-soft text-brand font-bold text-[12.5px] flex items-center justify-center">{i + 1}</span>
                 <select className="select !w-auto !py-1.5 font-semibold" value={p.kalkulationsart} disabled={readOnly} onChange={(e) => upd(i, { kalkulationsart: e.target.value as PositionInput["kalkulationsart"] })}>
                   <option value="UEBERLASSUNG">Überlassung (pro Leistungsstunde)</option>
                   <option value="PAYROLL">Payroll (Angestellte, 12×/Jahr)</option>
@@ -162,7 +162,7 @@ export function AngebotEditor({ id, kopf, positionen: init, saetze, kvs, kundenK
                       <div className="section-title mt-4 mb-2">Zulagen – nur die angehakten stehen im Angebot</div>
                       <div className="flex flex-wrap gap-x-5 gap-y-2">
                         {zulagen.map((z) => (
-                          <label key={z.id} className="flex items-center gap-2 text-[13px]">
+                          <label key={z.id} className="flex items-center gap-2 text-[12.5px]">
                             <input type="checkbox" checked={p.zulagenIds.includes(z.id)} disabled={readOnly}
                               onChange={(e) => upd(i, { zulagenIds: e.target.checked ? [...p.zulagenIds, z.id] : p.zulagenIds.filter((x) => x !== z.id) })} />
                             <span>{z.name} <span className="text-muted">({zulageText(z)})</span></span>
@@ -174,14 +174,14 @@ export function AngebotEditor({ id, kopf, positionen: init, saetze, kvs, kundenK
                 </div>
                 <div className="bg-surface-2 border-l border-line p-5">
                   <div className="section-title mb-2">{provision ? "Provision (intern)" : "Kalkulation (intern)"}</div>
-                  {provision && <div className="text-[13px] space-y-1.5">
+                  {provision && <div className="text-[12.5px] space-y-1.5">
                     {ueb && <><Row l="Verrechnungssatz" v={eur(c.preis)} /><Row l={`Volumen / Monat (${monatsstunden(p.wochenstunden) ?? 0} h)`} v={eur(c.umsatzMonat)} /><Row l="Kalkulation" v={c.status === "positiv" ? "kostendeckend" : c.status === "negativ" ? "nicht kostendeckend" : "–"} tone={c.status} bold /></>}
                     {pay && <><Row l="Verkaufspreis / Monat" v={eur(c.preis)} /><Row l="Kalkulation" v={c.status === "positiv" ? "kostendeckend" : c.status === "negativ" ? "nicht kostendeckend" : "–"} tone={c.status} bold /></>}
                     {!ueb && !pay && <Row l="Honorar gesamt" v={eur(c.umsatzMonat)} bold />}
-                    {c.status === "negativ" && <p className="text-red text-[12px] mt-2">Preis liegt unter den Selbstkosten – bitte Verrechnungssatz erhöhen.</p>}
-                    <p className="text-muted text-[12px] mt-2">Deine Provision wird nach dem Speichern rechts angezeigt.</p>
+                    {c.status === "negativ" && <p className="text-red text-[12.5px] mt-2">Preis liegt unter den Selbstkosten – bitte Verrechnungssatz erhöhen.</p>}
+                    <p className="text-muted text-[12.5px] mt-2">Deine Provision wird nach dem Speichern rechts angezeigt.</p>
                   </div>}
-                  {!provision && ueb && <><Gauge kosten={c.selbstkosten} preis={c.preis} /><div className="mt-3 text-[13px] space-y-1.5">
+                  {!provision && ueb && <><Gauge kosten={c.selbstkosten} preis={c.preis} /><div className="mt-3 text-[12.5px] space-y-1.5">
                     <Row l="Stundenlohn" v={eur(p.stundenlohn)} />
                     <Row l={`× Faktor ${c.faktor.toFixed(4)}`} v="" muted />
                     <Row l="Selbstkosten / Std" v={eur(c.selbstkosten)} bold />
@@ -191,7 +191,7 @@ export function AngebotEditor({ id, kopf, positionen: init, saetze, kvs, kundenK
                     <Row l={`DB1 / Monat (${monatsstunden(p.wochenstunden) ?? 0} h)`} v={eur(c.db1Monat)} />
                     <Row l="DB1 / Jahr" v={eur(c.db1Jahr)} bold />
                   </div></>}
-                  {!provision && pay && <><Gauge kosten={c.selbstkosten} preis={c.preis} /><div className="mt-3 text-[13px] space-y-1.5">
+                  {!provision && pay && <><Gauge kosten={c.selbstkosten} preis={c.preis} /><div className="mt-3 text-[12.5px] space-y-1.5">
                     <Row l="Bruttogehalt" v={eur(p.bruttogehalt)} />
                     <Row l={`× Payroll-Faktor ${c.faktor.toFixed(4)}`} v="" muted />
                     <Row l="Selbstkosten / Monat" v={eur(c.selbstkosten)} bold />
@@ -201,7 +201,7 @@ export function AngebotEditor({ id, kopf, positionen: init, saetze, kvs, kundenK
                     <Row l="Verkaufsfaktor" v={c.detail.verkaufsfaktor ? c.detail.verkaufsfaktor.toFixed(3) : "–"} />
                     <Row l="DB1 / Jahr" v={eur(c.db1Jahr)} bold />
                   </div></>}
-                  {!provision && !ueb && !pay && <div className="text-[13px] space-y-1.5"><Row l="Honorar gesamt" v={eur(c.umsatzMonat)} bold /><Row l="DB1" v={eur(c.db1Monat)} tone="positiv" /></div>}
+                  {!provision && !ueb && !pay && <div className="text-[12.5px] space-y-1.5"><Row l="Honorar gesamt" v={eur(c.umsatzMonat)} bold /><Row l="DB1" v={eur(c.db1Monat)} tone="positiv" /></div>}
                 </div>
               </div>
             </section>
@@ -213,25 +213,25 @@ export function AngebotEditor({ id, kopf, positionen: init, saetze, kvs, kundenK
       <aside className="space-y-4 lg:sticky lg:top-20 self-start">
         <section className="card card-pad reveal reveal-2">
           <div className="section-title mb-3">Angebot gesamt</div>
-          <div className="text-[12px] text-muted">Monatsvolumen (netto)</div>
-          <div className="num text-[26px] font-extrabold">{eur(summe.umsatz, 0)}</div>
+          <div className="text-[12.5px] text-muted">Monatsvolumen (netto)</div>
+          <div className="num text-[28px] font-extrabold">{eur(summe.umsatz, 0)}</div>
           {provision ? (
             <>
-              <div className="mt-3 text-[12px] text-muted">Provision / Monat{dirty && <span className="text-amber"> · nach dem Speichern aktuell</span>}</div>
-              {provision.monat == null ? <div className="text-[13px] text-amber mt-1">Noch nicht verfügbar – die Zentrale hat die Controlling-Kosten noch nicht hinterlegt.</div> : <>
+              <div className="mt-3 text-[12.5px] text-muted">Provision / Monat{dirty && <span className="text-amber"> · nach dem Speichern aktuell</span>}</div>
+              {provision.monat == null ? <div className="text-[12.5px] text-amber mt-1">Noch nicht verfügbar – die Zentrale hat die Controlling-Kosten noch nicht hinterlegt.</div> : <>
                 <div className={`num text-[22px] font-extrabold ${provision.monat < 0 ? "text-red" : "text-teal"}`}>{eur(provision.monat, 0)}</div>
-                <div className="mt-1 text-[13px]">Provision/Jahr <b className="num">{eur(provision.jahr ?? 0, 0)}</b></div>
+                <div className="mt-1 text-[12.5px]">Provision/Jahr <b className="num">{eur(provision.jahr ?? 0, 0)}</b></div>
               </>}
             </>
           ) : (
             <>
-              <div className="mt-3 text-[12px] text-muted">DB1 / Monat</div>
+              <div className="mt-3 text-[12.5px] text-muted">DB1 / Monat</div>
               <div className={`num text-[22px] font-extrabold ${summe.db1 < 0 ? "text-red" : "text-teal"}`}>{eur(summe.db1, 0)}</div>
-              <div className="mt-1 text-[13px]">Ø DB1-Marge <b className={`num ${marge != null && marge < 0 ? "text-red" : ""}`}>{pct(marge)}</b> · DB1/Jahr <b className="num">{eur(summe.db1 * 12, 0)}</b></div>
+              <div className="mt-1 text-[12.5px]">Ø DB1-Marge <b className={`num ${marge != null && marge < 0 ? "text-red" : ""}`}>{pct(marge)}</b> · DB1/Jahr <b className="num">{eur(summe.db1 * 12, 0)}</b></div>
               <div className="mt-3"><Gauge kosten={summe.umsatz - summe.db1} preis={summe.umsatz} /></div>
             </>
           )}
-          <p className="text-[11.5px] text-muted mt-3">Kalkulation bleibt intern – im PDF erscheinen nur Verrechnungssätze (kein Open Book).</p>
+          <p className="text-[12.5px] text-muted mt-3">Kalkulation bleibt intern – im PDF erscheinen nur Verrechnungssätze (kein Open Book).</p>
         </section>
         {!readOnly && (
           <button type="button" onClick={speichern} disabled={pending} className={`btn w-full justify-center ${dirty ? "btn-primary" : "btn-secondary"}`}>
@@ -251,5 +251,5 @@ function zulageText(z: { art: string; wert: number }): string {
 }
 
 function Row({ l, v, bold, muted, tone }: { l: string; v: string; bold?: boolean; muted?: boolean; tone?: "positiv" | "negativ" | null }) {
-  return <div className={`flex justify-between gap-3 ${muted ? "text-muted text-[12px]" : ""}`}><span className="text-muted">{l}</span><span className={`num ${bold ? "font-bold" : ""} ${tone === "negativ" ? "text-red" : tone === "positiv" ? "text-teal" : ""}`}>{v}</span></div>;
+  return <div className={`flex justify-between gap-3 ${muted ? "text-muted text-[12.5px]" : ""}`}><span className="text-muted">{l}</span><span className={`num ${bold ? "font-bold" : ""} ${tone === "negativ" ? "text-red" : tone === "positiv" ? "text-teal" : ""}`}>{v}</span></div>;
 }

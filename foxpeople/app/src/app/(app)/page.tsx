@@ -76,14 +76,14 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
 
       {ohneKosten && <div className="alert alert-amber mb-4"><span><strong>Provision noch nicht verfügbar:</strong> Die Zentrale hat die Controlling-Kosten für {jahr} noch nicht hinterlegt. Sobald das erledigt ist, erscheint hier deine Provision.</span></div>}
       {prov ? (
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <div className="kpi-group mb-6 reveal">
           <Kpi label="Verrechnung (Jahr)" value={eur(c.gesamt.umsatz, 0)} sub={`${c.gesamt.anzahlMitarbeiter} Mitarbeiter in Abrechnung`} />
           <Kpi label="Provision Überlassung" value={eurP(c.gesamt.provisionUeberlassung)} tone={ohneKosten ? undefined : c.gesamt.provisionUeberlassung >= 0 ? "teal" : "red"} sub="Anteil je überlassenem Mitarbeiter" className="reveal-2" />
           <Kpi label="Provision Vermittlung" value={eurP(c.gesamt.provisionVermittlung)} tone={ohneKosten ? undefined : "teal"} sub="Anteil am Vermittlungshonorar" className="reveal-3" />
           <Kpi label="Provision gesamt (Jahr)" value={eurP(c.gesamt.provision)} tone={ohneKosten ? undefined : c.gesamt.provision >= 0 ? "fox" : "red"} sub={ohneKosten ? "wartet auf Controlling-Kosten" : `Ø ${eur(c.gesamt.anzahlMitarbeiter ? c.gesamt.provision / c.gesamt.anzahlMitarbeiter : 0, 0)} je Mitarbeiter`} className="reveal-4" />
         </div>
       ) : (
-        <div className="grid grid-cols-2 xl:grid-cols-6 gap-4 mb-6">
+        <div className="kpi-group mb-6 reveal">
           <Kpi label="Gesamtumsatz (Jahr)" value={eur(c.gesamt.umsatz, 0)} sub={`Ø ${eur(c.gesamt.anzahlMitarbeiter ? c.gesamt.umsatz / c.gesamt.anzahlMitarbeiter : 0, 0)} je Mitarbeiter`} />
           <Kpi label="Selbstkosten (Jahr)" value={eur(c.gesamt.selbstkosten, 0)} sub={`Personalkostenquote ${pct(c.gesamt.personalkostenquote)}`} className="reveal-2" />
           <Kpi label="DG-Abgaben" value={eur(c.gesamt.abgaben, 0)} sub={`Quote ${pct(c.gesamt.abgabenquote)}`} className="reveal-3" />
@@ -98,7 +98,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
           {c.gesamt.umsatz ? <MonatsChart provision={prov} data={c.monatsreihe.filter((m, i) => i <= Math.max(...c.monatsreihe.map((x, j) => (x.umsatz || x.selbstkosten ? j : -1))))} /> : <Empty title="Noch keine Monatswerte" text={prov ? "Erfasse Verrechnung und Bruttolohn in der Monatsabrechnung – deine Provision wird automatisch berechnet." : "Erfasse Verrechnung und Bruttolohn in der Monatsabrechnung – Rückstellungen und DB1 werden automatisch berechnet."} action={<Link href="/abrechnung" className="btn btn-primary btn-sm">Zur Monatsabrechnung</Link>} />}
         </Card>
         <Card title="Heute im Blick" className="reveal reveal-2">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="-mx-5 -mb-5 border-t border-line">
             <Mini href="/personen?status=SUCHT" label="Bewerber-Pool" value={pool} />
             <Mini href="/personen?status=VERMITTELT" label="Aktive Mitarbeiter" value={aktiv} />
             <Mini href="/einsaetze" label="Laufende Einsätze" value={einsaetze} />
@@ -117,7 +117,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
           <Ranking rows={top} prov={prov} ohneKosten={ohneKosten} />
         </Card>
         <Card title={<span className="flex items-center gap-2"><TrendingDown size={15} className="text-red" /> Verlustbringer (negativ{prov ? "e Provision" : "er DB1"})</span>} className="reveal reveal-2">
-          {verlust.length ? <Ranking rows={verlust} neg prov={prov} ohneKosten={ohneKosten} /> : <p className="text-muted text-[13px] py-4">Kein Mitarbeiter mit negativ{prov ? "er Provision" : "em DB1"} in {jahr}. 👍</p>}
+          {verlust.length ? <Ranking rows={verlust} neg prov={prov} ohneKosten={ohneKosten} /> : <p className="text-muted text-[12.5px] py-4">Kein Mitarbeiter mit negativ{prov ? "er Provision" : "em DB1"} in {jahr}. 👍</p>}
         </Card>
         <Card title={<span className="flex items-center gap-2"><AlertTriangle size={15} className="text-amber" /> Wiedervorlagen</span>} actions={<Link href="/aufgaben" className="text-[12.5px] font-semibold text-brand flex items-center gap-1">Alle <ArrowUpRight size={13} /></Link>} className="reveal reveal-3">
           {aufgaben.length ? (
@@ -128,20 +128,20 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
                   <li key={a.id} className="py-2.5 flex items-start gap-3">
                     <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${ueberfaellig ? "bg-red" : "bg-amber"}`} />
                     <div className="min-w-0">
-                      <div className="text-[13.5px] font-medium leading-snug truncate">{a.titel}</div>
-                      <div className="text-[12px] text-muted">{ueberfaellig ? "überfällig seit" : "fällig am"} {datum(a.faelligAm)}</div>
+                      <div className="text-[14px] font-medium leading-snug truncate">{a.titel}</div>
+                      <div className="text-[12.5px] text-muted">{ueberfaellig ? "überfällig seit" : "fällig am"} {datum(a.faelligAm)}</div>
                     </div>
                   </li>
                 );
               })}
             </ul>
-          ) : <p className="text-muted text-[13px] py-4">Nichts offen – alle Nachweise, Verträge und Rechnungen sind im grünen Bereich.</p>}
+          ) : <p className="text-muted text-[12.5px] py-4">Nichts offen – alle Nachweise, Verträge und Rechnungen sind im grünen Bereich.</p>}
         </Card>
       </div>
 
       {prov && (
         <Card title="Provisionsbelege (freigegeben)" pad={false} className="mb-6 reveal">
-          {belege.length ? <table className="table"><thead><tr><th>Monat</th><th className="r">Verrechnung</th><th className="r">Provision</th><th>Status</th><th></th></tr></thead><tbody>{belege.map((b) => <tr key={b.id}><td className="font-semibold">{String(b.monat).padStart(2, "0")}/{b.jahr}</td><td className="r num">{eur(b.verrechnung, 0)}</td><td className="r num font-bold text-teal">{eur(b.betrag)}</td><td>{b.status === "AUSBEZAHLT" ? <span className="badge badge-brand">ausbezahlt {datum(b.ausbezahltAm)}</span> : <span className="badge badge-teal">freigegeben {datum(b.freigegebenAm)}</span>}</td><td className="r"><a href={`/controlling/provision/${b.id}/pdf`} className="btn btn-ghost btn-sm">PDF</a></td></tr>)}</tbody></table> : <p className="text-muted text-[13px] p-5">Noch kein freigegebener Provisionsbeleg – die Zentrale gibt die Belege monatlich frei.</p>}
+          {belege.length ? <table className="table"><thead><tr><th>Monat</th><th className="r">Verrechnung</th><th className="r">Provision</th><th>Status</th><th></th></tr></thead><tbody>{belege.map((b) => <tr key={b.id}><td className="font-semibold">{String(b.monat).padStart(2, "0")}/{b.jahr}</td><td className="r num">{eur(b.verrechnung, 0)}</td><td className="r num font-bold text-teal">{eur(b.betrag)}</td><td>{b.status === "AUSBEZAHLT" ? <span className="badge badge-brand">ausbezahlt {datum(b.ausbezahltAm)}</span> : <span className="badge badge-teal">freigegeben {datum(b.freigegebenAm)}</span>}</td><td className="r"><a href={`/controlling/provision/${b.id}/pdf`} className="btn btn-ghost btn-sm">PDF</a></td></tr>)}</tbody></table> : <p className="text-muted text-[12.5px] p-5">Noch kein freigegebener Provisionsbeleg – die Zentrale gibt die Belege monatlich frei.</p>}
         </Card>
       )}
       {geburtstage.length > 0 && (
@@ -158,7 +158,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
                 {[...c.kunden].sort((a, b) => wert(b) - wert(a)).map((k, i) => (
                   <tr key={k.kundeId}>
                     <td className="text-muted">{i + 1}</td>
-                    <td><Link href={`/kunden/${k.kundeId}`} className="row-link">{k.kunde}</Link><div className="text-[12px] text-muted">{k.anzahlMitarbeiter} Mitarbeiter</div></td>
+                    <td><Link href={`/kunden/${k.kundeId}`} className="row-link">{k.kunde}</Link><div className="text-[12.5px] text-muted">{k.anzahlMitarbeiter} Mitarbeiter</div></td>
                     <td className="r num">{eur(k.verrechnungJahr, 0)}</td>
                     <td className={`r num font-semibold ${wert(k) < 0 ? "text-red" : "text-teal"}`}>{eurP(wert(k))}</td>
                     {!prov && <td className="r num">{pct(k.db1Marge)}</td>}
@@ -212,27 +212,27 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
 
 function Mini({ href, label, value, tone, small }: { href: string; label: string; value: React.ReactNode; tone?: "red" | "amber" | "teal"; small?: boolean }) {
   return (
-    <Link href={href} className="rounded-xl border border-line bg-surface-2 p-3 hover:border-brand/40 transition-colors">
-      <div className="text-[11px] uppercase tracking-wider text-muted font-semibold">{label}</div>
-      <div className={`num font-extrabold ${small ? "text-[18px]" : "text-[24px]"} mt-0.5 ${tone === "red" ? "text-red" : tone === "amber" ? "text-amber" : tone === "teal" ? "text-teal" : ""}`}>{value}</div>
+    <Link href={href} className="flex items-center justify-between gap-3 px-5 py-2.5 border-b border-line last:border-0 hover:bg-surface-2 transition-colors">
+      <span className="text-[14px] text-ink-2">{label}</span>
+      <span className={`num font-semibold ${small ? "text-[15px]" : "text-[17px]"} ${tone === "red" ? "text-red" : tone === "amber" ? "text-amber" : tone === "teal" ? "text-teal" : ""}`}>{value}</span>
     </Link>
   );
 }
 
 function Ranking({ rows, neg, prov, ohneKosten }: { rows: { personId: string; name: string; kunde: string; db1Jahr: number; db1Marge: number; provisionJahr: number; provisionPct: number; art: string }[]; neg?: boolean; prov?: boolean; ohneKosten?: boolean }) {
-  if (!rows.length) return <p className="text-muted text-[13px] py-4">Noch keine Werte.</p>;
+  if (!rows.length) return <p className="text-muted text-[12.5px] py-4">Noch keine Werte.</p>;
   return (
     <ol className="divide-y divide-line">
       {rows.map((m, i) => (
         <li key={m.personId + m.kunde} className="py-2.5 flex items-center gap-3">
-          <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[12px] font-bold ${neg ? "bg-red-soft text-red" : i === 0 ? "bg-fox-soft text-fox" : "bg-brand-soft text-brand"}`}>{i + 1}</span>
+          <span className={`w-6 h-6 rounded-[7px] flex items-center justify-center text-[12.5px] font-semibold num ${neg ? "bg-red-soft text-red" : i === 0 ? "bg-fox-soft text-fox-ink" : "bg-surface-2 text-ink-2"}`}>{i + 1}</span>
           <div className="min-w-0 flex-1">
-            <Link href={`/personen/${m.personId}`} className="font-semibold text-[13.5px] hover:text-brand truncate block">{m.name}</Link>
-            <div className="text-[12px] text-muted truncate">{m.kunde}</div>
+            <Link href={`/personen/${m.personId}`} className="font-semibold text-[14px] hover:text-brand truncate block">{m.name}</Link>
+            <div className="text-[12.5px] text-muted truncate">{m.kunde}</div>
           </div>
           <div className="text-right">
             <div className={`num font-bold ${(prov ? m.provisionJahr : m.db1Jahr) < 0 ? "text-red" : "text-teal"}`}>{ohneKosten ? "–" : eur(prov ? m.provisionJahr : m.db1Jahr, 0)}</div>
-            <div className="text-[11.5px] text-muted num">{prov ? (m.art === "DIREKTVERMITTLUNG" ? "Vermittlung" : "Überlassung") : pct(m.db1Marge)}</div>
+            <div className="text-[12.5px] text-muted num">{prov ? (m.art === "DIREKTVERMITTLUNG" ? "Vermittlung" : "Überlassung") : pct(m.db1Marge)}</div>
           </div>
         </li>
       ))}

@@ -55,15 +55,17 @@ export default async function EinsaetzePage({ searchParams }: { searchParams: Pr
     <>
       <PageHeader title="Einsatzplanung" sub="Wer ist wann bei welchem Kunden – mit Konfliktprüfung für Doppelbuchungen, abgelaufene Nachweise und Verfügbarkeit." actions={<Link href="/einsaetze/neu" className="btn btn-primary"><Plus size={16} /> Einsatz planen</Link>} />
       <div className="flex flex-wrap items-center gap-2 mb-4 reveal">
-        <div className="flex items-center gap-1 bg-surface border border-line rounded-xl p-1">
+        <div className="flex items-center gap-1 bg-surface border border-line rounded-[10px] p-0.5 shadow-[var(--shadow-sm)]">
           <Link href={q({ monat: mk(prev) })} className="btn btn-ghost btn-sm"><ChevronLeft size={16} /></Link>
           <span className="font-display font-bold px-2 min-w-[150px] text-center">{MONATE_LANG[monat - 1]} {jahr}</span>
           <Link href={q({ monat: mk(next) })} className="btn btn-ghost btn-sm"><ChevronRight size={16} /></Link>
         </div>
-        <Link href={q({ ansicht: "monat" })} className={`chip-filter ${ansicht === "monat" ? "active" : ""}`}>Monatsübersicht</Link>
-        <Link href={q({ ansicht: "board" })} className={`chip-filter ${ansicht === "board" ? "active" : ""}`}>Board</Link>
-        <Link href={q({ ansicht: "timeline" })} className={`chip-filter ${ansicht === "timeline" ? "active" : ""}`}>Kalender</Link>
-        <Link href={q({ ansicht: "liste" })} className={`chip-filter ${ansicht === "liste" ? "active" : ""}`}>Liste</Link>
+        <div className="seg">
+          <Link href={q({ ansicht: "monat" })} className={`chip-filter ${ansicht === "monat" ? "active" : ""}`}>Monatsübersicht</Link>
+          <Link href={q({ ansicht: "board" })} className={`chip-filter ${ansicht === "board" ? "active" : ""}`}>Board</Link>
+          <Link href={q({ ansicht: "timeline" })} className={`chip-filter ${ansicht === "timeline" ? "active" : ""}`}>Kalender</Link>
+          <Link href={q({ ansicht: "liste" })} className={`chip-filter ${ansicht === "liste" ? "active" : ""}`}>Liste</Link>
+        </div>
         <form className="ml-auto flex gap-2">
           <input type="hidden" name="monat" value={`${jahr}-${String(monat).padStart(2, "0")}`} /><input type="hidden" name="ansicht" value={ansicht} />
           <select name="kundeId" defaultValue={sp.kundeId ?? ""} className="select !w-56 !py-1.5"><option value="">Alle Kunden</option>{kunden.map((k) => <option key={k.id} value={k.id}>{k.firmenname}</option>)}</select>
@@ -77,20 +79,20 @@ export default async function EinsaetzePage({ searchParams }: { searchParams: Pr
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
             <div className="kpi reveal"><div className="label">Sollstunden {MONATE_LANG[monat - 1]}</div><div className="value">{soll.soll.toLocaleString("de-AT")} h</div><div className="sub">aus {soll.arbeitsWochen} Arbeitswochen (X) · Mo–Fr ohne Feiertage</div></div>
             <div className="kpi reveal reveal-2"><div className="label">Mitarbeiter im Raster</div><div className="value">{personenMonat.length}</div><div className="sub">{wochen.length} Kalenderwochen</div></div>
-            <div className="kpi reveal reveal-3"><div className="label">Krank (K)</div><div className={`value ${soll.krankTage > 0 ? "text-red" : ""}`}>{soll.krankTage} <span className="text-[16px] text-muted">Tage</span></div></div>
-            <div className="kpi reveal reveal-4"><div className="label">Urlaub (U)</div><div className="value">{soll.urlaubTage} <span className="text-[16px] text-muted">Tage</span></div></div>
+            <div className="kpi reveal reveal-3"><div className="label">Krank (K)</div><div className={`value ${soll.krankTage > 0 ? "text-red" : ""}`}>{soll.krankTage} <span className="text-[17px] text-muted">Tage</span></div></div>
+            <div className="kpi reveal reveal-4"><div className="label">Urlaub (U)</div><div className="value">{soll.urlaubTage} <span className="text-[17px] text-muted">Tage</span></div></div>
           </div>
           {sp.gespeichert && <div className="alert alert-teal mb-4">{sp.gespeichert} Wochen gespeichert – K/U-Wochen wurden als Abwesenheit übernommen.</div>}
           <Card pad={false} className="reveal reveal-2">
             {personenMonat.length === 0 ? <Empty title="Keine aktiven Mitarbeiter" /> : (
               <form action={wochenSpeichern.bind(null, jahr, monat)}>
                 <div className="overflow-x-auto"><table className="table">
-                  <thead><tr><th>Mitarbeiter</th><th>Kunde</th>{wochen.map((w) => <th key={`${w.jahr}-${w.kw}`} className="text-center">KW {w.kw}<div className="font-normal normal-case tracking-normal text-[10.5px]">{w.von.getUTCDate()}.–{w.bis.getUTCDate()}. · {arbeitstageKw(w.jahr, w.kw, { jahr, monat })} AT</div><div className="mt-1"><WocheFuellen praefix={`wt_`} spalte={`_${w.jahr}_${w.kw}_`} feiertage={feiertagIndizes(w.jahr, w.kw)} titel={`KW ${w.kw}: alle Mitarbeiter Mo–Fr auf X setzen`} /></div></th>)}<th className="r">Soll h</th></tr></thead>
+                  <thead><tr><th>Mitarbeiter</th><th>Kunde</th>{wochen.map((w) => <th key={`${w.jahr}-${w.kw}`} className="text-center">KW {w.kw}<div className="font-normal normal-case tracking-normal text-[11px]">{w.von.getUTCDate()}.–{w.bis.getUTCDate()}. · {arbeitstageKw(w.jahr, w.kw, { jahr, monat })} AT</div><div className="mt-1"><WocheFuellen praefix={`wt_`} spalte={`_${w.jahr}_${w.kw}_`} feiertage={feiertagIndizes(w.jahr, w.kw)} titel={`KW ${w.kw}: alle Mitarbeiter Mo–Fr auf X setzen`} /></div></th>)}<th className="r">Soll h</th></tr></thead>
                   <tbody>{personenMonat.map((p) => {
                     const sollP = soll.jePerson.find((x) => x.personId === p.id);
                     return (
                       <tr key={p.id}>
-                        <td><Link href={`/personen/${p.id}`} className="row-link">{p.nachname} {p.vorname}</Link><div className="text-[12px] text-muted">{p.standardrolle} · {p.wochenstunden ?? 38.5} h/Wo</div></td>
+                        <td><Link href={`/personen/${p.id}`} className="row-link">{p.nachname} {p.vorname}</Link><div className="text-[12.5px] text-muted">{p.standardrolle} · {p.wochenstunden ?? 38.5} h/Wo</div></td>
                         <td className="text-[12.5px]">{[...new Set(p.einsaetze.map((e) => e.kunde.kurzname ?? e.kunde.firmenname))].join(", ") || <span className="text-muted">kein Einsatz</span>}</td>
                         {wochen.map((w) => {
                           const ws = wochenstatus.find((x) => x.personId === p.id && x.jahr === w.jahr && x.kw === w.kw);
@@ -98,8 +100,8 @@ export default async function EinsaetzePage({ searchParams }: { searchParams: Pr
                           const farbe = (v: string) => v === "X" ? "!bg-teal-soft !text-teal" : v === "K" ? "!bg-red-soft !text-red" : v === "U" ? "!bg-brand-soft" : v === "Z" ? "!bg-amber-soft" : "";
                           return <td key={`${w.jahr}-${w.kw}`} className="text-center"><div className="flex gap-0.5 justify-center">{daten.map((d, i) => { const imMonat = d.getUTCFullYear() === jahr && d.getUTCMonth() + 1 === monat; const ft = feiertageAT(d.getUTCFullYear()).has(d.toISOString().slice(0, 10)); return (
                             <label key={i} className={`flex flex-col items-center ${imMonat ? "" : "opacity-35"}`} title={`${TAGE_KURZ[i]} ${d.getUTCDate()}.${d.getUTCMonth() + 1}.${ft ? " (Feiertag)" : ""}`}>
-                              <span className={`text-[9px] leading-none mb-0.5 ${ft ? "text-red font-bold" : "text-muted"}`}>{TAGE_KURZ[i]}</span>
-                              <select name={`wt_${p.id}_${w.jahr}_${w.kw}_${i}`} defaultValue={tg[i] === "-" ? "" : tg[i]} className={`select !w-9 !px-0 !py-0.5 text-center font-display font-bold text-[12px] ${farbe(tg[i])}`}><option value="">–</option><option value="X">X</option><option value="K">K</option><option value="U">U</option><option value="Z">Z</option><option value="F">F</option></select>
+                              <span className={`text-[11px] leading-none mb-0.5 ${ft ? "text-red font-bold" : "text-muted"}`}>{TAGE_KURZ[i]}</span>
+                              <select name={`wt_${p.id}_${w.jahr}_${w.kw}_${i}`} defaultValue={tg[i] === "-" ? "" : tg[i]} className={`select !w-9 !px-0 !py-0.5 text-center font-display font-bold text-[12.5px] ${farbe(tg[i])}`}><option value="">–</option><option value="X">X</option><option value="K">K</option><option value="U">U</option><option value="Z">Z</option><option value="F">F</option></select>
                             </label>); })}</div><div className="mt-0.5"><WocheFuellen praefix={`wt_${p.id}_${w.jahr}_${w.kw}_`} feiertage={feiertagIndizes(w.jahr, w.kw)} /></div></td>;
                         })}
                         <td className="r num font-semibold">{sollP ? Math.round(sollP.soll) : 0}</td>
@@ -126,12 +128,12 @@ export default async function EinsaetzePage({ searchParams }: { searchParams: Pr
                   const warn = doppelt.has(e.id) || abgelaufeneQuali(e);
                   return (
                     <Link key={e.id} href={`/einsaetze/${e.id}`} className={`block card p-3 hover:shadow transition-shadow border-l-4 ${e.status === "AKTIV" ? "border-l-teal" : e.status === "GEPLANT" ? "border-l-brand" : "border-l-line-2"} ${warn ? "!border-l-red" : ""}`}>
-                      <div className="flex items-start justify-between gap-2"><div className="font-semibold text-[13.5px]">{e.person.vorname} {e.person.nachname}</div>{einsatzStatusBadge(e.status)}</div>
+                      <div className="flex items-start justify-between gap-2"><div className="font-semibold text-[14px]">{e.person.vorname} {e.person.nachname}</div>{einsatzStatusBadge(e.status)}</div>
                       <div className="text-[12.5px] text-muted mt-0.5">{e.rolleImEinsatz} · {e.schichtmodell === "TAG" ? "Tag" : e.schichtmodell.replace("_SCHICHT", "-Schicht")} · {e.wochenstunden} h</div>
-                      <div className="text-[12px] text-muted mt-1">{datum(e.von)} – {e.bis ? datum(e.bis) : "offen"}</div>
-                      {sensibel && e.verrechnungssatz && <div className="text-[12px] mt-1 num"><span className="text-muted">Satz</span> <b>{eur(e.verrechnungssatz)}</b>{e.stundenlohn && <> · <span className="text-muted">Lohn</span> <b>{eur(e.stundenlohn)}</b></>}</div>}
-                      {doppelt.has(e.id) && <div className="text-[12px] text-red font-semibold mt-1">⚠ Doppelbuchung</div>}
-                      {abgelaufeneQuali(e) && <div className="text-[12px] text-red font-semibold mt-1">⚠ Nachweis abgelaufen</div>}
+                      <div className="text-[12.5px] text-muted mt-1">{datum(e.von)} – {e.bis ? datum(e.bis) : "offen"}</div>
+                      {sensibel && e.verrechnungssatz && <div className="text-[12.5px] mt-1 num"><span className="text-muted">Satz</span> <b>{eur(e.verrechnungssatz)}</b>{e.stundenlohn && <> · <span className="text-muted">Lohn</span> <b>{eur(e.stundenlohn)}</b></>}</div>}
+                      {doppelt.has(e.id) && <div className="text-[12.5px] text-red font-semibold mt-1">⚠ Doppelbuchung</div>}
+                      {abgelaufeneQuali(e) && <div className="text-[12.5px] text-red font-semibold mt-1">⚠ Nachweis abgelaufen</div>}
                     </Link>
                   );
                 })}
@@ -145,17 +147,17 @@ export default async function EinsaetzePage({ searchParams }: { searchParams: Pr
         <Card pad={false} className="reveal reveal-2 overflow-x-auto">
           <div className="min-w-[900px]">
             <div className="grid" style={{ gridTemplateColumns: `240px repeat(${tage}, 1fr)` }}>
-              <div className="px-4 py-2 text-[11px] uppercase tracking-wider text-muted font-semibold border-b border-line bg-surface-2 sticky left-0">Mitarbeiter</div>
+              <div className="px-4 py-2 text-[12.5px] text-muted font-medium border-b border-line bg-surface sticky left-0">Mitarbeiter</div>
               {Array.from({ length: tage }, (_, i) => { const d = new Date(Date.UTC(jahr, monat - 1, i + 1)); const we = [0, 6].includes(d.getUTCDay()); const ist = d.toDateString() === new Date(Date.UTC(heute.getFullYear(), heute.getMonth(), heute.getDate())).toDateString(); return <div key={i} className={`text-center text-[11px] py-2 border-b border-line ${we ? "bg-surface-2 text-muted" : ""} ${ist ? "text-fox font-bold" : ""}`}>{i + 1}</div>; })}
               {[...perPerson.entries()].map(([pid, list]) => (
                 <div key={pid} className="contents">
-                  <div className="px-4 py-2.5 border-b border-line text-[13px] font-semibold sticky left-0 bg-surface"><Link href={`/personen/${pid}`} className="hover:text-brand">{list[0].person.vorname} {list[0].person.nachname}</Link><div className="text-[11.5px] text-muted font-normal">{list[0].person.standardrolle}</div></div>
+                  <div className="px-4 py-2.5 border-b border-line text-[12.5px] font-semibold sticky left-0 bg-surface"><Link href={`/personen/${pid}`} className="hover:text-brand">{list[0].person.vorname} {list[0].person.nachname}</Link><div className="text-[12.5px] text-muted font-normal">{list[0].person.standardrolle}</div></div>
                   <div className="border-b border-line relative h-[52px]" style={{ gridColumn: `span ${tage}` }}>
                     {list.map((e, idx) => {
                       const a = Math.max(1, e.von < start ? 1 : e.von.getUTCDate());
                       const b = !e.bis || e.bis > ende ? tage : e.bis.getUTCDate();
                       const left = ((a - 1) / tage) * 100; const w = ((b - a + 1) / tage) * 100;
-                      return <Link key={e.id} href={`/einsaetze/${e.id}`} title={`${e.kunde.firmenname} · ${e.rolleImEinsatz}`} className={`absolute h-[22px] rounded-md text-[11.5px] font-semibold text-white px-2 truncate leading-[22px] ${doppelt.has(e.id) ? "bg-red" : e.status === "AKTIV" ? "bg-teal" : e.status === "GEPLANT" ? "bg-brand" : "bg-line-2 !text-ink"}`} style={{ left: `${left}%`, width: `${w}%`, top: 6 + (idx % 2) * 22 }}>{e.kunde.kurzname ?? e.kunde.firmenname}</Link>;
+                      return <Link key={e.id} href={`/einsaetze/${e.id}`} title={`${e.kunde.firmenname} · ${e.rolleImEinsatz}`} className={`absolute h-[22px] rounded-md text-[12.5px] font-semibold text-white px-2 truncate leading-[22px] ${doppelt.has(e.id) ? "bg-red" : e.status === "AKTIV" ? "bg-teal" : e.status === "GEPLANT" ? "bg-brand" : "bg-line-2 !text-ink"}`} style={{ left: `${left}%`, width: `${w}%`, top: 6 + (idx % 2) * 22 }}>{e.kunde.kurzname ?? e.kunde.firmenname}</Link>;
                     })}
                   </div>
                 </div>

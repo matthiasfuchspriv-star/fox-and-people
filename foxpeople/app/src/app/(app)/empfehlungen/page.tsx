@@ -33,7 +33,7 @@ export default async function EmpfehlungenPage({ searchParams }: { searchParams:
               <thead><tr><th>Empfohlen</th><th>Von</th><th>Kontakt</th><th>Status</th><th>Prämie</th><th></th></tr></thead>
               <tbody>{liste.map((e) => (
                 <tr key={e.id}>
-                  <td className="font-semibold">{e.name}<div className="text-[11.5px] text-muted font-normal">{datum(e.erstelltAm)}{e.notiz ? ` · ${e.notiz}` : ""}</div>{e.empfohlenePerson && <Link href={`/personen/${e.empfohlenePerson.id}`} className="text-[12px] text-brand">→ {e.empfohlenePerson.vorname} {e.empfohlenePerson.nachname}</Link>}</td>
+                  <td className="font-semibold">{e.name}<div className="text-[12.5px] text-muted font-normal">{datum(e.erstelltAm)}{e.notiz ? ` · ${e.notiz}` : ""}</div>{e.empfohlenePerson && <Link href={`/personen/${e.empfohlenePerson.id}`} className="text-[12.5px] text-brand">→ {e.empfohlenePerson.vorname} {e.empfohlenePerson.nachname}</Link>}</td>
                   <td><Link href={`/personen/${e.werber.id}`} className="row-link">{e.werber.vorname} {e.werber.nachname}</Link></td>
                   <td className="text-[12.5px]">{e.telefon}<br />{e.email}</td>
                   <td><Badge tone={STATUS[e.status][1]}>{STATUS[e.status][0]}</Badge></td>
@@ -41,7 +41,7 @@ export default async function EmpfehlungenPage({ searchParams }: { searchParams:
                   <td className="r">
                     <form action={empfehlungStatus.bind(null, e.id)} className="flex items-center gap-1 justify-end flex-wrap">
                       {e.status === "NEU" && <button name="status" value="KONTAKTIERT" className="btn btn-secondary btn-sm">Kontaktiert</button>}
-                      {(e.status === "NEU" || e.status === "KONTAKTIERT") && <><select name="empfohlenePersonId" className="select !w-44 !py-1 text-[12px]"><option value="">Person im Pool wählen …</option>{pool.map((p) => <option key={p.id} value={p.id}>{p.nachname} {p.vorname}</option>)}</select><button name="status" value="EINGESTELLT" className="btn btn-primary btn-sm">Eingestellt</button><button name="status" value="ABGELEHNT" className="btn btn-ghost btn-sm">Ablehnen</button></>}
+                      {(e.status === "NEU" || e.status === "KONTAKTIERT") && <><select name="empfohlenePersonId" className="select !w-44 !py-1 text-[12.5px]"><option value="">Person im Pool wählen …</option>{pool.map((p) => <option key={p.id} value={p.id}>{p.nachname} {p.vorname}</option>)}</select><button name="status" value="EINGESTELLT" className="btn btn-primary btn-sm">Eingestellt</button><button name="status" value="ABGELEHNT" className="btn btn-ghost btn-sm">Ablehnen</button></>}
                       {e.status === "EINGESTELLT" && <button name="status" value="PRAEMIE_FAELLIG" className="btn btn-primary btn-sm">Prämie fällig</button>}
                       {e.status === "PRAEMIE_FAELLIG" && <button name="status" value="AUSBEZAHLT" className="btn btn-primary btn-sm">Ausbezahlt</button>}
                     </form>
@@ -54,7 +54,7 @@ export default async function EmpfehlungenPage({ searchParams }: { searchParams:
         {istZentrale(s) && (
           <>
           <Card title="Bewerbungs-QR-Code" className="reveal reveal-2">
-            <p className="text-[13.5px] text-muted mb-3">Der Code führt auf die 30-Sekunden-Kurzbewerbung. Auf Flyer, Aushang, Fahrzeug, Visitenkarte und auf jede Einsatzbestätigung drucken. Mit einem Kanalnamen im Feld unten kommt jede Bewerbung mit ihrer Quelle herein – dann steht im Controlling unter „Recruiting &amp; Bindung“, welcher Aushang wirklich Leute bringt.</p>
+            <p className="text-[14px] text-muted mb-3">Der Code führt auf die 30-Sekunden-Kurzbewerbung. Auf Flyer, Aushang, Fahrzeug, Visitenkarte und auf jede Einsatzbestätigung drucken. Mit einem Kanalnamen im Feld unten kommt jede Bewerbung mit ihrer Quelle herein – dann steht im Controlling unter „Recruiting &amp; Bindung“, welcher Aushang wirklich Leute bringt.</p>
             <form className="flex gap-2 items-end mb-3" action="/empfehlungen/qr" target="_blank">
               <Field label="Kanal (optional)" className="flex-1"><input name="q" className="input" placeholder="z. B. Aushang Werk Kilb" /></Field>
               <button className="btn btn-secondary">QR-Code öffnen</button>
@@ -63,7 +63,7 @@ export default async function EmpfehlungenPage({ searchParams }: { searchParams:
           </Card>
           <Card title="Programm-Einstellungen" className="reveal reveal-2">
             <form action={empfehlungKonfig} className="space-y-3">
-              <label className="flex items-center gap-2 text-[13.5px]"><input type="checkbox" name="aktiv" defaultChecked={cfg.aktiv} /> Programm aktiv (in der App sichtbar)</label>
+              <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" name="aktiv" defaultChecked={cfg.aktiv} /> Programm aktiv (in der App sichtbar)</label>
               <Field label="Prämie für den Werber €"><input name="praemieWerber" defaultValue={cfg.praemieWerber} className="input num" /></Field>
               <Field label="Startbonus für den Geworbenen € (0 = keiner)"><input name="praemieGeworbener" defaultValue={cfg.praemieGeworbener} className="input num" /></Field>
               <Field label="Fällig nach Monaten im Einsatz"><input name="praemieNachMonaten" defaultValue={cfg.praemieNachMonaten} className="input num" /></Field>
