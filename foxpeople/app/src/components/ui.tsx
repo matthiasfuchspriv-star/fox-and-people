@@ -9,10 +9,10 @@ export function PageHeader({ title, sub, actions, crumbs }: { title: ReactNode; 
     <div className="flex flex-wrap items-end justify-between gap-4 mb-6 reveal relative z-20">
       <div>
         {crumbs && (
-          <div className="flex items-center gap-1.5 text-[12.5px] text-muted mb-1">
+          <div className="flex items-center gap-1.5 text-[12.5px] text-muted mb-1.5">
             {crumbs.map((c, i) => (
               <span key={i} className="flex items-center gap-1.5">
-                {c.href ? <Link href={c.href} className="hover:text-brand">{c.label}</Link> : <span>{c.label}</span>}
+                {c.href ? <Link href={c.href} className="hover:text-ink">{c.label}</Link> : <span>{c.label}</span>}
                 {i < crumbs.length - 1 && <span className="opacity-50">/</span>}
               </span>
             ))}
@@ -31,7 +31,7 @@ export function Card({ children, className, title, actions, pad = true, id }: { 
     <section id={id} className={clsx("card", className)}>
       {(title || actions) && (
         <header className="flex items-center justify-between gap-3 px-5 pt-4 pb-3">
-          <h2 className="font-display font-bold text-[15px]">{title}</h2>
+          <h2 className="font-display font-semibold text-[15px] tracking-[-0.01em]">{title}</h2>
           {actions}
         </header>
       )}
@@ -58,10 +58,10 @@ export function Badge({ tone, children }: { tone: "teal" | "brand" | "fox" | "re
 export function Empty({ title, text, action }: { title: string; text?: string; action?: ReactNode }) {
   return (
     <div className="text-center py-14 px-6">
-      <div className="mx-auto w-12 h-12 rounded-2xl bg-brand-soft flex items-center justify-center text-brand mb-3">
+      <div className="mx-auto w-12 h-12 avatar bg-surface-2 text-muted mb-3">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 7h16M4 12h10M4 17h7" strokeLinecap="round" /></svg>
       </div>
-      <h3 className="font-display font-bold text-[15px]">{title}</h3>
+      <h3 className="font-display font-semibold text-[15px]">{title}</h3>
       {text && <p className="text-muted text-[13px] mt-1 max-w-sm mx-auto">{text}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
@@ -71,7 +71,7 @@ export function Empty({ title, text, action }: { title: string; text?: string; a
 export function Field({ label, children, help, className, required }: { label: string; children: ReactNode; help?: string; className?: string; required?: boolean }) {
   return (
     <div className={clsx("field", className)}>
-      <label className="label">{label}{required && <span className="text-red ml-0.5">*</span>}</label>
+      <label className="label">{label}{required && <span className="text-muted font-normal ml-1" title="Pflichtfeld">·</span>}</label>
       {children}
       {help && <div className="help">{help}</div>}
     </div>
@@ -87,6 +87,16 @@ export function Gauge({ kosten, preis }: { kosten: number; preis: number | null 
       <div className={neg ? "neg" : "cost"} style={{ width: `${neg ? 100 : c}%` }} />
       {!neg && <div className="db1" style={{ width: `${100 - c}%` }} />}
     </div>
+  );
+}
+
+/** Initialen oder Foto als Squircle – wie in Kontakte. */
+export function Avatar({ name, src, size = 40, className }: { name: string; src?: string | null; size?: number; className?: string }) {
+  const initialen = name.split(/\s+/).filter(Boolean).slice(0, 2).map((t) => t[0]?.toUpperCase()).join("");
+  return (
+    <span className={clsx("avatar", className)} style={{ width: size, height: size, fontSize: Math.round(size * 0.36) }} aria-hidden>
+      {src ? <img src={src} alt="" /> : initialen}
+    </span>
   );
 }
 
