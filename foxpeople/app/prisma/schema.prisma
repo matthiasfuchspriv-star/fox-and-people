@@ -1,0 +1,1357 @@
+// Fox & People – Verwaltungssoftware · Datenmodell v1
+// Jede fachliche Entität trägt kostenstelleId (Mandantentrennung).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------- Mandanten & Nutzer
+
+model Kostenstelle {
+  id            String   @id @default(cuid())
+  name          String
+  kuerzel       String   @unique // Bestandteil der Nummernkreise: AN-HQ-2026-0001
+  isZentrale    Boolean  @default(false)
+  strasse       String?
+  plz           String?
+  ort           String?
+  bundesland    String   @default("Niederösterreich")
+  telefon       String?
+  email         String?
+  aktiv         Boolean  @default(true)
+  // Provisionsschlüssel in % vom DB1 – Kostenstellen sehen statt DB1 nur ihre Provision
+  provisionUeberlassung Float @default(20)
+  provisionVermittlung  Float @default(50)
+  erstelltAm    DateTime @default(now())
+
+  nutzer            Nutzer[]
+  kunden            Kunde[]
+  personen          Person[]
+  einsaetze         Einsatz[]
+  angebote          Angebot[]
+  vertraege         Vertrag[]
+  rechnungen        Rechnung[]
+  monatsabrechnungen Monatsabrechnung[]
+  provisionsabrechnungen Provisionsabrechnung[]
+  dokumente         Dokument[]
+  aufgaben          Aufgabe[]
+  profilVersand     ProfilVersand[]
+  nummernkreise     Nummernkreis[]
+  vertragsvorlagen  Vertragsvorlage[]
+  uebernahmen       Uebernahme[]
+}
+
+enum Rolle {
+  SYSTEMADMIN
+  ZENTRALE
+  KOSTENSTELLEN_LEITUNG
+  SACHBEARBEITUNG
+}
+
+model Nutzer {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String
+  passwortHash   String
+  rolle          Rolle
+  kostenstelleId String? // null nur für SYSTEMADMIN/ZENTRALE
+  kostenstelle   Kostenstelle? @relation(fields: [kostenstelleId], references: [id])
+  totpSecret     String? // verschlüsselt; gesetzt = 2FA aktiv
+  aktiv          Boolean  @default(true)
+  fehlversuche   Int      @default(0)
+  gesperrtBis    DateTime?
+  letzterLogin   DateTime?
+  erstelltAm     DateTime @default(now())
+
+  auditLogs AuditLog[]
+  aufgaben  Aufgabe[]
+  /// Sitzungen, die vor diesem Zeitpunkt ausgestellt wurden, gelten nicht mehr (Passwort-, Rollen-, Statuswechsel)
+  sitzungenGueltigAb DateTime?
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  zeitpunkt   DateTime @default(now())
+  nutzerId    String?
+  nutzer      Nutzer?  @relation(fields: [nutzerId], references: [id])
+  nutzerName  String
+  aktion      String // LOGIN, LOGIN_FAILED, VIEW_SENSITIVE, CREATE, UPDATE, DELETE, EXPORT, SEND, IMPORT
+  entitaet    String
+  datensatzId String?
+  beschreibung String?
+  diff        Json?
+  ip          String?
+  kostenstelleId String?
+
+  @@index([entitaet, datensatzId])
+  @@index([zeitpunkt])
+}
+
+// ---------------------------------------------------------------- Einstellungen
+
+/// Versioniertes Satz-Set (WIFI-NÖ-Schema). Neues gültigAb = neue Version.
+model AbgabenSatzSet {
+  id        String   @id @default(cuid())
+  name      String
+  gultigAb  DateTime
+  saetze    Json // AbgabenSaetze aus engine/kalkulation.ts
+  erstelltAm DateTime @default(now())
+}
+
+model DzSatz {
+  id         String @id @default(cuid())
+  bundesland String
+  satz       Float
+  gultigAb   DateTime
+  @@unique([bundesland, gultigAb])
+}
+
+model Kollektivvertrag {
+  id       String @id @default(cuid())
+  name     String
+  kuerzel  String
+  gultigAb DateTime
+  gultigBis DateTime?
+  /// Teiler Monatslohn → Stundenlohn (Metalltechnische Industrie 167, AKÜ 167)
+  monatsteiler  Float   @default(167)
+  wochenstunden Float   @default(38.5)
+  /// true = Beschäftiger-KV (Referenzlohn nach § 10 AÜG), false = eigener KV des Überlassers (AKÜ)
+  istReferenz   Boolean @default(false)
+  /// true = Lohntafel nicht exakt gepflegt → beim Einsatz Referenzzuschlag manuell prüfen
+  referenzzuschlagPruefen Boolean @default(false)
+  /// Für wen der KV gilt: ARBEITER, ANGESTELLTE oder BEIDE. Beschäftiger führen beide getrennt.
+  gruppe   String  @default("ARBEITER")
+  hinweis  String?
+  quelle   String?
+  lohntabelle KvLohnstufe[]
+  personen    Person[]
+  kunden              Kunde[] @relation("KundeReferenzKvArbeiter")
+  kundenAngestellte   Kunde[] @relation("KundeReferenzKvAngestellte")
+  zulagen     Zulage[]
+}
+
+model KvLohnstufe {
+  id                   String @id @default(cuid())
+  kvId                 String
+  kv                   Kollektivvertrag @relation(fields: [kvId], references: [id], onDelete: Cascade)
+  beschaeftigungsgruppe String
+  bezeichnung          String?
+  mindestStundenlohn   Float?
+  mindestMonatsbrutto  Float?
+  /// Vorrückungsstufen der Lohntafel (Monatsbrutto)
+  nach2Jahren          Float?
+  nach4Jahren          Float?
+  /// Referenzzuschlag in Prozent auf den KV-Lohn dieser Gruppe (Spalte "Satz Ref. Z")
+  referenzzuschlagProzent Float?
+  /// gilt ab – erlaubt mehrere Lohntafeln je KV (z. B. 1.11.2025 und 1.11.2026)
+  gultigAb             DateTime?
+  @@index([kvId, gultigAb])
+}
+
+model Nummernkreis {
+  id             String @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  typ            String // AN, RE, VT
+  jahr           Int
+  letzteNummer   Int    @default(0)
+  freieNummern   Int[]  @default([]) // durch Löschen frei gewordene Nummern – werden zuerst wieder vergeben
+  format         String @default("{typ}-{kuerzel}-{jahr}-{nnnn}") // Platzhalter: {typ} {kuerzel} {jahr} {nnn} {nnnn}
+  @@unique([kostenstelleId, typ, jahr])
+}
+
+model Einstellung {
+  key   String @id
+  value Json
+}
+
+/// Controlling-Kosten der Zentrale je Geschäftsjahr: Gemeinkosten gesamt und Umlage je Mitarbeiter.
+/// DB2 = DB1 − Kosten je Mitarbeiter und Monat; Provisionen der Kostenstellen werden vom DB2 berechnet.
+model Controllingkosten {
+  id                        String   @id @default(cuid())
+  jahr                      Int
+  kostenstelleId            String   @default("") // "" = Standard für alle Kostenstellen, sonst Kostenstellen-spezifisch
+  gesamtkosten              Float    // Gemeinkosten gesamt €/Jahr (Verwaltung, Miete, Software, Dispo …)
+  kostenProMitarbeiterMonat Float    // Umlage je aktivem Mitarbeiter und Monat in €
+  kostenProVermittlung      Float?   // optionale Umlage je Direktvermittlung (sonst kostenProMitarbeiterMonat)
+  notiz                     String?
+  aktualisiertAm            DateTime @updatedAt
+
+  @@unique([jahr, kostenstelleId])
+}
+
+/// Einzelne Kostenposition je Monat – Grundlage der Kostenumlage im Controlling
+model Kostenposition {
+  id             String   @id @default(cuid())
+  kostenstelleId String   @default("") // "" = gilt für alle Kostenstellen
+  jahr           Int
+  monat          Int      // 1–12
+  bezeichnung    String
+  kategorie      String   @default("Sonstiges") // Miete, Personal, Software, Fahrzeuge, Marketing, Beratung, Sonstiges
+  betrag         Float    @default(0)
+  /// true = Fixkosten (jeden Monat gleich, werden in den Folgemonat übernommen), false = variabel
+  fix            Boolean  @default(true)
+  notiz          String?
+  erstelltAm     DateTime @default(now())
+
+  @@index([jahr, monat])
+  @@index([kostenstelleId, jahr])
+}
+
+/// Planwerte je Jahr und Kostenstelle (Plan/Ist-Vergleich, "" = gesamt)
+model Planwert {
+  id             String @id @default(cuid())
+  jahr           Int
+  kostenstelleId String @default("")
+  zielUmsatz     Float  @default(0)
+  zielDb1        Float  @default(0)
+  zielMitarbeiter Int   @default(0)
+  notiz          String?
+  @@unique([jahr, kostenstelleId])
+}
+
+/// KV-Zulagen und Zuschläge als Stammdaten (Schmutz-, Erschwernis-, Gefahrenzulage, Nacht-/Schichtzulage, Taggeld …)
+model Zulage {
+  id              String  @id @default(cuid())
+  name            String
+  kuerzel         String  @unique
+  art             ZulageArt
+  wert            Float   // % vom Stundenlohn bzw. € je Std / Tag / Monat
+  weiterverrechnen Boolean @default(true) // an Kunden weiterverrechnen (× Faktor)
+  steuerfrei      Boolean @default(false) // z. B. SEG-Zulagen § 68 EStG, Taggeld
+  beschreibung    String?
+  aktiv           Boolean @default(true)
+  reihenfolge     Int     @default(0)
+  /// nur für diesen Beschäftiger-KV vorschlagen (leer = für alle)
+  kvId            String?
+  kv              Kollektivvertrag? @relation(fields: [kvId], references: [id])
+  /// bei diesen Schichtmodellen von selbst anhaken (ZWEI_SCHICHT, DREI_SCHICHT, ...)
+  schichtmodelle  String[] @default([])
+}
+enum ZulageArt {
+  PROZENT_STUNDENLOHN
+  EURO_STUNDE
+  EURO_TAG
+  EURO_MONAT
+}
+
+/// Zeitkonto-Buchungen (Korrekturen, Zeitausgleich, Auszahlung) – Ist/Soll kommen aus Monatsabrechnung und Wochenraster
+/// Versendete Kundenprofile – an wen, wann, mit welcher Rückmeldung
+model ProfilVersand {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  personId       String
+  person         Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  kundeId        String
+  kunde          Kunde    @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  an             String?
+  gesendetAm     DateTime @default(now())
+  gesendetVon    String?
+  dokumentId     String?
+  rueckmeldungAm DateTime?
+  rueckmeldung   String?
+
+  @@index([personId])
+  @@index([kundeId])
+}
+
+model Zeitbuchung {
+  id        String   @id @default(cuid())
+  personId  String
+  person    Person   @relation(fields: [personId], references: [id])
+  datum     DateTime
+  stunden   Float    // + Gutschrift / − Abbau
+  typ       ZeitbuchungTyp
+  notiz     String?
+  erstelltAm DateTime @default(now())
+  @@index([personId])
+}
+enum ZeitbuchungTyp {
+  KORREKTUR
+  ZEITAUSGLEICH
+  AUSZAHLUNG
+  UEBERTRAG
+}
+
+/// Monatlicher Provisionsbeleg je Kostenstelle – Snapshot, Freigabe durch die Zentrale
+model Provisionsabrechnung {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  jahr           Int
+  monat          Int
+  verrechnung    Float
+  db2            Float
+  provisionUeberlassung Float
+  provisionVermittlung  Float
+  betrag         Float
+  detail         Json     // Zeilen je Mitarbeiter/Kunde
+  status         ProvisionStatus @default(ENTWURF)
+  erstelltAm     DateTime @default(now())
+  freigegebenAm  DateTime?
+  freigegebenVon String?
+  ausbezahltAm   DateTime?
+  notiz          String?
+  @@unique([kostenstelleId, jahr, monat])
+}
+enum ProvisionStatus {
+  ENTWURF
+  FREIGEGEBEN
+  AUSBEZAHLT
+}
+
+// ---------------------------------------------------------------- Kunden
+
+enum KundeStatus {
+  AKTIV
+  INAKTIV
+}
+
+model Kunde {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  firmenname     String
+  kundennummer   String?  @unique // fortlaufend ab 200001, erscheint auf der Rechnung
+  kurzname       String?
+  strasse        String?
+  plz            String?
+  ort            String?
+  land           String   @default("Österreich")
+  bundesland     String?  // Bundesland des Beschäftigers (AÜG-Statistik)
+  uid            String?
+  telefon        String?
+  email          String?
+  rechnungsemail String?
+  website        String?
+  zahlungszielTage Int    @default(0) // 0 = sofort
+  skontoProzent  Float?
+  /// true = wir bekommen die Stundenzettel vom Beschäftiger, es geht kein Freigabe-Link hinaus
+  stundennachweisVomKunden Boolean @default(false)
+  /// Voreinstellung der Anrede in E-Mails; je Ansprechpartner überschreibbar
+  anredeDu       Boolean  @default(false)
+  status         KundeStatus @default(AKTIV)
+  notizen        String?
+  // Pflichtangaben für Einsatz & Kalkulation
+  arbeitszeitmodell   String?   // z. B. "38,5 h Mo–Fr Tagschicht", "3-Schicht 40 h"
+  kollektivvertrag    String?   // WKO-Kollektivvertrag des Beschäftigers (Referenzlohn)
+  referenzKvId        String?   // verknüpfte Lohntafel des Beschäftiger-KV (Arbeiter)
+  referenzKv          Kollektivvertrag? @relation("KundeReferenzKvArbeiter", fields: [referenzKvId], references: [id])
+  referenzKvAngestellteId String? // getrennte Lohntafel für Angestellte beim selben Beschäftiger
+  referenzKvAngestellte   Kollektivvertrag? @relation("KundeReferenzKvAngestellte", fields: [referenzKvAngestellteId], references: [id])
+  /// CC bei Rechnungen und Zahlungserinnerungen (Buchhaltung, Steuerberater)
+  rechnungCcEmail     String?
+  kvGueltigBis        DateTime? // KV-Abschluss läuft aus → 2 Monate vorher Angebot anpassen
+  anforderungen       String?   // Freitext: was der Kunde typischerweise braucht
+  erforderlicheQualifikationen Json? // ["Staplerschein", ...]
+  lat                 Float?
+  lon                 Float?
+  // Rahmenvertrag
+  rahmenvertragBeginn DateTime?
+  rahmenvertragEnde   DateTime?
+  kuendigungsfrist    String?
+  erinnerungTageVorher Int   @default(60)
+  rahmenvertragPflicht Boolean @default(true) // ohne unterschriebenen Rahmenvertrag kein Einsatz
+  // UID-Prüfung (Stufe 2 = qualifizierte Bestätigung, jährlich)
+  uidGeprueftAm       DateTime?
+  uidGeprueftStufe    String?   // "1" | "2"
+  uidGueltig          Boolean?
+  uidPruefIntervallTage Int     @default(365)
+  // AGB-Akzeptanz
+  agbVersion          String?
+  agbAkzeptiertAm     DateTime?
+  agbAkzeptiertVon    String?
+  // Übernahme / Abwerbung (AGB Punkt 6) und Vermittlungshonorar
+  uebernahmeProzent   Float   @default(0.30)
+  uebernahmeMindest   Float   @default(2500)
+  vermittlungProzent  Float   @default(0.30)
+  erstelltAm     DateTime @default(now())
+  aktualisiertAm DateTime @updatedAt
+
+  ansprechpartner   Ansprechpartner[]
+  konditionen       Kondition[]
+  profilVersand     ProfilVersand[]
+  einsaetze         Einsatz[]
+  angebote          Angebot[]
+  vertraege         Vertrag[]
+  rechnungen        Rechnung[]
+  monatsabrechnungen Monatsabrechnung[]
+  dokumente         Dokument[]
+  personen          Person[] // hinterlegter Kunde
+  bewertungen       Bewertung[]
+  kundenBewertungen KundenBewertung[]
+  bewertungsAnfragen BewertungsAnfrage[]
+  aktivitaeten      Aktivitaet[]
+  aufgaben          Aufgabe[]
+  uebernahmen       Uebernahme[]
+  sperren           Sperre[]
+  portalTokens      KundenPortalToken[]
+
+  @@index([kostenstelleId])
+}
+
+model Ansprechpartner {
+  id        String  @id @default(cuid())
+  kundeId   String
+  kunde     Kunde   @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  name      String
+  funktion  String?
+  telefon   String?
+  email     String?
+  istHaupt  Boolean @default(false)
+  rollen    String[] @default([]) // DISPOSITION, RECHNUNG, STUNDENFREIGABE, BEWERTUNG, GESCHAEFTSFUEHRUNG
+  anrede    String?  // "Herr" | "Frau" – für die Briefanrede in E-Mails
+  anredeDu  Boolean? // null = wie beim Kunden hinterlegt
+}
+
+/// Verrechnungssätze / Rahmenkonditionen je Rolle
+model Kondition {
+  id                  String  @id @default(cuid())
+  kundeId             String
+  kunde               Kunde   @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  rolle               String
+  stundensatz         Float
+  ueberstundenZuschlag Float  @default(0.35) // 50%-Überstunden → +35 % auf den Verrechnungssatz
+  nachtZuschlag       Float   @default(0.25)
+  wochenendZuschlag   Float   @default(0.70) // 100%-Überstunden / So-Ft → +70 %
+  gultigVon           DateTime?
+  gultigBis           DateTime?
+}
+
+// ---------------------------------------------------------------- Personen (Bewerber/Mitarbeiter)
+
+enum PersonStatus {
+  SUCHT        // Bewerber-Pool
+  VERMITTELT   // Aktiver Mitarbeiter
+  GESPERRT     // Sperrliste
+  AUSGESCHIEDEN
+}
+
+model Person {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  status         PersonStatus @default(SUCHT)
+  nachname       String
+  vorname        String
+  geburtsdatum   DateTime?
+  telefon        String?
+  email          String?
+  strasse        String?
+  plz            String?
+  ort            String?
+  staatsangehoerigkeit String?
+  svnrEnc        String? // AES-256-GCM verschlüsselt
+  svnrLast4      String?
+  standardrolle  String?
+  verfuegbarAb   DateTime?
+  verfuegbarSofort Boolean @default(false)
+  hinterlegterKundeId String?
+  hinterlegterKunde   Kunde? @relation(fields: [hinterlegterKundeId], references: [id])
+  gesperrtSeit   DateTime?
+  gesperrtGrund  String? // sensibel
+  gesperrtCode   String? // Code aus dem Sperrgrund-Katalog
+  gesperrtVon    String?
+  notizen        String?
+  aufnahmedatum  DateTime @default(now())
+  // Arbeitsrecht
+  kvId           String?
+  kv             Kollektivvertrag? @relation(fields: [kvId], references: [id])
+  beschaeftigungsgruppe String?
+  wochenstunden  Float?
+  eintrittsdatum DateTime?
+  austrittsdatum DateTime?
+  urlaubsanspruchTage Int @default(25)
+  geschlecht     String?   // M / W / D (AÜG-Statistik)
+  angestellt     Boolean   @default(false) // false = Arbeiter (KV AKÜ), true = Angestellte/r (AngG)
+  lehreEndeAm    DateTime? // Lehrabschluss → Behaltefrist § 18 BAG
+  durchrechnungStart  DateTime? // Beginn des Durchrechnungszeitraums (Zeitkonto)
+  durchrechnungMonate Int       @default(12)
+  notfallkontakt String?   // Name + Telefon
+  appZuletztAktiv DateTime?
+  profilBestaetigtAm DateTime? // Mitarbeiter hat seine Daten in der App bestätigt
+  // Mitarbeiter-App
+  appSprache     String   @default("de") // de | en
+  /// persönlicher Werbecode für den Empfehlungs-Link meine.foxandpeople.at/w/<code>
+  werbecode      String?  @unique
+  datenschutzAkzeptiertAm DateTime?
+  datenschutzVersion String?
+  appGesperrtAm  DateTime? // Zugang zur App gesperrt (Austritt, Verlust des Handys)
+  lohnvorschauAus Boolean @default(false)
+  stundenlohn    Float? // aktueller Bruttostundenlohn (sensibel)
+  anonymisiertAm DateTime?
+  importQuelle   String?
+  fotoDokumentId String?
+  lat            Float?
+  lon            Float?
+  oegkAngemeldet Boolean  @default(false)
+  onboarding     Json?    // Checkliste neue Mitarbeiter {schritt: erledigtAm}
+  fuehrerschein  Boolean  @default(false) // Führerschein B
+  autoVorhanden  Boolean  @default(false) // eigenes Fahrzeug – für das Matching wichtiger als der Schein
+  maxPendelKm    Int?
+  // Identität – Ausweiskopie ist im Onboarding Pflicht
+  ausweisArt        String?   // Reisepass, Personalausweis, Aufenthaltstitel
+  ausweisNummer     String?
+  ausweisGultigBis  DateTime?
+  ausweisDokumentId String?
+  // Recruiting-Pipeline
+  quelle          String?   // AMS, Empfehlung, Website, Facebook, Initiativ, willhaben, ...
+  pipelineStufe   String?   @default("NEU") // NEU | KONTAKTIERT | GESPRAECH | GEPRUEFT | VORGESTELLT | EINGESTELLT | ABGESAGT
+  pipelineAm      DateTime?
+  erstkontaktAm   DateTime?
+  absagegrund     String?
+  absageAm        DateTime?
+  talentpool      Boolean   @default(false)
+  wiedervorlageAm DateTime?
+  // AMS-Förderung (nur aktive Mitarbeiter, sensibel)
+  amsGefoerdert       Boolean   @default(false)
+  amsFoerderungArt    String?
+  amsFoerderungBetrag Float?    // € pro Monat
+  amsFoerderungVon    DateTime?
+  amsFoerderungBis    DateTime?
+  amsFoerderungNotiz  String?
+  erstelltAm     DateTime @default(now())
+  aktualisiertAm DateTime @updatedAt
+
+  qualifikationen   Qualifikation[]
+  berufserfahrung   Berufserfahrung[]
+  abwesenheiten     Abwesenheit[]
+  zeitbuchungen  Zeitbuchung[]
+  appLogins      AppLogin[]
+  nachrichten    Nachricht[]
+  stundennachweise Stundennachweis[]
+  empfehlungen   Empfehlung[] @relation("Werber")
+  empfohlenDurch Empfehlung[] @relation("Empfohlen")
+  bewertungen       Bewertung[]
+  kundenBewertungen KundenBewertung[]
+  bewertungsAnfragen BewertungsAnfrage[]
+  wochenstatus      Wochenstatus[]
+  einsaetze         Einsatz[]
+  vertraege         Vertrag[]
+  monatsabrechnungen Monatsabrechnung[]
+  dokumente         Dokument[]
+  aktivitaeten      Aktivitaet[]
+  aufgaben          Aufgabe[]
+  rechnungspositionen Rechnungsposition[]
+  portalTokens      PortalToken[]
+  profilVersand     ProfilVersand[]
+  uebernahmen       Uebernahme[]
+  sperren           Sperre[]
+  pushAbos          PushAbo[]
+
+  @@index([kostenstelleId, status])
+  @@index([nachname, vorname])
+}
+
+model Qualifikation {
+  id          String   @id @default(cuid())
+  personId    String
+  person      Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  typ         String // Führerschein B, Staplerschein, Kranschein, Arbeitserlaubnis, ...
+  nummer      String?
+  bezeichnung String? // genaue Bezeichnung lt. Nachweis (z. B. „Staplerschein Fa. XY, Klasse ...“, Aussteller)
+  ausgestelltAm DateTime?
+  gultigBis   DateTime?
+  erinnerungTageVorher Int @default(60)
+  dokumentId  String?
+  notiz       String?
+}
+
+enum AbwesenheitTyp {
+  URLAUB
+  KRANKENSTAND
+  PFLEGEFREISTELLUNG
+  SONSTIGES
+}
+
+model Abwesenheit {
+  id       String @id @default(cuid())
+  personId String
+  person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+  typ      AbwesenheitTyp
+  von      DateTime
+  bis      DateTime
+  tage     Float
+  notiz    String?
+  status   AbwesenheitStatus @default(GENEHMIGT) // Anträge aus der App: BEANTRAGT bis Dispo entscheidet
+  quelle   String?  // APP, INTERN, WOCHENRASTER
+  dokumentId String? // z. B. Krankenstandsbestätigung
+  entschiedenVon String?
+  entschiedenAm  DateTime?
+}
+enum AbwesenheitStatus {
+  BEANTRAGT
+  GENEHMIGT
+  ABGELEHNT
+}
+
+// ---------------------------------------------------------------- Mitarbeiter-App
+
+/// Login-Code für die Mitarbeiter-App (6-stellig, per E-Mail, 10 Minuten gültig)
+model AppLogin {
+  id        String   @id @default(cuid())
+  personId  String
+  person    Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  codeHash  String
+  gultigBis DateTime
+  versuche  Int      @default(0)
+  erstelltAm DateTime @default(now())
+  @@index([personId])
+}
+
+/// Chat zwischen Mitarbeiter (App) und Disposition
+model Nachricht {
+  id            String   @id @default(cuid())
+  personId      String
+  person        Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  vonMitarbeiter Boolean
+  text          String
+  nutzerName    String?  // Absender auf Firmenseite
+  gelesenAm     DateTime?
+  erstelltAm    DateTime @default(now())
+  @@index([personId, erstelltAm])
+}
+
+/// Wöchentlicher Stundennachweis aus der App (Stunden je Tag + Foto des bestätigten Zettels)
+model Stundennachweis {
+  id            String   @id @default(cuid())
+  personId      String
+  person        Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  einsatzId     String?
+  jahr          Int
+  kw            Int
+  tage          Json     // [Mo,Di,Mi,Do,Fr,Sa,So] Stunden
+  /// AZG § 26: Beginn, Ende, Pausen je Tag – [{ort,beginn,ende,pauseMin,gesamt,normal,ue50,ue100,fehlzeit,anmerkung}] Mo–So
+  eintraege     Json?
+  summe         Float
+  summeNormal   Float    @default(0)
+  summeUe50     Float    @default(0)
+  summeUe100    Float    @default(0)
+  quelle        String   @default("APP") // APP | BUERO | PORTAL
+  /// Freigabe durch den Beschäftiger (Kundenportal)
+  bestaetigtVon String?
+  bestaetigtAm  DateTime?
+  notiz         String?
+  fotoDokumentId String?
+  status        NachweisStatus @default(EINGEREICHT)
+  rueckmeldung  String?
+  eingereichtAm DateTime @default(now())
+  geprueftAm    DateTime?
+  geprueftVon   String?
+  @@unique([personId, jahr, kw])
+}
+enum NachweisStatus {
+  EINGEREICHT
+  BESTAETIGT
+  ABGELEHNT
+}
+
+/// Freunde werben Freunde – Empfehlung eines Mitarbeiters
+model Empfehlung {
+  id                String   @id @default(cuid())
+  werberId          String
+  werber            Person   @relation("Werber", fields: [werberId], references: [id], onDelete: Cascade)
+  name              String
+  telefon           String?
+  email             String?
+  notiz             String?
+  status            EmpfehlungStatus @default(NEU)
+  empfohlenePersonId String?
+  empfohlenePerson  Person?  @relation("Empfohlen", fields: [empfohlenePersonId], references: [id])
+  praemieBetrag     Float?
+  /// Prämie trägt die Zentrale und mindert deren DB1 – hier der Monat, in dem sie den DB1 belastet
+  belastetJahr      Int?
+  belastetMonat     Int?
+  /// über den persönlichen Link eingegangen (statt händisch abgetippt)
+  ueberLink         Boolean  @default(false)
+  eingestelltAm     DateTime?
+  faelligAm         DateTime?
+  ausbezahltAm      DateTime?
+  erstelltAm        DateTime @default(now())
+  @@index([werberId])
+}
+enum EmpfehlungStatus {
+  NEU
+  KONTAKTIERT
+  EINGESTELLT
+  PRAEMIE_FAELLIG
+  AUSBEZAHLT
+  ABGELEHNT
+}
+
+model Bewertung {
+  id         String   @id @default(cuid())
+  personId   String
+  person     Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  kundeId    String?
+  kunde      Kunde?   @relation(fields: [kundeId], references: [id])
+  einsatzId  String?
+  datum      DateTime @default(now())
+  sterne     Int
+  kommentar  String?
+  wiedereinsatzEmpfohlen Boolean @default(true)
+  merkmale   String[] @default([]) // Vorschlags-Merkmale (zuverlässig, pünktlich …)
+  erfasstVon String?
+}
+
+// ---------------------------------------------------------------- Einsätze
+
+enum EinsatzArt {
+  UEBERLASSUNG
+  DIREKTVERMITTLUNG
+}
+enum EinsatzStatus {
+  GEPLANT
+  AKTIV
+  BEENDET
+  ABGEBROCHEN
+}
+enum Schichtmodell {
+  TAG
+  ZWEI_SCHICHT
+  DREI_SCHICHT
+  FREI
+}
+
+model Einsatz {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  personId       String
+  person         Person   @relation(fields: [personId], references: [id])
+  kundeId        String
+  kunde          Kunde    @relation(fields: [kundeId], references: [id])
+  rolleImEinsatz String
+  standardrolleReferenz String?
+  von            DateTime
+  bis            DateTime?
+  art            EinsatzArt @default(UEBERLASSUNG)
+  grenzueberschreitend Boolean @default(false) // Beschäftiger im Ausland → ZKO-Meldung
+  zkoGemeldet    Boolean  @default(false)
+  zulagen        Json?    // gewählte Zulagen [{kuerzel,name,art,wert,weiterverrechnen}]
+  vermittlungshonorar Float? // einmaliges Honorar bei Direktvermittlung (netto)
+  schichtmodell  Schichtmodell @default(TAG)
+  /// Stundenerfassung in der Mitarbeiter-App: standardmäßig aus, wird bei der Einsatzanlage freigeschaltet
+  stundenerfassungApp Boolean @default(false)
+  wochenstunden  Float    @default(38.5)
+  auslastung     Int      @default(100)
+  stundenlohn    Float?
+  verrechnungssatz Float?
+  status         EinsatzStatus @default(GEPLANT)
+  angebotId      String?
+  angebot        Angebot? @relation(fields: [angebotId], references: [id])
+  /// wie der Einsatz geendet hat – erscheint in der Einsatzhistorie des Mitarbeiters
+  aufloesungsart String?
+  einsatzort     String?
+  // Time-to-Fill: Anfrage des Kunden → Einsatzbeginn
+  angefragtAm    DateTime?
+  besetztAm      DateTime?
+  // Referenzlohn § 10 AÜG: Lohn lt. Beschäftiger-KV und der daraus resultierende Zuschlag auf den AKÜ-Grundlohn
+  referenzlohn      Float?
+  referenzzuschlag  Float?
+  /// Bestätigung, dass der Referenzlohn beim Beschäftiger erfragt wurde (wenn keine Lohntafel hinterlegt ist)
+  referenzGeprueftAm  DateTime?
+  referenzGeprueftVon String?
+  kundenKostenstelle String? // Kostenstelle/Abteilung beim Kunden – wird je Mitarbeiter auf der Rechnung ausgewiesen
+  /// Schwerarbeitsverordnung kommt in diesem Einsatz zur Anwendung – steht in der Überlassungsmitteilung (Punkt 10)
+  schwerarbeit      Boolean @default(false)
+  /// Nachtschwerarbeitsgesetz kommt zur Anwendung – Überlassungsmitteilung Punkt 9
+  nachtschwerarbeit Boolean @default(false)
+  notizen        String?
+  erstelltAm     DateTime @default(now())
+
+  monatsabrechnungen Monatsabrechnung[]
+  rechnungspositionen Rechnungsposition[]
+  vertraege      Vertrag[]
+
+  @@index([kostenstelleId, status])
+  @@index([personId])
+  @@index([kundeId])
+}
+
+// ---------------------------------------------------------------- Angebote
+
+enum AngebotStatus {
+  ENTWURF
+  VERSENDET
+  ANGENOMMEN
+  ABGELEHNT
+  ABGELAUFEN
+}
+enum Kalkulationsart {
+  UEBERLASSUNG
+  PAYROLL
+  VERMITTLUNG
+}
+
+model Angebot {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  kundeId        String
+  kunde          Kunde    @relation(fields: [kundeId], references: [id])
+  nummer         String   @unique
+  datum          DateTime @default(now())
+  gultigBis      DateTime?
+  status         AngebotStatus @default(ENTWURF)
+  betreff        String
+  einleitung     String?
+  schlusstext    String?
+  bundesland     String?
+  satzSetId      String?
+  /// im Angebot festgehalten: Stundennachweis kommt vom Beschäftiger (kein Portal-Link nötig)
+  stundennachweisVomKunden Boolean @default(false)
+  versendetAm    DateTime?
+  versendetAn    String?
+  entschiedenAm  DateTime?
+  pdfDokumentId  String?
+  erstelltVon    String?
+  erstelltAm     DateTime @default(now())
+  aktualisiertAm DateTime @updatedAt
+
+  positionen Angebotsposition[]
+  einsaetze  Einsatz[]
+  dokumente  Dokument[]
+
+  @@index([kostenstelleId, status])
+}
+
+model Angebotsposition {
+  id               String  @id @default(cuid())
+  angebotId        String
+  angebot          Angebot @relation(fields: [angebotId], references: [id], onDelete: Cascade)
+  reihenfolge      Int     @default(0)
+  kalkulationsart  Kalkulationsart @default(UEBERLASSUNG)
+  rolle            String
+  anzahlPersonen   Int     @default(1)
+  stundenlohn      Float?  // Überlassung
+  bruttogehalt     Float?  // Payroll
+  wochenstunden    Float?  // wöchentliche Sollarbeitszeit lt. Beschäftiger (z. B. 38,5)
+  stundenProMonat  Float?  @default(173) // daraus abgeleitet: Wochenstunden × 4,3333
+  verrechnungssatz Float?  // Überlassung: €/Std an Kunde
+  zuschlag50       Float   @default(0.35) // 50-%-Überstunde: Aufschlag auf den Verrechnungssatz
+  zuschlag100      Float   @default(0.70) // 100-%-Überstunde / Sonn- und Feiertag
+  zulagenIds       String[] @default([])  // im Angebot ausgewiesene Zulagen
+  aufschlagMonat   Float?  // Payroll: €/Monat
+  honorar          Float?  // Vermittlung
+  kvId             String?
+  beschaeftigungsgruppe String?
+  kalkulation      Json?   // Snapshot: Sätze + Ergebnis
+}
+
+// ---------------------------------------------------------------- Verträge
+
+enum VertragTyp {
+  DIENSTVERTRAG
+  UEBERLASSUNGSMITTEILUNG
+  ZUSATZVEREINBARUNG
+  UEBERLASSUNGSVERTRAG
+  RAHMENVERTRAG
+  VERMITTLUNGSVERTRAG
+}
+enum VertragStatus {
+  ENTWURF
+  VERSENDET
+  UNTERSCHRIEBEN
+  BEENDET
+}
+
+model Vertragsvorlage {
+  id             String  @id @default(cuid())
+  kostenstelleId String? // null = global
+  kostenstelle   Kostenstelle? @relation(fields: [kostenstelleId], references: [id])
+  name           String
+  typ            VertragTyp
+  inhalt         String // Markdown mit {{platzhaltern}}
+  version        Int     @default(1)
+  aktiv          Boolean @default(true)
+  vertraege      Vertrag[]
+}
+
+model Vertrag {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  nummer         String   @unique
+  typ            VertragTyp
+  vorlageId      String?
+  vorlage        Vertragsvorlage? @relation(fields: [vorlageId], references: [id])
+  personId       String?
+  person         Person?  @relation(fields: [personId], references: [id])
+  kundeId        String?
+  kunde          Kunde?   @relation(fields: [kundeId], references: [id])
+  einsatzId      String?
+  einsatz        Einsatz? @relation(fields: [einsatzId], references: [id])
+  status         VertragStatus @default(ENTWURF)
+  inhalt         String // gerenderter Vertragstext
+  erstelltAm     DateTime @default(now())
+  versendetAm    DateTime?
+  unterschriebenAm DateTime?
+  signaturAnbieter String?
+  signaturExterneId String?
+  pdfEntwurfDokumentId String?
+  pdfUnterschriebenDokumentId String?
+  dokumente      Dokument[]
+}
+
+// ---------------------------------------------------------------- Monatsabrechnung & Rechnungen
+
+enum AbrechnungStatus {
+  OFFEN
+  ABGERECHNET
+}
+
+model Monatsabrechnung {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  personId       String
+  person         Person   @relation(fields: [personId], references: [id])
+  kundeId        String
+  kunde          Kunde    @relation(fields: [kundeId], references: [id])
+  einsatzId      String?
+  einsatz        Einsatz? @relation(fields: [einsatzId], references: [id])
+  jahr           Int
+  monat          Int
+  verrechnung    Float?   // € netto an Kunde
+  bruttolohn     Float?   // lt. Lohnzettel
+  selbstkostenIst Float?  // Lohnkosten gesamt lt. Lohnprogramm (Brutto + Lohnnebenkosten) – ersetzt die kalkulierten Abgaben
+  sonderzahlungIst Float? // davon Sonderzahlung (UZ/WR inkl. Abgaben) – fließt nicht in den DB, löst die Rückstellung auf
+  stunden        Float?   // Normalstunden
+  ueberstunden50 Float?   // 50%-Überstunden (Zuschlag lt. Kondition, Standard +35 % auf den Satz)
+  ueberstunden100 Float?  // 100%-Überstunden / Sonn-/Feiertag (Standard +70 %)
+  zulagenBetrag  Float?   // weiterverrechnete Zulagen gesamt (€) – eigene Rechnungsposition
+  zulagenMengen  Json?    // je Zulage die tatsächlichen Stunden bzw. Tage lt. Stundenzettel: { "SCHICHT2": 62, "TAGGELD": 4 }
+  art            String?  // Art der Leistung ("UEBERLASSUNG"/"DIREKTVERMITTLUNG") – für Zeilen ohne Einsatz (freie Rechnung) maßgeblich für die Provision
+  status         AbrechnungStatus @default(OFFEN)
+  rechnungId     String?
+  rechnung       Rechnung? @relation(fields: [rechnungId], references: [id])
+  notiz          String?
+
+  @@unique([personId, kundeId, jahr, monat])
+  @@index([kostenstelleId, jahr])
+  @@index([jahr, monat, status])
+  @@index([personId])
+}
+
+enum RechnungStatus {
+  ENTWURF
+  VERSENDET
+  TEILBEZAHLT
+  BEZAHLT
+  UEBERFAELLIG
+  STORNIERT
+}
+
+model Rechnung {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  kundeId        String
+  kunde          Kunde    @relation(fields: [kundeId], references: [id])
+  nummer         String   @unique
+  rechnungsdatum DateTime @default(now())
+  leistungJahr   Int
+  leistungMonat  Int
+  faelligAm      DateTime
+  status         RechnungStatus @default(ENTWURF)
+  netto          Float    @default(0)
+  ustProzent     Float    @default(20)
+  /// Umsatzsteuerbetrag, auf Cent gerundet – damit Netto + USt exakt Brutto ergibt (§ 11 UStG)
+  ust            Float    @default(0)
+  brutto         Float    @default(0)
+  bezahltBetrag  Float    @default(0)
+  bezahltAm      DateTime?
+  mahnstufe      Int      @default(0)
+  letzteErinnerungAm DateTime?
+  versendetAm    DateTime?
+  pdfDokumentId  String?
+  storniertDurchId String?
+  notiz          String?
+  erstelltAm     DateTime @default(now())
+
+  positionen        Rechnungsposition[]
+  monatsabrechnungen Monatsabrechnung[]
+  dokumente         Dokument[]
+
+  @@index([kostenstelleId, status])
+  @@index([status, faelligAm])
+}
+
+model Rechnungsposition {
+  id          String   @id @default(cuid())
+  rechnungId  String
+  rechnung    Rechnung @relation(fields: [rechnungId], references: [id], onDelete: Cascade)
+  personId    String?
+  person      Person?  @relation(fields: [personId], references: [id])
+  einsatzId   String?
+  einsatz     Einsatz? @relation(fields: [einsatzId], references: [id])
+  beschreibung String
+  menge       Float    @default(1)
+  einheit     String   @default("Std.")
+  einzelpreis Float
+  betrag      Float
+}
+
+// ---------------------------------------------------------------- Dokumente, Aktivitäten, Aufgaben, Mail
+
+model Dokument {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  dateiname      String
+  mime           String
+  groesse        Int
+  speicherpfad   String
+  kategorie      String // Rahmenvertrag, AGB-Bestätigung, Dienstvertrag, Lohnzettel, Einsatzbestätigung, Qualifikationsnachweis, Angebot, Rechnung, Sonstiges
+  personId       String?
+  person         Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  kundeId        String?
+  kunde          Kunde?   @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  vertragId      String?
+  vertrag        Vertrag? @relation(fields: [vertragId], references: [id])
+  rechnungId     String?
+  rechnung       Rechnung? @relation(fields: [rechnungId], references: [id])
+  angebotId      String?
+  angebot        Angebot? @relation(fields: [angebotId], references: [id])
+  sichtbarImPortal Boolean @default(false)
+  geprueft       Boolean  @default(true)  // Uploads aus der App: false bis die Dispo geprüft hat
+  /// Ablaufdatum – bei Ausweis, Reisepass, Aufenthaltstitel und Führerschein Pflicht (Fristenmonitor)
+  gultigBis      DateTime?
+  quelle         String?  // APP, INTERN
+  hochgeladenVon String?
+  hochgeladenAm  DateTime @default(now())
+  @@index([personId])
+  @@index([kundeId])
+}
+
+model Aktivitaet {
+  id        String   @id @default(cuid())
+  zeitpunkt DateTime @default(now())
+  typ       String // NOTIZ, ANRUF, EMAIL, ANGEBOT, EINSATZ, RECHNUNG, STATUS
+  text      String
+  nutzerName String?
+  kundeId   String?
+  kunde     Kunde?   @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  personId  String?
+  person    Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  @@index([personId])
+  @@index([kundeId])
+}
+
+enum AufgabeTyp {
+  QUALIFIKATION_ABLAUF
+  RAHMENVERTRAG_ABLAUF
+  KV_ABLAUF
+  RECHNUNG_UEBERFAELLIG
+  ANGEBOT_OFFEN
+  EINSATZ_ENDE
+  PROBEZEIT_ENDE
+  UEBERNAHME_MOEGLICH
+  OEGK_ANMELDUNG
+  BEWERTUNG_OFFEN
+  AMS_FOERDERUNG_ENDE
+  AUEG_STATISTIK
+  ZKO_MELDUNG
+  ZEITKONTO_ABLAUF
+  PROVISION_FREIGABE
+  STUNDENNACHWEIS_PRUEFEN
+  KRANKMELDUNG
+  URLAUBSANTRAG
+  DOKUMENT_PRUEFEN
+  EMPFEHLUNG_PRAEMIE
+  BEWILLIGUNG_ABLAUF
+  AUSWEIS_ABLAUF
+  UID_PRUEFUNG
+  AGB_FEHLT
+  TALENTPOOL_WIEDERVORLAGE
+  UEBERNAHME_VERRECHNEN
+  MANUELL
+}
+
+model Aufgabe {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  typ            AufgabeTyp
+  titel          String
+  faelligAm      DateTime
+  erledigt       Boolean  @default(false)
+  erledigtAm     DateTime?
+  personId       String?
+  person         Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  kundeId        String?
+  kunde          Kunde?   @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  referenzTyp    String?
+  referenzId     String?
+  nutzerId       String?
+  nutzer         Nutzer?  @relation(fields: [nutzerId], references: [id])
+  erstelltAm     DateTime @default(now())
+  @@unique([typ, referenzTyp, referenzId])
+}
+
+model MailLog {
+  id          String   @id @default(cuid())
+  zeitpunkt   DateTime @default(now())
+  an          String
+  betreff     String
+  text        String
+  anhangName  String?
+  status      String // TEST, GESENDET, FEHLER
+  fehler      String?
+  referenzTyp String?
+  referenzId  String?
+}
+
+model PortalToken {
+  id        String   @id @default(cuid())
+  personId  String
+  person    Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  gultigBis DateTime
+  verwendetAm DateTime?
+}
+
+// ---------------------------------------------------------------- Wissensbot (nur Systemadmin)
+
+model WissenDokument {
+  id         String   @id @default(cuid())
+  titel      String
+  quelle     String?
+  kategorie  String   @default("Firmenwissen") // Arbeitsrecht, Kalkulation, Firmenwissen, Vorlagen
+  zeichen    Int      @default(0)
+  erstelltAm DateTime @default(now())
+  chunks     WissenChunk[]
+}
+
+model WissenChunk {
+  id         String @id @default(cuid())
+  dokumentId String
+  dokument   WissenDokument @relation(fields: [dokumentId], references: [id], onDelete: Cascade)
+  index      Int
+  text       String
+  @@index([dokumentId])
+}
+
+model AssistentNachricht {
+  id          String   @id @default(cuid())
+  unterhaltungId String
+  nutzerId    String
+  rolle       String // user | assistant
+  text        String
+  quellen     Json?
+  erstelltAm  DateTime @default(now())
+  @@index([unterhaltungId])
+}
+
+model Monatsreport {
+  id             String   @id @default(cuid())
+  jahr           Int
+  monat          Int
+  kostenstelleId String?
+  inhalt         String
+  erstelltAm     DateTime @default(now())
+  erstelltVon    String?
+}
+
+
+// ---------------------------------------------------------------- Gegenseitige Bewertung & Matching
+
+/// Mitarbeiter bewertet Kunden/Einsatz (intern erfasst oder über das Mitarbeiter-Portal)
+model KundenBewertung {
+  id         String   @id @default(cuid())
+  kundeId    String
+  kunde      Kunde    @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  personId   String
+  person     Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  einsatzId  String?
+  datum      DateTime @default(now())
+  sterne     Int
+  kommentar  String?
+  wiederArbeiten Boolean @default(true) // würde dort wieder arbeiten
+  merkmale   String[] @default([])
+  quelle     String   @default("INTERN") // INTERN | PORTAL
+}
+
+/// Bewertungsanfrage an den Kunden (Link per E-Mail) – Kunde bewertet Mitarbeiter
+model BewertungsAnfrage {
+  id         String   @id @default(cuid())
+  kundeId    String
+  kunde      Kunde    @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  personId   String
+  person     Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  einsatzId  String?
+  tokenHash  String   @unique
+  an         String
+  gultigBis  DateTime
+  erledigtAm DateTime?
+  erstelltAm DateTime @default(now())
+}
+
+/// Wochenraster der Einsatzplanung: X = arbeitet, K = krank, U = Urlaub, F = frei/kein Einsatz
+model Wochenstatus {
+  id        String @id @default(cuid())
+  personId  String
+  person    Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+  jahr      Int
+  kw        Int
+  status    String // X | K | U | F (Wochenstatus = vorherrschender Tagesstatus)
+  tage      String? // 7 Zeichen Mo–So: X arbeitet, K krank, U Urlaub, Z Zeitausgleich, F frei/kein Einsatz, - leer
+  einsatzId String?
+  notiz     String?
+  @@unique([personId, jahr, kw])
+  @@index([jahr, kw])
+}
+
+model Geocode {
+  key   String @id // normalisierte Adresse
+  lat   Float
+  lon   Float
+  quelle String @default("nominatim")
+  erstelltAm DateTime @default(now())
+}
+
+/// Werdegang / Berufserfahrung – erscheint im Kundenprofil (Zeitraum, Firma, Tätigkeit, Notiz)
+model Berufserfahrung {
+  id          String @id @default(cuid())
+  personId    String
+  person      Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+  reihenfolge Int    @default(0)
+  zeitraum    String
+  firma       String
+  taetigkeit  String
+  notiz       String?
+}
+
+
+// ---------------------------------------------------------------- v2.1: Übernahme, Sperren, Kundenportal
+
+/// Übernahme (Abwerbung) einer überlassenen Arbeitskraft durch den Beschäftiger – Aufwandsersatz lt. AGB Punkt 6:
+/// 30 % des Bruttojahresentgelts, je vollem Überlassungsmonat −1/12, mindestens 2.500 €, nach 12 Monaten frei.
+model Uebernahme {
+  id             String   @id @default(cuid())
+  kostenstelleId String
+  kostenstelle   Kostenstelle @relation(fields: [kostenstelleId], references: [id])
+  kundeId        String
+  kunde          Kunde    @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  personId       String
+  person         Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  einsatzId      String?
+  gemeldetAm     DateTime @default(now())
+  uebernahmeAm   DateTime
+  bruttojahresentgelt Float
+  monateUeberlassen   Int   @default(0)
+  prozent        Float    @default(0.30)
+  mindesthonorar Float    @default(2500)
+  honorar        Float
+  status         String   @default("OFFEN") // OFFEN | VERRECHNET | VERZICHTET
+  rechnungId     String?
+  notiz          String?
+  erstelltAm     DateTime @default(now())
+
+  @@index([kundeId])
+  @@index([personId])
+}
+
+/// Katalog der Sperrgründe – einheitlich statt Freitext
+model Sperrgrund {
+  id           String  @id @default(cuid())
+  code         String  @unique
+  bezeichnung  String
+  sperrtEinsatz Boolean @default(true)
+  sensibel     Boolean @default(false)
+  reihenfolge  Int     @default(0)
+  aktiv        Boolean @default(true)
+  sperren      Sperre[]
+}
+
+/// Sperre eines Mitarbeiters – generell oder nur bei einem bestimmten Kunden
+model Sperre {
+  id         String   @id @default(cuid())
+  personId   String
+  person     Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  kundeId    String?  // null = generelle Sperre
+  kunde      Kunde?   @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  grundId    String?
+  grund      Sperrgrund? @relation(fields: [grundId], references: [id])
+  ab         DateTime @default(now())
+  bis        DateTime?
+  notiz      String?
+  erfasstVon String?
+  erstelltAm DateTime @default(now())
+
+  @@index([personId])
+  @@index([kundeId])
+}
+
+/// Kundenportal light: Link an den Beschäftiger für Stundenfreigabe und Bewertung
+model KundenPortalToken {
+  id          String   @id @default(cuid())
+  kundeId     String
+  kunde       Kunde    @relation(fields: [kundeId], references: [id], onDelete: Cascade)
+  tokenHash   String   @unique
+  an          String
+  name        String?
+  zweck       String   @default("STUNDEN") // STUNDEN | BEWERTUNG | BEIDES
+  jahr        Int?
+  kw          Int?
+  gultigBis   DateTime
+  verwendetAm DateTime?
+  erstelltAm  DateTime @default(now())
+
+  @@index([kundeId])
+}
+
+
+/// Web-Push-Abo der Mitarbeiter-App (ein Eintrag je Gerät/Browser)
+model PushAbo {
+  id         String   @id @default(cuid())
+  personId   String
+  person     Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  endpoint   String   @unique
+  p256dh     String
+  auth       String
+  geraet     String?
+  erstelltAm DateTime @default(now())
+  zuletztOk  DateTime?
+  fehler     Int      @default(0)
+
+  @@index([personId])
+}
+
+/// Zähler gegen Massenanfragen: je Schlüssel (z. B. "appcode:<personId>") und Zeitfenster eine Zeile
+model Zugriffszaehler {
+  id         String   @id @default(cuid())
+  schluessel String
+  fenster    DateTime
+  anzahl     Int      @default(0)
+  erstelltAm DateTime @default(now())
+
+  @@unique([schluessel, fenster])
+  @@index([fenster])
+}
+
+/// Was im Hintergrund schiefgeht. Ohne diese Tabelle steht ein Fehler nur im Container-Log, und
+/// dorthin sieht im Alltag niemand – ein kaputter Mailversand fiele erst auf, wenn wochenlang keine
+/// Stundenzettel mehr kommen. Gleiche Quelle + gleiche Meldung = eine Zeile mit Zähler.
+model Fehlerprotokoll {
+  id         String    @id @default(cuid())
+  quelle     String    // z. B. "Hintergrundlauf/Aufgaben", "Mailversand", "Rechnungslauf"
+  stufe      String    @default("FEHLER") // FEHLER | WARNUNG
+  meldung    String
+  detail     String?
+  anzahl     Int       @default(1)
+  zuerstAm   DateTime  @default(now())
+  zuletztAm  DateTime  @default(now())
+  erledigtAm DateTime?
+  /// wann dieser Eintrag zuletzt in einer Tagesmail stand
+  gemeldetAm DateTime?
+
+  @@index([zuletztAm(sort: Desc)])
+}

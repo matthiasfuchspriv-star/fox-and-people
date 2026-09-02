@@ -1,0 +1,1 @@
+ALTER TABLE "Ansprechpartner" ADD COLUMN "rollen" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];

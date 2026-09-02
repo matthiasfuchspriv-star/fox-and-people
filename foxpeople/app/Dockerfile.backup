@@ -1,0 +1,14 @@
+# Sicherungs-Container: Postgres-Werkzeuge plus alles, was für die Kopie außer Haus gebraucht wird.
+# Eigenes Abbild statt Nachinstallieren bei jedem Start – so läuft die Sicherung auch ohne Internet
+# und ist beim Neustart sofort einsatzbereit.
+FROM postgres:16
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends rsync openssh-client gnupg ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY scripts/sicherung.sh /usr/local/bin/sicherung.sh
+COPY scripts/wiederherstellen.sh /usr/local/bin/wiederherstellen.sh
+RUN chmod +x /usr/local/bin/sicherung.sh /usr/local/bin/wiederherstellen.sh
+
+ENTRYPOINT ["/usr/local/bin/sicherung.sh"]

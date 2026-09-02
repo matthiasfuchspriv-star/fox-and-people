@@ -1,0 +1,8 @@
+Verrechnungstool.xlsx
+app/node_modules
+app/.next
+app/storage
+app/.env
+app/backups
+shots
+vorlagen

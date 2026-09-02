@@ -1,0 +1,14 @@
+{
+  "name": "Fox & People – Mitarbeiter-App",
+  "short_name": "Fox & People",
+  "start_url": "/app",
+  "scope": "/app",
+  "display": "standalone",
+  "background_color": "#10222a",
+  "theme_color": "#10222a",
+  "lang": "de-AT",
+  "icons": [
+    { "src": "/app-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

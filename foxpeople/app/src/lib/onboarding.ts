@@ -1,0 +1,20 @@
+/** Checkliste neue Mitarbeiter (aus Checkliste_Neue_Mitarbeiter.docx) */
+export const ONBOARDING: { key: string; gruppe: "A" | "B"; text: string; hinweis?: string }[] = [
+  { key: "arbeitsvertrag", gruppe: "A", text: "Unterschriebener Arbeitsvertrag" },
+  { key: "zusatzvereinbarung", gruppe: "A", text: "Unterschriebene Zusatzvereinbarung (Urlaub, Zeitausgleich, Krankenstand)" },
+  { key: "ueberlassungsmitteilung", gruppe: "A", text: "Unterschriebene Überlassungsmitteilung", hinweis: "pro Einsatz/Beschäftiger, § 12 AÜG" },
+  { key: "ausweis", gruppe: "A", text: "Kopie amtlicher Lichtbildausweis", hinweis: "Reisepass oder Personalausweis" },
+  { key: "meldezettel", gruppe: "A", text: "Aktueller Meldezettel (Hauptwohnsitz)" },
+  { key: "ecard", gruppe: "A", text: "Sozialversicherungsnummer / e-card (Kopie)" },
+  { key: "aufenthaltstitel", gruppe: "A", text: "Bei Nicht-EU/EWR: gültiger Aufenthaltstitel mit Arbeitsmarktzugang", hinweis: "z. B. Rot-Weiß-Rot-Karte – Kopie beidseitig, Ablaufdatum als Qualifikation erfassen" },
+  { key: "iban", gruppe: "A", text: "IBAN / Bankverbindung für die Lohnauszahlung" },
+  { key: "zeugnisse", gruppe: "A", text: "Ausbildungsnachweise / Zeugnisse (Staplerschein, Schweißpass, Berufsausbildung)" },
+  { key: "eignung", gruppe: "A", text: "Ärztliche Eignungsuntersuchung, sofern erforderlich", hinweis: "z. B. G25 für Fahr-, Steuer-, Überwachungstätigkeiten" },
+  { key: "notfallkontakt", gruppe: "A", text: "Notfallkontakt (Name, Telefon)" },
+  { key: "kleidergroesse", gruppe: "A", text: "Kleider-/Schuhgröße, wenn der Kunde PSA/Arbeitskleidung stellt" },
+  { key: "oegk", gruppe: "B", text: "Anmeldung bei der ÖGK vor Arbeitsbeginn", hinweis: "Mindestangaben-Anmeldung, spätestens bei Arbeitsantritt" },
+  { key: "um_ausgehaendigt", gruppe: "B", text: "Überlassungsmitteilung an Mitarbeiter/in ausgehändigt (§ 12 AÜG)" },
+  { key: "einsatz_angelegt", gruppe: "B", text: "Einsatz mit Kundendaten im System angelegt" },
+  { key: "sicherheit", gruppe: "B", text: "Arbeitssicherheits-Unterweisung durch den Beschäftiger bestätigt (§ 9 Abs. 4 ASchG)" },
+  { key: "willkommensmappe", gruppe: "B", text: "Willkommensmappe ausgehändigt" },
+];

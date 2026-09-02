@@ -1,0 +1,35 @@
+# Fox & People – Reverse-Proxy mit automatischem HTTPS (Let's Encrypt).
+# Büro-Programm: app.foxandpeople.at · Mitarbeiter-App: meine.foxandpeople.at
+{
+	email office@foxandpeople.at
+}
+
+app.foxandpeople.at {
+	encode gzip
+	# Der stündliche Hintergrundlauf und die Gesundheitsprüfung laufen nur intern (Docker-Netz).
+	# Von außen sind sie nicht erreichbar – das nimmt beiden jede Angriffsfläche.
+	@intern path /api/lauf /api/health
+	respond @intern 404
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+	reverse_proxy app:3000
+}
+
+meine.foxandpeople.at {
+	encode gzip
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+	# Startseite der Mitarbeiter-Domain → App
+	redir / /app 302
+	# Büro-Seiten sind unter der Mitarbeiter-Domain nicht erreichbar
+	@buero not path /app* /dokumente/* /_next/* /app-manifest.json /app-sw.js /app-icon-*
+	respond @buero "Bitte app.foxandpeople.at verwenden." 404
+	reverse_proxy app:3000
+}
